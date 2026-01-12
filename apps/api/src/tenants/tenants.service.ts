@@ -35,7 +35,7 @@ export class TenantsService {
                 name,
                 slug,
                 plan: 'trial',
-                // plan related fields like trial_ends_at deferred to Defaults or specific logic
+                trial_ends_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
             })
             .select()
             .single();
@@ -113,6 +113,23 @@ export class TenantsService {
             throw new ForbiddenException('Only admins can invite members');
         }
 
+        // Check if invite already exists pending
+        const { data: existing } = await (this.db.from('tenant_invites') as any)
+            .select('*')
+            .eq('tenant_id', tenantId)
+            .eq('email', email)
+            .eq('status', 'pending')
+            .gt('expires_at', new Date().toISOString())
+            .single();
+
+        if (existing) {
+            // Resend email instead of error?
+            // For now throw to prevent dupe spam, or just return success (idempotent)
+            // Let's reuse existing logic but update expires? 
+            // Simple: Throw error "Invite already pending"
+            throw new BadRequestException('Invite already pending for this email');
+        }
+
         // Generate Token
         const token = crypto.randomBytes(32).toString('hex');
         const expiresAt = new Date();
@@ -131,8 +148,8 @@ export class TenantsService {
         if (error) throw new BadRequestException('Failed to create invite');
 
         // Send Email
-        // Assuming web url - typically configured in ENV
-        const inviteLink = `http://localhost:3000/invites/${token}`;
+        const baseUrl = env.WEB_URL || 'http://localhost:3000';
+        const inviteLink = `${baseUrl}/invites/${token}`;
 
         // Fetch tenant details for name
         const { data: tenant } = await this.db.from('tenants').select('name').eq('id', tenantId).single();
@@ -142,6 +159,35 @@ export class TenantsService {
         await this.logAudit(userId, tenantId, 'TENANT_INVITE_CREATED', 'invite', null, { email, role });
 
         return { message: 'Invite sent' };
+    }
+
+    async getInviteByToken(token: string) {
+        const { data: invite, error } = await (this.db
+            .from('tenant_invites') as any)
+            .select('*, tenant:tenants(name)')
+            .eq('token', token)
+            .single();
+
+        if (error || !invite) throw new BadRequestException('Invalid token');
+
+        const isExpired = new Date(invite.expires_at) < new Date();
+        const isValid = invite.status === 'pending' && !isExpired;
+
+        // Check if user exists
+        const { data: { users } } = await this.db.auth.admin.listUsers();
+        // Pagination ignored for MVP
+        const userExists = users.some(u => u.email === invite.email);
+
+        return {
+            email: invite.email,
+            role: invite.role,
+            tenantName: invite.tenant?.name || 'Unknown',
+            status: invite.status,
+            expiresAt: invite.expires_at,
+            isExpired,
+            isValid,
+            userExists
+        };
     }
 
     async revokeInvite(tenantId: string, userId: string, inviteId: string) {
@@ -271,5 +317,78 @@ export class TenantsService {
             resource_id: entityId,
             metadata: meta,
         });
+    }
+
+    // --- Plans & Trial Logic ---
+
+    async checkTrialExpiration() {
+        this.logger.log('Checking for expired trials...');
+
+        // Find tenants with plan 'trial' and trial_ends_at < now
+        const { data: expiredTenants, error } = await (this.db.from('tenants') as any)
+            .select('id, name, trial_ends_at')
+            .eq('plan', 'trial')
+            .lt('trial_ends_at', new Date().toISOString());
+
+        if (error) {
+            this.logger.error('Failed to query expired trials', error);
+            return { error };
+        }
+
+        const updates = [];
+        for (const tenant of expiredTenants) {
+            this.logger.log(`Expiring trial for tenant ${tenant.name} (${tenant.id})`);
+
+            // Update plan to trial_expired
+            await (this.db.from('tenants') as any)
+                .update({ plan: 'trial_expired' })
+                .eq('id', tenant.id);
+
+            // Audit logic could go here (no user_id context, so system)
+            // We can add a system audit or skip for now.
+            updates.push(tenant.id);
+        }
+
+        return { expired: updates.length, tenants: updates };
+    }
+
+    async getPlanStatus(tenantId: string) {
+        const { data: tenant } = await this.db.from('tenants').select('plan, trial_ends_at').eq('id', tenantId).single();
+        if (!tenant) throw new BadRequestException('Tenant not found');
+
+        const isTrial = tenant.plan === 'trial';
+        const isExpired = tenant.plan === 'trial_expired';
+
+        let daysLeft = 0;
+        if (isTrial && tenant.trial_ends_at) {
+            const end = new Date(tenant.trial_ends_at).getTime();
+            const now = Date.now();
+            daysLeft = Math.ceil((end - now) / (1000 * 60 * 60 * 24));
+        }
+
+        // Feature Gates
+        const features = {
+            KEYWORDS_CUSTOM: this.checkFeatureGate(tenant.plan, 'KEYWORDS_CUSTOM')
+        };
+
+        return {
+            plan: tenant.plan,
+            status: isExpired ? 'EXPIRED' : (isTrial ? 'TRIAL' : 'ACTIVE'),
+            daysLeft: daysLeft > 0 ? daysLeft : 0,
+            features
+        };
+    }
+
+    checkFeatureGate(plan: string, feature: string): boolean {
+        // Feature Matrix
+        const matrix: Record<string, string[]> = {
+            'trial': ['KEYWORDS_CUSTOM', 'ADVANCED_REPORTS'],
+            'pro': ['KEYWORDS_CUSTOM', 'ADVANCED_REPORTS'],
+            'trial_expired': [], // No premium features
+            'basic': []
+        };
+
+        const allowedFeatures = matrix[plan] || [];
+        return allowedFeatures.includes(feature);
     }
 }

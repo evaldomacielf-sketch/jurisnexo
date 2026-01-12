@@ -59,6 +59,62 @@ export class AuthService {
         return { user: { id: user.id, email: user.email }, message: 'Login successful' };
     }
 
+    async registerWithInvite(token: string, fullName: string, password: string, res: Response) {
+        // 1. Validate Token (we need TenantsService for this, but circular dependency risk)
+        // Alternatively, query DB directly here since we satisfy 'same module' or 'db access'
+        // But logic for 'acceptInvite' is complex (audit, policies).
+        // Let's inject TenantsService with forwardRef.
+        // Assuming TenantsService is available. 
+        // For now, I will duplicate the simple DB lookup to find the invite details 
+        // OR rely on the Token being passed to `acceptInvite` later.
+
+        // 1. Get Invite
+        const { data: invite } = await (this.db
+            .from('tenant_invites') as any)
+            .select('*')
+            .eq('token', token)
+            .single();
+
+        if (!invite || invite.status !== 'pending') throw new UnauthorizedException('Invalid invite');
+
+        // 2. Create User
+        const { data: newUser, error: createError } = await this.db.auth.admin.createUser({
+            email: invite.email,
+            email_confirm: true,
+            password: password,
+            user_metadata: { full_name: fullName }
+        });
+
+        if (createError) throw new BadRequestException(createError.message);
+
+        // 3. Accept Invite (Direct DB Update to avoid circular dep if possible, or use service)
+        // Let's do direct DB update + Membership insert here to resolve the Circular Dependency elegantly 
+        // without refactoring Modules right now.
+
+        // Create membership
+        await (this.db.from('memberships') as any).insert({
+            tenant_id: invite.tenant_id,
+            user_id: newUser.user.id,
+            role: invite.role
+        });
+
+        // Update invite
+        await (this.db.from('tenant_invites') as any)
+            .update({ status: 'accepted' })
+            .eq('id', invite.id);
+
+        // Audit (Generic)
+        await this.logAudit(newUser.user.id, 'AUTH_REGISTER_INVITE', 'user', newUser.user.id, { inviteId: invite.id });
+
+        // 4. Generate Session
+        const accessToken = this.signAccessToken(newUser.user.id, invite.email, invite.tenant_id);
+        const refreshToken = await this.createRefreshToken(newUser.user.id);
+
+        this.setCookies(res, accessToken, refreshToken);
+
+        return { user: newUser.user, accessToken };
+    }
+
     // --- Helpers ---
 
     private async getOrCreateAuthUser(email: string) {

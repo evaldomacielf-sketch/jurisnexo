@@ -63,7 +63,7 @@ export default function AuthLayout({
                 </div>
 
                 {/* Pattern Background */}
-                <div className="absolute inset-0 z-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
+                <div className="absolute inset-0 z-0 opacity-[0.03] bg-[radial-gradient(#ffffff_1px,transparent_1px)] bg-[length:30px_30px]"></div>
             </div>
         </div>
     );

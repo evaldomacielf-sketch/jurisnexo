@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <title>JurisNexo: do primeiro contato ao pagamento — tudo em um único fluxo.</title>
+  <meta name="description" content="CRM e campanhas para conversão, rotina com prioridade para produtividade, e contratos + cobrança para previsibilidade financeira. Teste grátis por 10 dias, sem cartão, com até 2 usuários." />
+
+  <meta property="og:title" content="JurisNexo: do primeiro contato ao pagamento — tudo em um único fluxo." />
+  <meta property="og:description" content="Teste grátis por 10 dias, sem cartão, com até 2 usuários." />
+  <meta property="og:image" content="jurisnexo_tech_premium_2.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{--bg:#07080a;--panel:#0f1116;--panel2:#121522;--border:rgba(255,255,255,.10);--text:#f2f5ff;--muted:rgba(242,245,255,.72);--gold:#d9b86c;--gold2:#caa756;--shadow:0 14px 40px rgba(0,0,0,.45);--radius:14px;--radiusSm:12px;--font:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:var(--font);background:radial-gradient(1100px 520px at 15% 0%,rgba(217,184,108,.10),transparent 60%),radial-gradient(900px 520px at 95% 10%,rgba(217,184,108,.08),transparent 55%),var(--bg);color:var(--text);line-height:1.55}
+    a{color:var(--gold);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:1140px;margin:0 auto;padding:0 20px}
+    .header{position:sticky;top:0;z-index:50;background:rgba(7,8,10,.72);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+    .header__inner{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0}
+    .brand{display:flex;align-items:center}
+    .logo{height:38px;width:auto}
+    .nav{display:none}
+    .nav__list{display:flex;gap:18px;list-style:none;padding:0;margin:0}
+    .nav__link{color:var(--muted);font-weight:500}
+    .nav__link:hover,.nav__link:focus{color:var(--text);text-decoration:none}
+    .header__ctas{display:flex;gap:10px;align-items:center}
+    .btn{appearance:none;border:1px solid transparent;border-radius:999px;padding:10px 14px;font-weight:700;cursor:pointer;transition:transform .12s ease,background .12s ease,border-color .12s ease,opacity .12s ease}
+    .btn:focus{outline:3px solid rgba(217,184,108,.30);outline-offset:2px}
+    .btn:active{transform:translateY(1px)}
+    .btn--lg{padding:12px 18px;font-size:1rem}
+    .btn--full{width:100%}
+    .btn--primary{background:linear-gradient(180deg,var(--gold),var(--gold2));color:#111;box-shadow:0 10px 26px rgba(217,184,108,.18)}
+    .btn--primary:hover{opacity:.95}
+    .btn--ghost{background:transparent;border-color:rgba(217,184,108,.38);color:var(--text)}
+    .btn--ghost:hover{background:rgba(217,184,108,.10);border-color:rgba(217,184,108,.55)}
+    .hero{padding:36px 0 10px}
+    .hero__grid{display:grid;grid-template-columns:1fr;gap:22px;align-items:center;padding-top:14px}
+    .topbar{display:inline-flex;gap:10px;padding:8px 12px;border-radius:999px;border:1px solid rgba(217,184,108,.35);background:rgba(217,184,108,.08);color:var(--text);margin:0 0 14px 0;font-weight:600}
+    .hero h1{font-size:2.05rem;line-height:1.12;margin:0 0 12px 0;letter-spacing:-.02em}
+    .hero__sub{margin:0 0 16px 0;color:var(--muted);font-size:1.05rem}
+    .hero__bullets{margin:0 0 18px 0;padding:0;list-style:none;display:grid;gap:10px}
+    .hero__bullets li{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--radiusSm);padding:12px 12px;color:rgba(242,245,255,.92)}
+    .hero__cta{display:flex;gap:10px;flex-wrap:wrap}
+    .hero__micro{margin:14px 0 0 0;color:rgba(242,245,255,.72);font-weight:600}
+    .hero__visual{display:flex;justify-content:center}
+    .mock{width:100%;max-width:520px;border-radius:var(--radius);border:1px solid rgba(217,184,108,.28);background:linear-gradient(180deg,rgba(18,21,34,.92),rgba(15,17,22,.92));box-shadow:var(--shadow);overflow:hidden}
+    .mock__top{display:flex;align-items:center;gap:8px;padding:12px 12px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .dot{width:10px;height:10px;border-radius:50%}
+    .dot--r{background:#ff5f57}.dot--y{background:#febc2e}.dot--g{background:#28c840}
+    .mock__title{margin-left:8px;color:rgba(242,245,255,.75);font-weight:600;font-size:.92rem}
+    .mock__body{padding:14px;display:grid;gap:12px;grid-template-columns:1fr}
+    .mock__card{border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:12px;background:rgba(7,8,10,.35)}
+    .mock__kicker{margin:0;color:rgba(217,184,108,.92);font-weight:700;font-size:.92rem}
+    .mock__text{margin:6px 0 0 0;color:rgba(242,245,255,.85);font-weight:600}
+    .mock__legend{margin:0;padding:12px 14px;color:rgba(242,245,255,.70);border-top:1px solid rgba(255,255,255,.08);font-weight:600}
+    .section{padding:54px 0}
+    .section--alt{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0))}
+    h2{font-size:1.55rem;line-height:1.18;letter-spacing:-.01em;margin:0 0 18px 0}
+    h3{margin:0 0 10px 0}
+    .grid{display:grid;gap:14px}
+    .grid--4{grid-template-columns:1fr}
+    .grid--3{grid-template-columns:1fr}
+    .card{border:1px solid var(--border);background:rgba(255,255,255,.03);border-radius:var(--radius);padding:16px;box-shadow:0 8px 26px rgba(0,0,0,.25)}
+    .card--pilar{background:linear-gradient(180deg,rgba(217,184,108,.06),rgba(255,255,255,.02))}
+    .card__title{color:rgba(217,184,108,.95);font-weight:800}
+    .list{margin:0;padding-left:18px;color:rgba(242,245,255,.85)}
+    .section__closing{margin:16px 0 0 0;color:rgba(242,245,255,.80);font-weight:700}
+    .grid--list{grid-template-columns:1fr}
+    .pill{border:1px solid rgba(217,184,108,.20);background:rgba(217,184,108,.06);border-radius:999px;padding:10px 12px;color:rgba(242,245,255,.90);font-weight:700}
+    .steps{display:grid;gap:12px;margin-top:14px}
+    .step{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--border);background:rgba(255,255,255,.03);border-radius:var(--radius);padding:14px}
+    .step__num{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(217,184,108,.12);border:1px solid rgba(217,184,108,.28);color:rgba(217,184,108,.95);font-weight:900}
+    .section__cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .accordion{display:grid;gap:10px}
+    .accordion__item{border:1px solid var(--border);border-radius:var(--radius);background:rgba(255,255,255,.03);overflow:hidden}
+    .accordion__btn{width:100%;text-align:left;background:transparent;border:0;color:var(--text);padding:14px 14px;font-weight:800;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+    .accordion__btn:focus{outline:3px solid rgba(217,184,108,.30);outline-offset:2px}
+    .accordion__panel{display:none;padding:0 14px 14px 14px;color:rgba(242,245,255,.82)}
+    .accordion__item.is-open .accordion__panel{display:block}
+    .accordion__icon{font-size:1.2rem;color:rgba(217,184,108,.95)}
+    .cta{padding:36px 0 56px}
+    .cta__inner{border:1px solid rgba(217,184,108,.22);background:linear-gradient(180deg,rgba(217,184,108,.08),rgba(255,255,255,.02));border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);display:grid;gap:14px}
+    .cta__micro{margin:8px 0 0 0;color:rgba(242,245,255,.78);font-weight:700}
+    .cta__actions{display:flex;gap:10px;flex-wrap:wrap}
+    .footer{border-top:1px solid var(--border);padding:22px 0 30px;background:rgba(255,255,255,.01)}
+    .footer__inner{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+    .footer__links{display:flex;gap:14px;flex-wrap:wrap}
+    .footer__links a{color:rgba(242,245,255,.78);font-weight:700}
+    .footer__text{margin:0;color:rgba(242,245,255,.70);font-weight:600}
+    .modal{position:fixed;inset:0;display:none;z-index:100}
+    .modal.is-open{display:block}
+    .modal__overlay{position:absolute;inset:0;background:rgba(0,0,0,.65)}
+    .modal__content{position:relative;max-width:520px;margin:8vh auto 0 auto;background:linear-gradient(180deg,rgba(18,21,34,.98),rgba(15,17,22,.98));border:1px solid rgba(217,184,108,.22);border-radius:16px;box-shadow:var(--shadow);padding:18px}
+    .modal__close{position:absolute;top:10px;right:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:rgba(242,245,255,.92);border-radius:10px;width:38px;height:38px;cursor:pointer;font-size:22px;line-height:0}
+    .modal__close:focus{outline:3px solid rgba(217,184,108,.30);outline-offset:2px}
+    .modal__sub{margin:6px 0 14px 0;color:rgba(242,245,255,.72);font-weight:700}
+    .field{display:grid;gap:6px;margin-bottom:12px}
+    label{font-weight:800;color:rgba(242,245,255,.92)}
+    input{width:100%;padding:12px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(7,8,10,.35);color:var(--text);font-weight:600}
+    input:focus{outline:3px solid rgba(217,184,108,.24);outline-offset:2px;border-color:rgba(217,184,108,.40)}
+    .field__error{margin:0;color:#ffb4b4;font-weight:700;min-height:18px}
+    .modal__trust{margin:12px 0 0 0;display:flex;gap:12px;flex-wrap:wrap;color:rgba(242,245,255,.78);font-weight:800}
+    .modal__legal{margin:12px 0 0 0;color:rgba(242,245,255,.70);font-weight:600}
+    .modal__links{margin-top:12px;display:flex;gap:14px;flex-wrap:wrap}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .no-scroll{overflow:hidden}
+    @media (min-width:900px){
+      .nav{display:block}
+      .hero__grid{grid-template-columns:1.08fr .92fr}
+      .grid--4{grid-template-columns:repeat(4,1fr)}
+      .grid--3{grid-template-columns:repeat(3,1fr)}
+      .grid--list{grid-template-columns:repeat(3,1fr)}
+      .cta__inner{grid-template-columns:1fr auto;align-items:center;padding:22px}
+      .footer__inner{flex-direction:row;justify-content:space-between;align-items:center}
+      .hero h1{font-size:2.6rem}
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header" role="banner">
+    <div class="container header__inner">
+      <a class="brand" href="#" aria-label="Ir para o topo">
+        <img src="jurisnexo_tech_premium_2.png" alt="JurisNexo Logo" class="logo" />
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <ul class="nav__list">
+          <li><a class="nav__link" href="#recursos">Recursos</a></li>
+          <li><a class="nav__link" href="#como-funciona">Como funciona</a></li>
+          <li><a class="nav__link" href="#financeiro">Financeiro</a></li>
+          <li><a class="nav__link" href="#faq">FAQ</a></li>
+        </ul>
+      </nav>
+
+      <div class="header__ctas">
+        <button class="btn btn--ghost" id="btn-demo" type="button">Agendar demonstração</button>
+        <button class="btn btn--primary" id="btn-free" type="button">Conta grátis</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-label="Apresentação">
+      <div class="container hero__grid">
+        <div class="hero__content">
+          <p class="topbar">Do primeiro contato ao pagamento: operação jurídica com previsibilidade.</p>
+
+          <h1>JurisNexo: do primeiro contato ao pagamento — tudo em um único fluxo.</h1>
+
+          <p class="hero__sub">
+            CRM e campanhas para conversão, rotina com prioridade para produtividade, e contratos + cobrança para previsibilidade financeira.
+            Teste grátis por 10 dias, sem cartão, com até 2 usuários.
+          </p>
+
+          <ul class="hero__bullets">
+            <li>Conversão: campanhas (broadcast) + métricas de conversão</li>
+            <li>Produtividade: tarefas e prazos + gestão por prioridade + produtividade</li>
+            <li>Financeiro: contratos, faturamento, fluxo de caixa e cobrança + pagamentos</li>
+          </ul>
+
+          <div class="hero__cta">
+            <button class="btn btn--primary btn--lg" id="btn-hero-free" type="button">Conta grátis</button>
+            <button class="btn btn--ghost btn--lg" id="btn-hero-demo" type="button">Agendar demonstração</button>
+          </div>
+
+          <p class="hero__micro">Trial de 10 dias • sem cartão • até 2 usuários • ativação imediata.</p>
+        </div>
+
+        <div class="hero__visual" aria-label="Prévia do produto">
+          <div class="mock">
+            <div class="mock__top">
+              <span class="dot dot--r"></span><span class="dot dot--y"></span><span class="dot dot--g"></span>
+              <span class="mock__title">Dashboard</span>
+            </div>
+            <div class="mock__body">
+              <div class="mock__card">
+                <p class="mock__kicker">Conversão</p>
+                <p class="mock__text">Campanhas + métricas</p>
+              </div>
+              <div class="mock__card">
+                <p class="mock__kicker">Tarefas & Prazos</p>
+                <p class="mock__text">Prioridade + produtividade</p>
+              </div>
+              <div class="mock__card">
+                <p class="mock__kicker">Financeiro</p>
+                <p class="mock__text">Caixa + cobrança</p>
+              </div>
+            </div>
+            <p class="mock__legend">Dashboard de conversão, tarefas e financeiro</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" aria-label="Problema e solução">
+      <div class="container">
+        <h2>Quando cada etapa está em um lugar, o jurídico vira retrabalho — e o caixa perde previsibilidade.</h2>
+
+        <div class="grid grid--4">
+          <article class="card"><p>Leads sem acompanhamento → campanhas + métricas para agir no timing</p></article>
+          <article class="card"><p>Rotina sem prioridade → central de tarefas e prazos + prioridade + encaminhamento</p></article>
+          <article class="card"><p>Gestão sem visibilidade → visão de produtividade e gestão de equipe</p></article>
+          <article class="card"><p>Cobrança no improviso → contratos + faturamento + fluxo de caixa e cobrança + pagamentos</p></article>
+        </div>
+
+        <p class="section__closing">Menos improviso. Mais controle. Mais resultado.</p>
+      </div>
+    </section>
+
+    <section class="section" id="recursos" aria-label="Pilares">
+      <div class="container">
+        <h2>Um sistema, três resultados: conversão, produtividade e previsibilidade financeira.</h2>
+
+        <div class="grid grid--3">
+          <article class="card card--pilar">
+            <h3 class="card__title">Conversão</h3>
+            <ul class="list">
+              <li>Disparos e campanhas (broadcast)</li>
+              <li>Métricas de conversão</li>
+            </ul>
+          </article>
+
+          <article class="card card--pilar">
+            <h3 class="card__title">Produtividade</h3>
+            <ul class="list">
+              <li>Central de tarefas e prazos</li>
+              <li>Gestão por prioridade</li>
+              <li>Modal de encaminhamento</li>
+              <li>Visão de produtividade + gestão de equipe</li>
+            </ul>
+          </article>
+
+          <article class="card card--pilar" id="financeiro">
+            <h3 class="card__title">Previsibilidade Financeira</h3>
+            <ul class="list">
+              <li>Gestão de contratos</li>
+              <li>Gestão de faturamento (visão tenant)</li>
+              <li>Monitoramento de pagamentos (visão superadmin) quando aplicável</li>
+              <li>Fluxo de caixa e cobrança</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" aria-label="Lista de recursos">
+      <div class="container">
+        <h2>Recursos que viram rotina (e rotina que vira previsibilidade).</h2>
+
+        <div class="grid grid--list">
+          <div class="pill">Gestão de Equipe</div>
+          <div class="pill">Central de Tarefas e Prazos</div>
+          <div class="pill">Gestão por Prioridade</div>
+          <div class="pill">Visão de Produtividade</div>
+          <div class="pill">Modal de Encaminhamento</div>
+          <div class="pill">Disparos e Campanhas (Broadcast)</div>
+          <div class="pill">Métricas de Conversão</div>
+          <div class="pill">Gestão de Contratos</div>
+          <div class="pill">Faturamento / Pagamentos</div>
+          <div class="pill">Fluxo de Caixa e Cobrança</div>
+          <div class="pill">Upload de Logo (URL assinada no fluxo)</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="como-funciona" aria-label="Como funciona">
+      <div class="container">
+        <h2>Você cria a conta grátis e valida o fluxo completo em 10 dias.</h2>
+
+        <div class="steps">
+          <div class="step"><div class="step__num">1</div><p>Crie sua conta (e-mail + senha, sem cartão)</p></div>
+          <div class="step"><div class="step__num">2</div><p>Ative até 2 usuários</p></div>
+          <div class="step"><div class="step__num">3</div><p>Valide ponta a ponta: conversão → produtividade → financeiro/cobrança</p></div>
+        </div>
+
+        <div class="section__cta">
+          <button class="btn btn--primary btn--lg" id="btn-how-free" type="button">Conta grátis</button>
+          <button class="btn btn--ghost btn--lg" id="btn-how-demo" type="button">Agendar demonstração</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="faq" aria-label="FAQ">
+      <div class="container">
+        <h2>Dúvidas frequentes</h2>
+
+        <div class="accordion" role="region" aria-label="Perguntas frequentes">
+          <div class="accordion__item">
+            <button class="accordion__btn" aria-expanded="false" type="button">
+              Preciso de cartão para testar?
+              <span class="accordion__icon" aria-hidden="true">+</span>
+            </button>
+            <div class="accordion__panel" role="region">
+              <p>Não. Trial sem cartão.</p>
+            </div>
+          </div>
+
+          <div class="accordion__item">
+            <button class="accordion__btn" aria-expanded="false" type="button">
+              Quantos usuários posso usar no trial?
+              <span class="accordion__icon" aria-hidden="true">+</span>
+            </button>
+            <div class="accordion__panel" role="region">
+              <p>Até 2 usuários durante os 10 dias.</p>
+            </div>
+          </div>
+
+          <div class="accordion__item">
+            <button class="accordion__btn" aria-expanded="false" type="button">
+              Preciso de demonstração para começar?
+              <span class="accordion__icon" aria-hidden="true">+</span>
+            </button>
+            <div class="accordion__panel" role="region">
+              <p>Não. A demo é opcional para acelerar a implantação e tirar dúvidas.</p>
+            </div>
+          </div>
+
+          <div class="accordion__item">
+            <button class="accordion__btn" aria-expanded="false" type="button">
+              O que acontece ao final do trial?
+              <span class="accordion__icon" aria-hidden="true">+</span>
+            </button>
+            <div class="accordion__panel" role="region">
+              <p>Você decide se continua. Se fizer sentido, você migra para um plano adequado ao seu volume.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="container cta__inner">
+        <div>
+          <h2>Se você quer previsibilidade, precisa de fluxo — não de improviso.</h2>
+          <p class="cta__micro">10 dias grátis. Até 2 usuários. Sem cartão.</p>
+        </div>
+
+        <div class="cta__actions">
+          <button class="btn btn--primary btn--lg" id="btn-final-free" type="button">Conta grátis</button>
+          <button class="btn btn--ghost btn--lg" id="btn-final-demo" type="button">Agendar demonstração</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer__inner">
+      <div class="footer__links">
+        <a href="#" aria-label="Política de Privacidade">Política de Privacidade</a>
+        <a href="#" aria-label="Termos">Termos</a>
+        <a href="#" aria-label="Contato">Contato</a>
+      </div>
+      <p class="footer__text">JurisNexo — do primeiro contato ao pagamento, em um único fluxo.</p>
+    </div>
+  </footer>
+
+  <div class="modal" id="modal-signup" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-title">
+    <div class="modal__overlay" id="modal-overlay"></div>
+
+    <div class="modal__content" role="document">
+      <button class="modal__close" id="modal-close" type="button" aria-label="Fechar modal">×</button>
+
+      <h2 id="modal-title">Crie sua conta grátis</h2>
+      <p class="modal__sub">Trial de 10 dias • sem cartão • até 2 usuários</p>
+
+      <form id="signup-form" novalidate>
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input id="email" name="email" type="email" autocomplete="email" required />
+          <p class="field__error" id="email-error" aria-live="polite"></p>
+        </div>
+
+        <div class="field">
+          <label for="password">Senha</label>
+          <input id="password" name="password" type="password" autocomplete="new-password" required />
+          <p class="field__error" id="password-error" aria-live="polite"></p>
+        </div>
+
+        <div class="field">
+          <label for="confirm-password">Confirmar senha</label>
+          <input id="confirm-password" name="confirm-password" type="password" autocomplete="new-password" required />
+          <p class="field__error" id="confirm-error" aria-live="polite"></p>
+        </div>
+
+        <button class="btn btn--primary btn--lg btn--full" id="btn-submit" type="submit">Criar conta e começar</button>
+
+        <div class="modal__trust">
+          <p>Ativação imediata.</p>
+          <p>Sem cartão.</p>
+        </div>
+
+        <p class="modal__legal">
+          Ao criar sua conta, você concorda com os <a href="#">Termos</a> e a <a href="#">Política de Privacidade</a>.
+        </p>
+
+        <div class="modal__links">
+          <a href="/login" id="link-login">Já tenho conta (entrar)</a>
+          <a href="#" id="link-demo">Prefiro uma demonstração</a>
+        </div>
+
+        <p class="sr-only" id="form-status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

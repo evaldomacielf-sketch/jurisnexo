@@ -79,10 +79,30 @@ export class TenantsController {
         return this.tenantsService.revokeInvite(tenantId, req.user.sub, id);
     }
 
+    @Get('invites/:token')
+    async getInvite(@Param('token') token: string) {
+        return this.tenantsService.getInviteByToken(token);
+    }
+
     @UseGuards(AuthGuard)
     @Post('invites/accept')
     async acceptInvite(@Body('token') token: string, @Request() req: any) {
         if (!req.user?.sub) throw new BadRequestException('User not authenticated');
         return this.tenantsService.acceptInvite(req.user.sub, token);
+    }
+
+    @UseGuards(AuthGuard)
+    @Get('me/plan')
+    async getPlan(@Request() req: any) {
+        const tenantId = req.user?.tenant_id;
+        if (!tenantId) throw new BadRequestException('No active tenant context');
+        return this.tenantsService.getPlanStatus(tenantId);
+    }
+
+    // System/Cron endpoint. In production, protect with specific Cron secret guard.
+    // @UseGuards(CronGuard)
+    @Post('cron/expire-trials')
+    async expireTrials() {
+        return this.tenantsService.checkTrialExpiration();
     }
 }

@@ -27,6 +27,14 @@ export class AuthController {
         return this.authService.exchangeCode(email, code, res);
     }
 
+    @Post('register-invite')
+    @HttpCode(200)
+    async registerInvite(@Body() body: { token: string; fullName: string; password: string }, @Res({ passthrough: true }) res: Response) {
+        // Simple manual validation
+        if (!body.token || !body.fullName || !body.password) throw new Error('Missing fields'); // Should rely on Filter/Exception
+        return this.authService.registerWithInvite(body.token, body.fullName, body.password, res);
+    }
+
     @Post('logout')
     @HttpCode(200)
     async logout(@Res({ passthrough: true }) res: Response) {

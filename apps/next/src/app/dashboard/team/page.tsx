@@ -155,8 +155,8 @@ export default function TeamPage() {
                                 <td className="px-6 py-4 text-sm text-[#616f89] dark:text-gray-400">{m.user?.email}</td>
                                 <td className="px-6 py-4">
                                     <span className={`px-3 py-1 text-xs font-bold rounded-full uppercase ${m.role === 'admin' ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400' :
-                                            m.role === 'owner' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400' :
-                                                'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'
+                                        m.role === 'owner' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400' :
+                                            'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'
                                         }`}>
                                         {m.role}
                                     </span>
@@ -295,6 +295,7 @@ export default function TeamPage() {
                                 <div className="flex flex-col gap-2">
                                     <label className="text-sm font-medium text-[#111318] dark:text-gray-300">Nível de acesso</label>
                                     <select
+                                        aria-label="Selecionar nível de acesso"
                                         value={inviteRole}
                                         onChange={e => setInviteRole(e.target.value)}
                                         className="w-full h-11 px-4 rounded-lg border border-[#dbdfe6] dark:border-gray-600 bg-white dark:bg-[#101622] text-[#111318] dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all"
