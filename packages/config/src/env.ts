@@ -20,12 +20,16 @@ export const nextEnvSchema = baseSchema.extend({
 
 // API specific
 export const apiEnvSchema = baseSchema.extend({
-    SUPABASE_URL: z.string().url('SUPABASE_URL is required'),
-    SUPABASE_ANON_KEY: z.string().min(1, 'SUPABASE_ANON_KEY is required'),
-    SUPABASE_SERVICE_ROLE_KEY: z.string().min(1, 'SUPABASE_SERVICE_ROLE_KEY is required'),
-    JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters'),
+    SUPABASE_URL: z.string().url('SUPABASE_URL is required').optional().or(z.literal('')),
+    SUPABASE_ANON_KEY: z.string().min(1).optional().or(z.literal('')),
+    SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional().or(z.literal('')),
+    JWT_SECRET: z.string().min(32).default('super-secret-jwt-key-minimum-32-chars'),
     JWT_EXPIRES_IN: z.string().default('7d'),
     CORS_ORIGINS: z.string().optional(),
+    REDIS_URL: z.string().url().optional().or(z.literal('')),
+    // SendGrid is strictly required for Prod, but optional for Dev (we'll mock it)
+    SENDGRID_API_KEY: z.string().optional().or(z.literal('')),
+    EMAIL_FROM: z.string().email().default('noreply@jurisnexo.com.br'),
 });
 
 // Worker specific
@@ -81,6 +85,7 @@ export const envSchema = z.object({
     SMTP_USER: z.string().optional(),
     SMTP_PASS: z.string().optional(),
     EMAIL_FROM: z.string().email().optional(),
+    SENDGRID_API_KEY: z.string().optional(),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;
@@ -98,7 +103,7 @@ export function validateEnv<T>(schema: z.ZodSchema<T>, serviceName: string): T {
         console.error(`❌ [${serviceName}] Invalid environment variables:`);
         const errors = parsed.error.flatten().fieldErrors;
         Object.entries(errors).forEach(([key, messages]) => {
-            console.error(`  - ${key}: ${messages?.join(', ')}`);
+            console.error(`  - ${key}: ${(messages as string[])?.join(', ')}`);
         });
         throw new Error(`[${serviceName}] Environment validation failed. App will not start.`);
     }

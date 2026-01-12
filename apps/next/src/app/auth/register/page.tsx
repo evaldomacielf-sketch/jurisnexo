@@ -5,16 +5,17 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
 
-export default function LoginPage() {
+export default function RegisterPage() {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
         try {
+            // Reusing the same request-code endpoint as it handles creation implicitly
             const res = await fetch('http://localhost:4000/api/auth/request-code', {
                 method: 'POST',
                 headers: {
@@ -27,7 +28,7 @@ export default function LoginPage() {
                 // Encode email to pass to verify page
                 router.push(`/auth/verify?email=${encodeURIComponent(email)}`);
             } else {
-                alert('Erro ao solicitar código. Verifique o email.');
+                alert('Erro ao solicitar criação de conta. Tente novamente.');
             }
         } catch (err) {
             console.error(err);
@@ -39,18 +40,18 @@ export default function LoginPage() {
 
     return (
         <div className="w-full">
-            <h1 className="text-3xl font-bold text-white mb-2">Acesse sua conta</h1>
-            <p className="text-gray-400 mb-8">Bem-vindo de volta ao futuro da gestão jurídica.</p>
+            <h1 className="text-3xl font-bold text-white mb-2">Crie sua conta</h1>
+            <p className="text-gray-400 mb-8">Comece agora a transformar seu escritório.</p>
 
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form onSubmit={handleRegister} className="space-y-6">
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-300" htmlFor="email">
-                        E-mail
+                        E-mail Profissional
                     </label>
                     <input
                         id="email"
                         type="email"
-                        placeholder="seu@email.com"
+                        placeholder="seu@advogado.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="w-full bg-[#1e293b] border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
@@ -58,10 +59,11 @@ export default function LoginPage() {
                     />
                 </div>
 
-                {/* 
-            Note: Password field omitted as we are using Code-based Auth (OTP).
-            To match visual fidelity of 'Password' input, we could add it, but it wouldn't function right now.
-        */}
+                <div className="text-xs text-gray-500">
+                    Ao criar uma conta, você concorda com nossos{' '}
+                    <a href="#" className="underline hover:text-gray-400">Termos de Uso</a> e{' '}
+                    <a href="#" className="underline hover:text-gray-400">Política de Privacidade</a>.
+                </div>
 
                 <button
                     type="submit"
@@ -71,10 +73,10 @@ export default function LoginPage() {
                     {loading ? (
                         <>
                             <Loader2 className="w-5 h-5 animate-spin" />
-                            Enviando Código...
+                            Criando conta...
                         </>
                     ) : (
-                        'Entrar'
+                        'Criar conta grátis'
                     )}
                 </button>
             </form>
@@ -87,9 +89,9 @@ export default function LoginPage() {
 
             <div className="mt-6 text-center">
                 <p className="text-gray-400 text-sm">
-                    Ainda não tem uma conta?{' '}
-                    <Link href="/auth/register" className="text-blue-500 hover:text-blue-400 hover:underline">
-                        Criar conta gratuita
+                    Já tem uma conta?{' '}
+                    <Link href="/auth/login" className="text-blue-500 hover:text-blue-400 hover:underline">
+                        Fazer login
                     </Link>
                 </p>
             </div>

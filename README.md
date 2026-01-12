@@ -32,7 +32,7 @@ pnpm test
 
 ## 📦 Estrutura do Monorepo
 
-```
+```text
 jurisnexo/
 ├── apps/
 │   ├── next/          # Frontend (Next.js) - site/app/auth hosts
@@ -81,7 +81,7 @@ pnpm dev:worker   # Porta 4001
 ## 📚 Packages
 
 | Package | Descrição |
-|---------|-----------|
+| :--- | :--- |
 | `@jurisnexo/config` | Validação de env com Zod |
 | `@jurisnexo/shared` | DTOs, validators brasileiros (CPF, CNPJ, OAB) |
 | `@jurisnexo/db` | Cliente Supabase tipado + migrations |

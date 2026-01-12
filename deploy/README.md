@@ -127,7 +127,7 @@ gcloud run logs read jurisnexo-api-staging --region=southamerica-east1 --limit=5
 ### Obrigatórias por Serviço
 
 | Serviço | Variáveis |
-|---------|-----------|
+| :--- | :--- |
 | Next.js | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` |
 | API | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `JWT_SECRET` |
 | Worker | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` |
@@ -136,7 +136,7 @@ gcloud run logs read jurisnexo-api-staging --region=southamerica-east1 --limit=5
 
 Se uma variável obrigatória estiver faltando, o app **não inicia** e exibe erro no log:
 
-```
+```text
 ❌ [api] Invalid environment variables:
   - JWT_SECRET: JWT_SECRET must be at least 32 characters
 [api] Environment validation failed. App will not start.

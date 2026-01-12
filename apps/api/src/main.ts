@@ -3,8 +3,16 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
+import cookieParser from 'cookie-parser';
+
+import { validateEnv, apiEnvSchema } from '@jurisnexo/config';
+
 async function bootstrap() {
+    // Validate Env first
+    validateEnv(apiEnvSchema, 'API');
+
     const app = await NestFactory.create(AppModule);
+    app.use(cookieParser());
 
     // CORS
     app.enableCors({
