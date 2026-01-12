@@ -21,6 +21,7 @@ function VerifyForm() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, code }),
+                credentials: 'include',
             });
 
             if (res.ok) {
@@ -40,41 +41,43 @@ function VerifyForm() {
 
     return (
         <div className="w-full">
-            <Link href="/auth/login" className="inline-flex items-center text-gray-400 hover:text-white mb-6 text-sm transition-colors">
+            <Link href="/auth/login" className="inline-flex items-center text-[#9da6b9] hover:text-white mb-6 text-sm transition-colors font-display">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Voltar para login
             </Link>
 
-            <h1 className="text-3xl font-bold text-white mb-2">Verificar Código</h1>
-            <p className="text-gray-400 mb-8">
-                Enviamos um código de 6 dígitos para <span className="text-white font-medium">{email}</span>.
-            </p>
+            <div className="mb-8">
+                <h1 className="text-white tracking-tight text-[32px] font-bold leading-tight mb-2 font-display">Verificar Código</h1>
+                <p className="text-[#9da6b9] text-base font-normal leading-normal font-display">
+                    Enviamos um código de 6 dígitos para <span className="text-white font-medium">{email}</span>.
+                </p>
+            </div>
 
-            <form onSubmit={handleVerify} className="space-y-6">
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-300" htmlFor="code">
-                        Código de Verificação
+            <form onSubmit={handleVerify} className="flex flex-col gap-6">
+                <div className="flex flex-col w-full">
+                    <label className="flex flex-col w-full">
+                        <p className="text-white text-sm font-medium leading-normal pb-2 font-display">Código de Verificação</p>
+                        <input
+                            id="code"
+                            type="text"
+                            placeholder="000000"
+                            value={code}
+                            onChange={(e) => setCode(e.target.value)}
+                            maxLength={6}
+                            className="form-input flex w-full rounded-lg text-white text-center text-2xl tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-[#1152d4]/50 border border-[#3b4354] bg-[#1c2230] focus:border-[#1152d4] h-14 placeholder:text-[#9da6b9]/20 px-4 font-normal transition-all font-mono"
+                            required
+                        />
                     </label>
-                    <input
-                        id="code"
-                        type="text"
-                        placeholder="000000"
-                        value={code}
-                        onChange={(e) => setCode(e.target.value)}
-                        maxLength={6}
-                        className="w-full bg-[#1e293b] border border-gray-700 rounded-lg px-4 py-3 text-white text-center text-2xl tracking-[0.5em] placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all font-mono"
-                        required
-                    />
                 </div>
 
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+                    className="flex w-full cursor-pointer items-center justify-center rounded-lg h-14 bg-[#1152d4] text-white text-base font-bold transition-all hover:bg-[#0e44b1] active:scale-[0.98] font-display"
                 >
                     {loading ? (
                         <>
-                            <Loader2 className="w-5 h-5 animate-spin" />
+                            <Loader2 className="w-5 h-5 animate-spin mr-2" />
                             Verificando...
                         </>
                     ) : (
@@ -85,7 +88,7 @@ function VerifyForm() {
 
             <div className="mt-6 text-center">
                 <button
-                    className="text-sm text-blue-500 hover:text-blue-400 hover:underline"
+                    className="text-sm text-[#1152d4] font-bold hover:underline font-display"
                     onClick={() => alert('Reenviar código não implementado na demo')}
                 >
                     Não recebeu o código? Reenviar

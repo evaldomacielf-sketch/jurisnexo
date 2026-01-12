@@ -1,5 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import * as dotenv from 'dotenv';
+dotenv.config({ path: '../../.env' });
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
@@ -9,6 +11,9 @@ import { validateEnv, apiEnvSchema } from '@jurisnexo/config';
 
 async function bootstrap() {
     // Validate Env first
+    console.log('🔍 Checking Env Variables...');
+    console.log('SUPABASE_URL:', process.env.SUPABASE_URL ? 'Set' : 'Unset');
+    console.log('SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'Set' : 'Unset');
     validateEnv(apiEnvSchema, 'API');
 
     const app = await NestFactory.create(AppModule);

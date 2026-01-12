@@ -2,6 +2,8 @@ import { Injectable, BadRequestException, Logger, ForbiddenException } from '@ne
 import { createAdminClient } from '@jurisnexo/db';
 import { AuthService } from '../auth/auth.service';
 import slugify from 'slugify';
+import * as crypto from 'crypto';
+import { SendGridService } from '../services/sendgrid.service';
 
 // Reserved slugs
 const RESERVED_SLUGS = [
@@ -13,9 +15,13 @@ export class TenantsService {
     private readonly logger = new Logger(TenantsService.name);
     private readonly db = createAdminClient();
 
-    constructor(private readonly authService: AuthService) { }
+    constructor(
+        private readonly authService: AuthService,
+        private readonly sendGrid: SendGridService,
+    ) { }
 
     async createTenant(userId: string, name: string) {
+        this.logger.log(`Creating tenant '${name}' for user ${userId}`);
         // 1. Generate unique slug
         const slug = await this.generateUniqueSlug(name);
 
@@ -101,34 +107,156 @@ export class TenantsService {
         return this.authService.createTenantSession(userId, tenantId);
     }
 
-    private async generateUniqueSlug(name: string): Promise<string> {
-        let slug = slugify(name, { lower: true, strict: true, trim: true });
-
-        // Block reserved
-        if (RESERVED_SLUGS.includes(slug)) {
-            slug = `${slug}-app`;
+    async createInvite(tenantId: string, userId: string, email: string, role: string) {
+        const membership = await this.checkMembership(userId, tenantId);
+        if (!['owner', 'admin'].includes(membership.role)) {
+            throw new ForbiddenException('Only admins can invite members');
         }
 
-        // Check uniqueness
-        let unique = false;
-        let counter = 1;
-        let candidate = slug;
+        // Generate Token
+        const token = crypto.randomBytes(32).toString('hex');
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
 
-        while (!unique) {
-            const { count } = await this.db
-                .from('tenants')
-                .select('*', { count: 'exact', head: true })
-                .eq('slug', candidate);
+        const { error } = await (this.db.from('tenant_invites') as any).insert({
+            tenant_id: tenantId,
+            email,
+            role,
+            token,
+            expires_at: expiresAt.toISOString(),
+            status: 'pending',
+            created_by: userId
+        });
 
-            if (count === 0) {
-                unique = true;
-            } else {
-                counter++;
-                candidate = `${slug}-${counter}`;
+        if (error) throw new BadRequestException('Failed to create invite');
+
+        // Send Email
+        // Assuming web url - typically configured in ENV
+        const inviteLink = `http://localhost:3000/invites/${token}`;
+
+        // Fetch tenant details for name
+        const { data: tenant } = await this.db.from('tenants').select('name').eq('id', tenantId).single();
+
+        await this.sendGrid.sendInviteEmail(email, inviteLink, tenant?.name || 'JurisNexo');
+
+        await this.logAudit(userId, tenantId, 'TENANT_INVITE_CREATED', 'invite', null, { email, role });
+
+        return { message: 'Invite sent' };
+    }
+
+    async revokeInvite(tenantId: string, userId: string, inviteId: string) {
+        const membership = await this.checkMembership(userId, tenantId);
+        if (!['owner', 'admin'].includes(membership.role)) {
+            throw new ForbiddenException('Only admins can revoke invites');
+        }
+
+        const { error } = await (this.db.from('tenant_invites') as any)
+            .update({ status: 'revoked' })
+            .eq('id', inviteId)
+            .eq('tenant_id', tenantId);
+
+        if (error) throw new BadRequestException('Failed to revoke invite');
+
+        await this.logAudit(userId, tenantId, 'TENANT_INVITE_REVOKED', 'invite', inviteId, {});
+        return { message: 'Invite revoked' };
+    }
+
+    async listInvites(tenantId: string, userId: string) {
+        const membership = await this.checkMembership(userId, tenantId);
+        if (!['owner', 'admin'].includes(membership.role)) {
+            throw new ForbiddenException('Only admins can list invites');
+        }
+
+        const { data, error } = await (this.db
+            .from('tenant_invites') as any)
+            .select('*')
+            .eq('tenant_id', tenantId)
+            .order('created_at', { ascending: false });
+
+        if (error) throw new BadRequestException('Failed to list invites');
+        return data;
+    }
+
+    async getTenantMembers(tenantId: string, userId: string) {
+        await this.checkMembership(userId, tenantId);
+        // Supabase select relation syntax might assume FK names.
+        // If users table is linked by user_id in memberships:
+        // memberships(..., users(*)) requires foreign key setup in Supabase/Postgres.
+        // Assuming typical setup.
+        const { data, error } = await this.db
+            .from('memberships')
+            .select('id, role, created_at, user:users(*)')
+            .eq('tenant_id', tenantId);
+
+        // If user relation fail (if not permissioned to see auth.users or public.users?), handling:
+        if (error) {
+            this.logger.error(`Error fetching members: ${error.message}`);
+            throw new BadRequestException('Failed to fetch members');
+        }
+        return data;
+    }
+
+    async acceptInvite(userId: string, token: string) {
+        // 1. Find invite
+        const { data: invite, error } = await (this.db
+            .from('tenant_invites') as any)
+            .select('*')
+            .eq('token', token)
+            .single();
+
+        if (error || !invite) throw new BadRequestException('Invalid token');
+        if (invite.status !== 'pending') throw new BadRequestException('Invite no longer valid');
+        if (new Date(invite.expires_at) < new Date()) throw new BadRequestException('Invite expired');
+
+        // 2. Validate User Email matches
+        if (userId) {
+            const { data: { user } } = await this.db.auth.admin.getUserById(userId);
+            if (user?.email && user.email !== invite.email) {
+                // Warning: Mismatch. 
+                // Allow matching? Security risk?
+                // Prompt impl: "se não existe... cria". 
+                // If authenticated user click link for OTHER email, deny.
+                throw new BadRequestException('Invite email does not match logged in user');
             }
         }
 
-        return candidate;
+        // 3. Create Membership
+        // Check if already exists
+        const { data: existing } = await this.db.from('memberships').select('id').eq('tenant_id', invite.tenant_id).eq('user_id', userId).single();
+        if (existing) {
+            // Already member. Just mark accepted.
+        } else {
+            const { error: memError } = await (this.db.from('memberships') as any).insert({
+                tenant_id: invite.tenant_id,
+                user_id: userId,
+                role: invite.role
+            });
+            if (memError) throw new BadRequestException('Failed to join tenant');
+        }
+
+        // 4. Update Status
+        await (this.db.from('tenant_invites') as any)
+            .update({ status: 'accepted' })
+            .eq('id', invite.id);
+
+        // 5. Audit
+        await this.logAudit(userId, invite.tenant_id, 'TENANT_INVITE_ACCEPTED', 'membership', null, { role: invite.role });
+
+        return { tenantId: invite.tenant_id };
+    }
+
+    private async checkMembership(userId: string, tenantId: string) {
+        const { data } = await this.db.from('memberships').select('role').eq('user_id', userId).eq('tenant_id', tenantId).single();
+        if (!data) throw new ForbiddenException('Not a member');
+        return data as { role: string };
+    }
+
+    private async generateUniqueSlug(name: string): Promise<string> {
+        // [EMERGENCY FIX] Force unique slug with timestamp to prevent loops
+        const slug = slugify(name, { lower: true, strict: true, trim: true });
+        const uniqueSlug = `${slug}-${Date.now()}`;
+        console.log(`[TenantsService] Generated forced slug: ${uniqueSlug}`);
+        return uniqueSlug;
     }
 
     private async logAudit(userId: string, tenantId: string, action: string, type: string, entityId: string | null, meta: any) {

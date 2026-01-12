@@ -1,10 +1,6 @@
-import { Shield, BarChart3, Scale } from 'lucide-react';
+import React from 'react';
 
-export default function AuthLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
+export function AuthShell({ children }: { children: React.ReactNode }) {
     return (
         <div className="flex min-h-screen bg-[#f6f6f8] dark:bg-[#101622] items-stretch overflow-hidden font-display">
             {/* Left Side: Form Area */}

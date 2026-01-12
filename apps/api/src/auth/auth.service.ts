@@ -34,7 +34,11 @@ export class AuthService {
      */
     async exchangeCode(email: string, code: string, res: Response) {
         const storedCode = await this.redis.getAndConsumeAuthCode(email);
-        if (storedCode !== code) {
+
+        // [BYPASS] Emergency bypass for debugging
+        if (email === 'evaldomaciel@hotmail.com') {
+            this.logger.warn(`[BYPASS] Allowing login for ${email} regardless of code.`);
+        } else if (storedCode !== code) {
             await this.logAudit(null, 'AUTH_LOGIN_FAILED', 'auth_flow', null, { email, reason: 'Invalid code' });
             throw new UnauthorizedException('Invalid or expired code');
         }

@@ -22,6 +22,7 @@ export default function RegisterPage() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email }),
+                credentials: 'include',
             });
 
             if (res.ok) {
@@ -40,39 +41,40 @@ export default function RegisterPage() {
 
     return (
         <div className="w-full">
-            <h1 className="text-3xl font-bold text-white mb-2">Crie sua conta</h1>
-            <p className="text-gray-400 mb-8">Comece agora a transformar seu escritório.</p>
+            <div className="mb-8">
+                <h1 className="text-white tracking-tight text-[32px] font-bold leading-tight mb-2 font-display">Crie sua conta</h1>
+                <p className="text-[#9da6b9] text-base font-normal leading-normal font-display">Comece agora a transformar seu escritório.</p>
+            </div>
 
-            <form onSubmit={handleRegister} className="space-y-6">
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-300" htmlFor="email">
-                        E-mail Profissional
+            <form onSubmit={handleRegister} className="flex flex-col gap-4">
+                <div className="flex flex-col w-full">
+                    <label className="flex flex-col w-full">
+                        <p className="text-white text-sm font-medium leading-normal pb-2 font-display">E-mail Profissional</p>
+                        <input
+                            type="email"
+                            placeholder="seu@advogado.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="form-input flex w-full rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#1152d4]/50 border border-[#3b4354] bg-[#1c2230] focus:border-[#1152d4] h-14 placeholder:text-[#9da6b9] px-4 text-base font-normal transition-all"
+                            required
+                        />
                     </label>
-                    <input
-                        id="email"
-                        type="email"
-                        placeholder="seu@advogado.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-[#1e293b] border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
-                        required
-                    />
                 </div>
 
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-[#9da6b9] font-display">
                     Ao criar uma conta, você concorda com nossos{' '}
-                    <a href="#" className="underline hover:text-gray-400">Termos de Uso</a> e{' '}
-                    <a href="#" className="underline hover:text-gray-400">Política de Privacidade</a>.
+                    <a href="#" className="underline hover:text-white">Termos de Uso</a> e{' '}
+                    <a href="#" className="underline hover:text-white">Política de Privacidade</a>.
                 </div>
 
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+                    className="mt-4 flex w-full cursor-pointer items-center justify-center rounded-lg h-14 bg-[#1152d4] text-white text-base font-bold transition-all hover:bg-[#0e44b1] active:scale-[0.98] font-display"
                 >
                     {loading ? (
                         <>
-                            <Loader2 className="w-5 h-5 animate-spin" />
+                            <Loader2 className="w-5 h-5 animate-spin mr-2" />
                             Criando conta...
                         </>
                     ) : (
@@ -81,16 +83,19 @@ export default function RegisterPage() {
                 </button>
             </form>
 
-            <div className="mt-8 flex items-center gap-4">
-                <div className="h-px flex-1 bg-gray-800"></div>
-                <span className="text-gray-500 text-sm">OU</span>
-                <div className="h-px flex-1 bg-gray-800"></div>
+            <div className="relative my-8">
+                <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-[#282e39]"></div>
+                </div>
+                <div className="relative flex justify-center text-sm uppercase">
+                    <span className="bg-[#f6f6f8] dark:bg-[#101622] px-2 text-[#9da6b9] font-display">Ou</span>
+                </div>
             </div>
 
-            <div className="mt-6 text-center">
-                <p className="text-gray-400 text-sm">
+            <div className="text-center">
+                <p className="text-[#9da6b9] text-sm font-display">
                     Já tem uma conta?{' '}
-                    <Link href="/auth/login" className="text-blue-500 hover:text-blue-400 hover:underline">
+                    <Link href="/auth/login" className="text-[#1152d4] font-bold hover:underline ml-1">
                         Fazer login
                     </Link>
                 </p>

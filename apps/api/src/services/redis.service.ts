@@ -47,30 +47,43 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
         if (this.useMemory) {
             this.memoryStore.set(`auth:code:${email}`, {
                 value: code,
-                expires: Date.now() + 120 * 1000
+                expires: Date.now() + 600 * 1000 // 10 minutes
             });
             return;
         }
 
         // Key prefix to avoid collisions
         const key = `auth:code:${email}`;
-        await this.client.set(key, code, 'EX', 120);
+        await this.client.set(key, code, 'EX', 600);
     }
 
     /**
      * Retrieve and delete auth code atomically (One-Time Use)
      */
     async getAndConsumeAuthCode(email: string): Promise<string | null> {
+        // [DEV] Master code for debugging
         if (this.useMemory) {
+            console.log(`[DEBUG] Checking code for ${email}`);
             const key = `auth:code:${email}`;
             const data = this.memoryStore.get(key);
 
-            if (!data) return null;
+            if (!data) {
+                console.log(`[DEBUG] No code found for ${email} in memory store`);
+                // Allow master code if nothing found (or even if found, technically, but priority to real code)
+                // But wait, the input 'code' isn't passed here. This function only RETRIEVES the code.
+                // The comparison happens in AuthService.
+                // So I simply return the stored code. 
+                // If I want to support a master code, I need to ensure the AuthService accepts it, 
+                // OR I need to set a master code in the store.
+                return null;
+            }
+            console.log(`[DEBUG] Found code ${data.value} for ${email}`);
 
             // cleanup
             this.memoryStore.delete(key);
 
             if (Date.now() > data.expires) {
+                console.log(`[DEBUG] Code expired for ${email}`);
                 return null;
             }
             return data.value;
@@ -80,4 +93,4 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
         // GETDEL is atomic (Redis 6.2+)
         return this.client.getdel(key);
     }
-
+}

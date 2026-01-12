@@ -47,4 +47,37 @@ export class SendGridService {
             throw new Error('Failed to send verification email');
         }
     }
+    async sendInviteEmail(to: string, inviteLink: string, tenantName: string): Promise<void> {
+        if (!env.SENDGRID_API_KEY) {
+            console.warn(`[DEV] Mock sending invite email to ${to} for ${tenantName}. Link: ${inviteLink}`);
+            return;
+        }
+
+        const msg = {
+            to,
+            from: env.EMAIL_FROM || 'noreply@jurisnexo.com.br',
+            subject: `Convite para participar do escritório ${tenantName} - JurisNexo`,
+            text: `Você foi convidado para participar do escritório ${tenantName} no JurisNexo. Acesse: ${inviteLink}`,
+            html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2>Convite de Acesso</h2>
+          <p>Você foi convidado para participar do escritório <strong>${tenantName}</strong> no JurisNexo.</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${inviteLink}" style="background-color: #1152d4; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Aceitar Convite</a>
+          </div>
+          <p style="color: #666;">Ou copie e cole este link no seu navegador:</p>
+          <p style="background: #f4f4f4; padding: 10px; word-break: break-all; font-size: 12px;">${inviteLink}</p>
+          <p style="font-size: 12px; color: #999; margin-top: 30px;">Este convite expira em 7 dias.</p>
+        </div>
+      `,
+        };
+
+        try {
+            await sgMail.send(msg);
+            console.log(`📧 Invite email sent to ${to}`);
+        } catch (error) {
+            console.error('❌ Error sending invite email:', error);
+            throw new Error('Failed to send invite email');
+        }
+    }
 }

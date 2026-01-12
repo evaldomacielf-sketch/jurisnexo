@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { AuthShell } from '@/components/layout/AuthShell';
 
 interface Tenant {
     id: string;
@@ -15,10 +16,17 @@ export default function TenantSelectPage() {
     const router = useRouter();
 
     useEffect(() => {
-        fetch('http://localhost:4000/api/tenants/me')
+        fetch('http://localhost:4000/api/tenants/me', { credentials: 'include' })
             .then(res => res.json())
             .then(data => {
-                setTenants(data);
+                console.log('Tenants API response:', data);
+                if (Array.isArray(data)) {
+                    setTenants(data);
+                } else {
+                    console.error('Expected array but got:', data);
+                    // Fallback if wrapped in object like { data: [...] }
+                    if (data.data && Array.isArray(data.data)) setTenants(data.data);
+                }
                 setLoading(false);
             })
             .catch(err => {
@@ -32,7 +40,8 @@ export default function TenantSelectPage() {
             const res = await fetch('http://localhost:4000/api/tenants/me/active-tenant', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tenantId })
+                body: JSON.stringify({ tenantId }),
+                credentials: 'include',
             });
             if (res.ok) {
                 router.push('/dashboard');
@@ -42,39 +51,43 @@ export default function TenantSelectPage() {
         }
     };
 
-    if (loading) return <div className="flex h-screen items-center justify-center">Carregando...</div>;
+    if (loading) return <div className="flex h-screen items-center justify-center text-white bg-[#101622]">Carregando...</div>;
 
     return (
-        <main className="flex min-h-screen items-center justify-center bg-gray-50">
-            <div className="w-full max-w-lg bg-white p-8 rounded-lg shadow">
-                <h1 className="text-2xl font-bold mb-6 text-center">Selecionar Escritório</h1>
-
-                <div className="space-y-3">
-                    {tenants.map(t => (
-                        <button
-                            key={t.id}
-                            onClick={() => selectTenant(t.id)}
-                            className="w-full text-left p-4 border rounded hover:bg-gray-50 flex justify-between items-center group"
-                        >
-                            <span className="font-medium text-lg">{t.name}</span>
-                            <span className="text-gray-400 group-hover:text-blue-600">Entrar &rarr;</span>
-                        </button>
-                    ))}
-
-                    {tenants.length === 0 && (
-                        <div className="text-center text-gray-500 py-4">Nenhum escritório encontrado.</div>
-                    )}
-                </div>
-
-                <div className="mt-8 border-t pt-4 text-center">
-                    <button
-                        onClick={() => router.push('/tenants/create')}
-                        className="text-blue-600 hover:underline font-medium"
-                    >
-                        Criar novo escritório (+ por R$49/mês)
-                    </button>
-                </div>
+        <AuthShell>
+            <div className="mb-8">
+                <h1 className="text-white tracking-tight text-[32px] font-bold leading-tight mb-2 font-display">Selecionar Escritório</h1>
+                <p className="text-[#9da6b9] text-base font-normal leading-normal font-display">Escolha o ambiente de trabalho.</p>
             </div>
-        </main>
+
+            <div className="space-y-4 w-full">
+                {tenants.map(t => (
+                    <button
+                        key={t.id}
+                        onClick={() => selectTenant(t.id)}
+                        className="w-full text-left p-4 rounded-xl bg-[#1c2230] hover:bg-[#252b3b] border border-[#3b4354] hover:border-[#1152d4] transition-all flex justify-between items-center group"
+                    >
+                        <span className="font-bold text-white text-lg font-display">{t.name}</span>
+                        <span className="text-[#9da6b9] group-hover:text-[#1152d4] material-symbols-outlined">arrow_forward</span>
+                    </button>
+                ))}
+
+                {tenants.length === 0 && (
+                    <div className="text-center text-[#9da6b9] py-4 bg-[#1c2230]/50 rounded-xl border border-dashed border-[#3b4354]">
+                        Nenhum escritório encontrado.
+                    </div>
+                )}
+            </div>
+
+            <div className="mt-8 border-t border-[#282e39] pt-6 text-center">
+                <button
+                    onClick={() => router.push('/tenants/create')}
+                    className="flex items-center justify-center gap-2 text-[#1152d4] hover:text-[#0e44b1] font-bold font-display w-full py-3 rounded-lg hover:bg-[#1152d4]/10 transition-colors"
+                >
+                    <span className="material-symbols-outlined">add_circle</span>
+                    Criar novo escritório (+ por R$49/mês)
+                </button>
+            </div>
+        </AuthShell>
     );
 }
