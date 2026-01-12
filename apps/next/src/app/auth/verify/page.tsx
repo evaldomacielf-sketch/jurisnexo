@@ -17,7 +17,7 @@ function VerifyForm() {
         setLoading(true);
 
         try {
-            const res = await fetch('http://localhost:4000/api/auth/exchange', {
+            const res = await fetch('http://localhost:4001/api/auth/verify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, code }),
@@ -25,8 +25,10 @@ function VerifyForm() {
             });
 
             if (res.ok) {
-                // Check for tenants to redirect
-                // For now, simple redirect to dashboard, middleware/page logic will handle the rest
+                const data = await res.json();
+                if (data.token) {
+                    document.cookie = `access_token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
+                }
                 router.push('/dashboard');
             } else {
                 alert('Código inválido ou expirado.');
@@ -41,22 +43,22 @@ function VerifyForm() {
 
     return (
         <div className="w-full">
-            <Link href="/auth/login" className="inline-flex items-center text-[#9da6b9] hover:text-white mb-6 text-sm transition-colors font-display">
+            <Link href="/auth/login" className="inline-flex items-center text-[#4f5b76] hover:text-[#0A0E27] mb-6 text-sm transition-colors font-display">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Voltar para login
             </Link>
 
             <div className="mb-8">
-                <h1 className="text-white tracking-tight text-[32px] font-bold leading-tight mb-2 font-display">Verificar Código</h1>
-                <p className="text-[#9da6b9] text-base font-normal leading-normal font-display">
-                    Enviamos um código de 6 dígitos para <span className="text-white font-medium">{email}</span>.
+                <h1 className="text-[#0A0E27] tracking-tight text-[32px] font-bold leading-tight mb-2 font-display">Verificar Código</h1>
+                <p className="text-[#4f5b76] text-base font-normal leading-normal font-display">
+                    Enviamos um código de 6 dígitos para <span className="text-[#0A0E27] font-medium">{email}</span>.
                 </p>
             </div>
 
             <form onSubmit={handleVerify} className="flex flex-col gap-6">
                 <div className="flex flex-col w-full">
                     <label className="flex flex-col w-full">
-                        <p className="text-white text-sm font-medium leading-normal pb-2 font-display">Código de Verificação</p>
+                        <p className="text-[#0A0E27] text-sm font-medium leading-normal pb-2 font-display">Código de Verificação</p>
                         <input
                             id="code"
                             type="text"
@@ -64,7 +66,7 @@ function VerifyForm() {
                             value={code}
                             onChange={(e) => setCode(e.target.value)}
                             maxLength={6}
-                            className="form-input flex w-full rounded-lg text-white text-center text-2xl tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-[#1152d4]/50 border border-[#3b4354] bg-[#1c2230] focus:border-[#1152d4] h-14 placeholder:text-[#9da6b9]/20 px-4 font-normal transition-all font-mono"
+                            className="flex w-full rounded-lg text-[#0A0E27] text-center text-2xl tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-[#1152d4]/50 border border-slate-300 bg-white focus:border-[#1152d4] h-14 placeholder:text-slate-400/50 px-4 font-normal transition-all font-mono"
                             required
                         />
                     </label>

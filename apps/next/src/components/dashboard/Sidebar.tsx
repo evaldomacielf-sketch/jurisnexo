@@ -4,9 +4,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { usePlan } from '@/hooks/usePlan';
+import { useTenantContext } from '@/providers/TenantProvider';
 
 export function Sidebar() {
     const { plan } = usePlan();
+    const { tenant, isSubdomain } = useTenantContext();
     const pathname = usePathname();
 
     const isActive = (path: string) => pathname === path;
@@ -21,13 +23,14 @@ export function Sidebar() {
 
     return (
         <aside className="flex flex-col w-64 bg-white dark:bg-[#1a2130] border-r border-[#dbdfe6] dark:border-[#2d3748] h-full shrink-0 font-display">
-            <div className="p-6 flex items-center gap-3">
-                <div className="bg-blue-600 size-10 rounded-lg flex items-center justify-center text-white shrink-0">
-                    <span className="material-symbols-outlined">balance</span>
+            <div className="p-6 flex flex-col items-center gap-4 text-center">
+                <div className="w-40 h-auto shrink-0">
+                    <img src="/images/jurisnexo-v2.png" alt="JurisNexo Premium" className="w-full h-full object-contain" />
                 </div>
                 <div>
-                    <h1 className="text-base font-bold leading-none dark:text-gray-100">JurisNexo</h1>
-                    <p className="text-[#616f89] text-xs mt-1">Gestão Jurídica</p>
+                    <h1 className="text-sm font-bold leading-tight dark:text-gray-100">
+                        Crm Juridico + Whatsapp
+                    </h1>
                 </div>
             </div>
 
@@ -42,7 +45,7 @@ export function Sidebar() {
                             }`}
                     >
                         <span className="material-symbols-outlined">{item.icon}</span>
-                        <p className="text-sm font-medium {isActive(item.path) ? 'font-semibold' : ''}">{item.name}</p>
+                        <p className={`text-sm font-medium ${isActive(item.path) ? 'font-semibold' : ''}`}>{item.name}</p>
                     </Link>
                 ))}
             </nav>
@@ -56,7 +59,8 @@ export function Sidebar() {
                             <span className="text-xs font-bold text-blue-600 dark:text-blue-400">{plan.daysLeft} dias</span>
                         </div>
                         <div className="w-full bg-gray-200 dark:bg-gray-700 h-1.5 rounded-full overflow-hidden">
-                            <div className="bg-blue-600 h-full rounded-full" style={{ width: `${(plan.daysLeft / 7) * 100}%` }}></div>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <div className="bg-blue-600 h-full rounded-full w-[var(--prog)]" style={{ '--prog': `${(plan.daysLeft / 7) * 100}%` } as React.CSSProperties}></div>
                         </div>
                         <p className="text-[10px] text-[#616f89] mt-2 leading-tight">Assine agora para manter o acesso total.</p>
                     </div>

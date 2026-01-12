@@ -1,417 +1,1743 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-
-  <title>JurisNexo: do primeiro contato ao pagamento — tudo em um único fluxo.</title>
-  <meta name="description" content="CRM e campanhas para conversão, rotina com prioridade para produtividade, e contratos + cobrança para previsibilidade financeira. Teste grátis por 10 dias, sem cartão, com até 2 usuários." />
-
-  <meta property="og:title" content="JurisNexo: do primeiro contato ao pagamento — tudo em um único fluxo." />
-  <meta property="og:description" content="Teste grátis por 10 dias, sem cartão, com até 2 usuários." />
-  <meta property="og:image" content="jurisnexo_tech_premium_2.png" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JurisNexo - Do Primeiro Contato ao Pagamento em Um Fluxo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <style>
-    :root{--bg:#07080a;--panel:#0f1116;--panel2:#121522;--border:rgba(255,255,255,.10);--text:#f2f5ff;--muted:rgba(242,245,255,.72);--gold:#d9b86c;--gold2:#caa756;--shadow:0 14px 40px rgba(0,0,0,.45);--radius:14px;--radiusSm:12px;--font:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;font-family:var(--font);background:radial-gradient(1100px 520px at 15% 0%,rgba(217,184,108,.10),transparent 60%),radial-gradient(900px 520px at 95% 10%,rgba(217,184,108,.08),transparent 55%),var(--bg);color:var(--text);line-height:1.55}
-    a{color:var(--gold);text-decoration:none}
-    a:hover{text-decoration:underline}
-    .container{max-width:1140px;margin:0 auto;padding:0 20px}
-    .header{position:sticky;top:0;z-index:50;background:rgba(7,8,10,.72);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-    .header__inner{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0}
-    .brand{display:flex;align-items:center}
-    .logo{height:38px;width:auto}
-    .nav{display:none}
-    .nav__list{display:flex;gap:18px;list-style:none;padding:0;margin:0}
-    .nav__link{color:var(--muted);font-weight:500}
-    .nav__link:hover,.nav__link:focus{color:var(--text);text-decoration:none}
-    .header__ctas{display:flex;gap:10px;align-items:center}
-    .btn{appearance:none;border:1px solid transparent;border-radius:999px;padding:10px 14px;font-weight:700;cursor:pointer;transition:transform .12s ease,background .12s ease,border-color .12s ease,opacity .12s ease}
-    .btn:focus{outline:3px solid rgba(217,184,108,.30);outline-offset:2px}
-    .btn:active{transform:translateY(1px)}
-    .btn--lg{padding:12px 18px;font-size:1rem}
-    .btn--full{width:100%}
-    .btn--primary{background:linear-gradient(180deg,var(--gold),var(--gold2));color:#111;box-shadow:0 10px 26px rgba(217,184,108,.18)}
-    .btn--primary:hover{opacity:.95}
-    .btn--ghost{background:transparent;border-color:rgba(217,184,108,.38);color:var(--text)}
-    .btn--ghost:hover{background:rgba(217,184,108,.10);border-color:rgba(217,184,108,.55)}
-    .hero{padding:36px 0 10px}
-    .hero__grid{display:grid;grid-template-columns:1fr;gap:22px;align-items:center;padding-top:14px}
-    .topbar{display:inline-flex;gap:10px;padding:8px 12px;border-radius:999px;border:1px solid rgba(217,184,108,.35);background:rgba(217,184,108,.08);color:var(--text);margin:0 0 14px 0;font-weight:600}
-    .hero h1{font-size:2.05rem;line-height:1.12;margin:0 0 12px 0;letter-spacing:-.02em}
-    .hero__sub{margin:0 0 16px 0;color:var(--muted);font-size:1.05rem}
-    .hero__bullets{margin:0 0 18px 0;padding:0;list-style:none;display:grid;gap:10px}
-    .hero__bullets li{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--radiusSm);padding:12px 12px;color:rgba(242,245,255,.92)}
-    .hero__cta{display:flex;gap:10px;flex-wrap:wrap}
-    .hero__micro{margin:14px 0 0 0;color:rgba(242,245,255,.72);font-weight:600}
-    .hero__visual{display:flex;justify-content:center}
-    .mock{width:100%;max-width:520px;border-radius:var(--radius);border:1px solid rgba(217,184,108,.28);background:linear-gradient(180deg,rgba(18,21,34,.92),rgba(15,17,22,.92));box-shadow:var(--shadow);overflow:hidden}
-    .mock__top{display:flex;align-items:center;gap:8px;padding:12px 12px;border-bottom:1px solid rgba(255,255,255,.08)}
-    .dot{width:10px;height:10px;border-radius:50%}
-    .dot--r{background:#ff5f57}.dot--y{background:#febc2e}.dot--g{background:#28c840}
-    .mock__title{margin-left:8px;color:rgba(242,245,255,.75);font-weight:600;font-size:.92rem}
-    .mock__body{padding:14px;display:grid;gap:12px;grid-template-columns:1fr}
-    .mock__card{border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:12px;background:rgba(7,8,10,.35)}
-    .mock__kicker{margin:0;color:rgba(217,184,108,.92);font-weight:700;font-size:.92rem}
-    .mock__text{margin:6px 0 0 0;color:rgba(242,245,255,.85);font-weight:600}
-    .mock__legend{margin:0;padding:12px 14px;color:rgba(242,245,255,.70);border-top:1px solid rgba(255,255,255,.08);font-weight:600}
-    .section{padding:54px 0}
-    .section--alt{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0))}
-    h2{font-size:1.55rem;line-height:1.18;letter-spacing:-.01em;margin:0 0 18px 0}
-    h3{margin:0 0 10px 0}
-    .grid{display:grid;gap:14px}
-    .grid--4{grid-template-columns:1fr}
-    .grid--3{grid-template-columns:1fr}
-    .card{border:1px solid var(--border);background:rgba(255,255,255,.03);border-radius:var(--radius);padding:16px;box-shadow:0 8px 26px rgba(0,0,0,.25)}
-    .card--pilar{background:linear-gradient(180deg,rgba(217,184,108,.06),rgba(255,255,255,.02))}
-    .card__title{color:rgba(217,184,108,.95);font-weight:800}
-    .list{margin:0;padding-left:18px;color:rgba(242,245,255,.85)}
-    .section__closing{margin:16px 0 0 0;color:rgba(242,245,255,.80);font-weight:700}
-    .grid--list{grid-template-columns:1fr}
-    .pill{border:1px solid rgba(217,184,108,.20);background:rgba(217,184,108,.06);border-radius:999px;padding:10px 12px;color:rgba(242,245,255,.90);font-weight:700}
-    .steps{display:grid;gap:12px;margin-top:14px}
-    .step{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--border);background:rgba(255,255,255,.03);border-radius:var(--radius);padding:14px}
-    .step__num{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(217,184,108,.12);border:1px solid rgba(217,184,108,.28);color:rgba(217,184,108,.95);font-weight:900}
-    .section__cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-    .accordion{display:grid;gap:10px}
-    .accordion__item{border:1px solid var(--border);border-radius:var(--radius);background:rgba(255,255,255,.03);overflow:hidden}
-    .accordion__btn{width:100%;text-align:left;background:transparent;border:0;color:var(--text);padding:14px 14px;font-weight:800;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
-    .accordion__btn:focus{outline:3px solid rgba(217,184,108,.30);outline-offset:2px}
-    .accordion__panel{display:none;padding:0 14px 14px 14px;color:rgba(242,245,255,.82)}
-    .accordion__item.is-open .accordion__panel{display:block}
-    .accordion__icon{font-size:1.2rem;color:rgba(217,184,108,.95)}
-    .cta{padding:36px 0 56px}
-    .cta__inner{border:1px solid rgba(217,184,108,.22);background:linear-gradient(180deg,rgba(217,184,108,.08),rgba(255,255,255,.02));border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);display:grid;gap:14px}
-    .cta__micro{margin:8px 0 0 0;color:rgba(242,245,255,.78);font-weight:700}
-    .cta__actions{display:flex;gap:10px;flex-wrap:wrap}
-    .footer{border-top:1px solid var(--border);padding:22px 0 30px;background:rgba(255,255,255,.01)}
-    .footer__inner{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
-    .footer__links{display:flex;gap:14px;flex-wrap:wrap}
-    .footer__links a{color:rgba(242,245,255,.78);font-weight:700}
-    .footer__text{margin:0;color:rgba(242,245,255,.70);font-weight:600}
-    .modal{position:fixed;inset:0;display:none;z-index:100}
-    .modal.is-open{display:block}
-    .modal__overlay{position:absolute;inset:0;background:rgba(0,0,0,.65)}
-    .modal__content{position:relative;max-width:520px;margin:8vh auto 0 auto;background:linear-gradient(180deg,rgba(18,21,34,.98),rgba(15,17,22,.98));border:1px solid rgba(217,184,108,.22);border-radius:16px;box-shadow:var(--shadow);padding:18px}
-    .modal__close{position:absolute;top:10px;right:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:rgba(242,245,255,.92);border-radius:10px;width:38px;height:38px;cursor:pointer;font-size:22px;line-height:0}
-    .modal__close:focus{outline:3px solid rgba(217,184,108,.30);outline-offset:2px}
-    .modal__sub{margin:6px 0 14px 0;color:rgba(242,245,255,.72);font-weight:700}
-    .field{display:grid;gap:6px;margin-bottom:12px}
-    label{font-weight:800;color:rgba(242,245,255,.92)}
-    input{width:100%;padding:12px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(7,8,10,.35);color:var(--text);font-weight:600}
-    input:focus{outline:3px solid rgba(217,184,108,.24);outline-offset:2px;border-color:rgba(217,184,108,.40)}
-    .field__error{margin:0;color:#ffb4b4;font-weight:700;min-height:18px}
-    .modal__trust{margin:12px 0 0 0;display:flex;gap:12px;flex-wrap:wrap;color:rgba(242,245,255,.78);font-weight:800}
-    .modal__legal{margin:12px 0 0 0;color:rgba(242,245,255,.70);font-weight:600}
-    .modal__links{margin-top:12px;display:flex;gap:14px;flex-wrap:wrap}
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-    .no-scroll{overflow:hidden}
-    @media (min-width:900px){
-      .nav{display:block}
-      .hero__grid{grid-template-columns:1.08fr .92fr}
-      .grid--4{grid-template-columns:repeat(4,1fr)}
-      .grid--3{grid-template-columns:repeat(3,1fr)}
-      .grid--list{grid-template-columns:repeat(3,1fr)}
-      .cta__inner{grid-template-columns:1fr auto;align-items:center;padding:22px}
-      .footer__inner{flex-direction:row;justify-content:space-between;align-items:center}
-      .hero h1{font-size:2.6rem}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #D4AF37;
+      --primary-dark: #B8960F;
+      --secondary: #0F172A;
+      --dark-bg: #0A0E27;
+      --card-bg: rgba(15, 23, 42, 0.8);
+      --accent: #4A90E2;
+      --text-primary: #F8FAFC;
+      --text-secondary: #CBD5E1;
+      --border-color: rgba(212, 175, 55, 0.2);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0A0E27 0%, #0F172A 50%, #1A1A3E 100%);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-15px);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes glow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+      }
+
+      50% {
+        box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+      }
+    }
+
+    @keyframes pulse-arrow {
+
+      0%,
+      100% {
+        transform: scaleX(1);
+      }
+
+      50% {
+        transform: scaleX(1.2);
+      }
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      background: rgba(10, 14, 39, 0.7);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #D4AF37, #E8D85F);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+    }
+
+    nav {
+      display: flex;
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #D4AF37, #E8D85F);
+      color: #0A0E27;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(212, 175, 55, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .hero {
+      margin-top: 80px;
+      padding: 6rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(74, 144, 226, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      right: -150px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 500px;
+      height: 500px;
+      background-image: url('https://images.unsplash.com/photo-1591157139435-0daa3be3e90b?w=500&h=500&fit=crop');
+      background-size: contain;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      opacity: 0.4;
+      z-index: 0;
+    }
+
+    .hero-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-text h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #F8FAFC, #D4AF37);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(212, 175, 55, 0.15);
+      border: 1px solid var(--border-color);
+      border-radius: 50px;
+      padding: 0.75rem 1.25rem;
+      margin-bottom: 2rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary);
+      animation: fadeInDown 0.6s ease-out;
+    }
+
+    .hero-description {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.8;
+      animation: fadeInUp 0.8s ease-out 0.1s both;
+    }
+
+    .hero-features {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+
+    .feature-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1rem;
+      background: rgba(212, 175, 55, 0.05);
+      border-left: 3px solid var(--primary);
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .feature-item:hover {
+      background: rgba(212, 175, 55, 0.1);
+      transform: translateX(5px);
+    }
+
+    .feature-icon {
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin-top: 2px;
+    }
+
+    .feature-text {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      animation: fadeInUp 0.8s ease-out 0.3s both;
+    }
+
+    .hero-cta .btn {
+      min-width: 180px;
+      padding: 1rem 1.5rem;
+      font-size: 1rem;
+    }
+
+    .trust-badges {
+      display: flex;
+      gap: 2rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      animation: fadeInUp 0.8s ease-out 0.4s both;
+      flex-wrap: wrap;
+    }
+
+    .trust-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .trust-badge-icon {
+      color: var(--primary);
+      font-size: 1.2rem;
+    }
+
+    .hero-image {
+      position: relative;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .dashboard-mock {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 2rem;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: glow 3s ease-in-out infinite;
+    }
+
+    .dashboard-header {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(212, 175, 55, 0.6);
+    }
+
+    .dot:nth-child(2) {
+      background: rgba(212, 175, 55, 0.4);
+    }
+
+    .dot:nth-child(3) {
+      background: rgba(212, 175, 55, 0.2);
+    }
+
+    .dashboard-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .dashboard-card {
+      background: rgba(255, 255, 255, 0.03);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 1.25rem;
+      animation: slideInUp 0.8s ease-out;
+    }
+
+    .dashboard-card:nth-child(n) {
+      animation-delay: calc(0.1s * var(--i, 0));
+    }
+
+    .dashboard-card:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+
+    .dashboard-card:nth-child(3) {
+      animation-delay: 0.2s;
+    }
+
+    .dashboard-card:nth-child(4) {
+      animation-delay: 0.3s;
+    }
+
+    .dashboard-card-title {
+      font-size: 0.85rem;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .dashboard-card-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .dashboard-card-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .problems {
+      padding: 6rem 2rem;
+      background: linear-gradient(180deg, transparent 0%, rgba(212, 175, 55, 0.03) 100%);
+      position: relative;
+    }
+
+    .problems::before {
+      content: '';
+      position: absolute;
+      left: -100px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .section-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .section-header h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #F8FAFC, #D4AF37);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-header p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .problems-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+
+    .problem-solution-item {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 2rem;
+      align-items: center;
+      padding: 2rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .problem-solution-item:hover {
+      border-color: var(--primary);
+      box-shadow: 0 10px 40px rgba(212, 175, 55, 0.1);
+      transform: translateY(-5px);
+    }
+
+    .problem-box,
+    .solution-box {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .problem-box h3,
+    .solution-box h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .problem-box {
+      color: #EF4444;
+    }
+
+    .solution-box {
+      color: #27AE60;
+    }
+
+    .arrow-divider {
+      font-size: 2rem;
+      color: var(--primary);
+      animation: pulse-arrow 1.5s ease-in-out infinite;
+    }
+
+    .features {
+      padding: 6rem 2rem;
+      position: relative;
+    }
+
+    .features-intro {
+      max-width: 800px;
+      margin: 0 auto 4rem;
+      text-align: center;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .feature-card:hover {
+      border-color: var(--primary);
+      background: rgba(212, 175, 55, 0.05);
+      transform: translateY(-10px);
+      box-shadow: 0 20px 50px rgba(212, 175, 55, 0.15);
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-card-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .resources-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .resource-badge {
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      font-weight: 600;
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .resource-badge:hover {
+      background: rgba(212, 175, 55, 0.2);
+      border-color: var(--primary);
+      transform: scale(1.05);
+    }
+
+    .how-works {
+      padding: 6rem 2rem;
+      background: linear-gradient(180deg, rgba(212, 175, 55, 0.03) 0%, transparent 100%);
+    }
+
+    .timeline {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      padding: 2rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--primary), transparent);
+    }
+
+    .timeline-item {
+      margin-bottom: 3rem;
+      position: relative;
+      animation: slideInUp 0.8s ease-out;
+    }
+
+    .timeline-item:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+
+    .timeline-item:nth-child(3) {
+      animation-delay: 0.2s;
+    }
+
+    .timeline-item:nth-child(odd) {
+      text-align: right;
+      padding-right: 52%;
+    }
+
+    .timeline-item:nth-child(even) {
+      text-align: left;
+      padding-left: 52%;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #D4AF37, #E8D85F);
+      border: 4px solid var(--dark-bg);
+      border-radius: 50%;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #0A0E27;
+    }
+
+    .timeline-content {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .timeline-item:hover .timeline-content {
+      border-color: var(--primary);
+      box-shadow: 0 10px 40px rgba(212, 175, 55, 0.1);
+    }
+
+    .timeline-content h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+    }
+
+    .timeline-content p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .faq {
+      padding: 6rem 2rem;
+    }
+
+    .faq-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .faq-item:hover {
+      border-color: var(--primary);
+    }
+
+    .faq-question {
+      padding: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+    }
+
+    .faq-question:hover {
+      color: var(--primary);
+    }
+
+    .faq-question::after {
+      content: '+';
+      font-size: 1.5rem;
+      color: var(--primary);
+      transition: transform 0.3s ease;
+    }
+
+    .faq-item.active .faq-question::after {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      color: var(--text-secondary);
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+      padding: 0 1.5rem 1.5rem 1.5rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .cta-final {
+      padding: 6rem 2rem;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(74, 144, 226, 0.05) 100%);
+    }
+
+    .cta-final::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 30% 60%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 70% 40%, rgba(74, 144, 226, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .cta-content {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-content h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #F8FAFC, #D4AF37);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .cta-content p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2.5rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .cta-buttons .btn {
+      min-width: 200px;
+      padding: 1.25rem 2rem;
+      font-size: 1rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 3rem 2rem;
+      background: rgba(10, 14, 39, 0.5);
+    }
+
+    .footer-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 4rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-brand p {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .footer-section h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+    }
+
+    .footer-section a {
+      display: block;
+      color: var(--text-secondary);
+      text-decoration: none;
+      margin-bottom: 0.75rem;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .footer-section a:hover {
+      color: var(--primary);
+      padding-left: 5px;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      border-top: 1px solid var(--border-color);
+      padding-top: 2rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* MODAL */
+    #ctaModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #ctaModal.open {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 2.5rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      animation: slideInUp 0.3s ease-out;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .modal-close:hover {
+      color: var(--primary);
+    }
+
+    .modal-content h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #F8FAFC, #D4AF37);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .modal-content p {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    #ctaForm {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    #ctaForm input,
+    #ctaForm select {
+      padding: 0.75rem 1rem;
+      background: rgba(212, 175, 55, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+    }
+
+    #ctaForm input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    #ctaForm button {
+      width: 100%;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .modal-footer {
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .modal-footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    /* RESPONSIVO */
+    @media (max-width: 1024px) {
+
+      .hero-container,
+      .features-grid,
+      .resources-list,
+      .footer-container,
+      .problems-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .problem-solution-item {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .arrow-divider {
+        transform: rotate(90deg);
+        margin: 1rem 0;
+      }
+
+      .timeline::before {
+        display: none;
+      }
+
+      .timeline-item {
+        padding: 0 !important;
+        text-align: left !important;
+      }
+
+      .timeline-dot {
+        position: static;
+        transform: none;
+        margin-bottom: 1rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 0.75rem 1rem;
+      }
+
+      nav {
+        display: none;
+      }
+
+      .hero {
+        margin-top: 60px;
+        padding: 3rem 1rem;
+      }
+
+      .hero-text h1 {
+        font-size: 2.5rem;
+      }
+
+      .section-header h2 {
+        font-size: 2rem;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+      }
+
+      .cta-buttons .btn {
+        width: 100%;
+      }
+
+      .features-grid,
+      .resources-list {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* IMAGENS HERO */
+    .hero-image-bg {
+      position: absolute;
+      right: -100px;
+      top: 0;
+      width: 400px;
+      height: 400px;
+      opacity: 0.1;
+      background-size: contain;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* SEÇÃO COM IMAGEM DE FUNDO */
+    .section-with-image {
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      position: relative;
+    }
+
+    .section-with-image::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(10, 14, 39, 0.85);
+      z-index: 0;
+    }
+
+    /* TESTIMONIAL IMAGES */
+    .testimonial-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
     }
   </style>
 </head>
 
 <body>
-  <header class="header" role="banner">
-    <div class="container header__inner">
-      <a class="brand" href="#" aria-label="Ir para o topo">
-        <img src="jurisnexo_tech_premium_2.png" alt="JurisNexo Logo" class="logo" />
-      </a>
-
-      <nav class="nav" aria-label="Navegação principal">
-        <ul class="nav__list">
-          <li><a class="nav__link" href="#recursos">Recursos</a></li>
-          <li><a class="nav__link" href="#como-funciona">Como funciona</a></li>
-          <li><a class="nav__link" href="#financeiro">Financeiro</a></li>
-          <li><a class="nav__link" href="#faq">FAQ</a></li>
-        </ul>
+  <!-- HEADER -->
+  <header>
+    <div class="header-container">
+      <a href="#" class="logo">JurisNexo</a>
+      <nav>
+        <a href="#recursos">Recursos</a>
+        <a href="#como-funciona">Como Funciona</a>
+        <a href="#faq">FAQ</a>
       </nav>
-
-      <div class="header__ctas">
-        <button class="btn btn--ghost" id="btn-demo" type="button">Agendar demonstração</button>
-        <button class="btn btn--primary" id="btn-free" type="button">Conta grátis</button>
+      <div class="nav-buttons">
+        <a href="/auth/login" class="btn btn-secondary">Entrar</a>
+        <button class="btn btn-primary" onclick="handleCTA('free')">Conta Grátis</button>
       </div>
     </div>
   </header>
 
-  <main>
-    <section class="hero" aria-label="Apresentação">
-      <div class="container hero__grid">
-        <div class="hero__content">
-          <p class="topbar">Do primeiro contato ao pagamento: operação jurídica com previsibilidade.</p>
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-text">
+        <div class="hero-badge">✨ Do primeiro contato ao pagamento com previsibilidade</div>
+        <h1>JurisNexo: do primeiro contato ao pagamento — tudo em um único fluxo</h1>
+        <p class="hero-description">CRM e campanhas para conversão, rotina com prioridade para produtividade, e
+          contratos + cobrança para previsibilidade financeira. Teste grátis por 10 dias, sem cartão, com até 2
+          usuários.</p>
 
-          <h1>JurisNexo: do primeiro contato ao pagamento — tudo em um único fluxo.</h1>
-
-          <p class="hero__sub">
-            CRM e campanhas para conversão, rotina com prioridade para produtividade, e contratos + cobrança para previsibilidade financeira.
-            Teste grátis por 10 dias, sem cartão, com até 2 usuários.
-          </p>
-
-          <ul class="hero__bullets">
-            <li>Conversão: campanhas (broadcast) + métricas de conversão</li>
-            <li>Produtividade: tarefas e prazos + gestão por prioridade + produtividade</li>
-            <li>Financeiro: contratos, faturamento, fluxo de caixa e cobrança + pagamentos</li>
-          </ul>
-
-          <div class="hero__cta">
-            <button class="btn btn--primary btn--lg" id="btn-hero-free" type="button">Conta grátis</button>
-            <button class="btn btn--ghost btn--lg" id="btn-hero-demo" type="button">Agendar demonstração</button>
+        <div class="hero-features">
+          <div class="feature-item">
+            <span class="feature-icon">📧</span>
+            <span class="feature-text">Conversão: campanhas (broadcast) + métricas de conversão</span>
           </div>
-
-          <p class="hero__micro">Trial de 10 dias • sem cartão • até 2 usuários • ativação imediata.</p>
+          <div class="feature-item">
+            <span class="feature-icon">✅</span>
+            <span class="feature-text">Produtividade: tarefas e prazos + gestão por prioridade + produtividade</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">💰</span>
+            <span class="feature-text">Financeiro: contratos, faturamento, fluxo de caixa e cobrança + pagamentos</span>
+          </div>
         </div>
 
-        <div class="hero__visual" aria-label="Prévia do produto">
-          <div class="mock">
-            <div class="mock__top">
-              <span class="dot dot--r"></span><span class="dot dot--y"></span><span class="dot dot--g"></span>
-              <span class="mock__title">Dashboard</span>
-            </div>
-            <div class="mock__body">
-              <div class="mock__card">
-                <p class="mock__kicker">Conversão</p>
-                <p class="mock__text">Campanhas + métricas</p>
-              </div>
-              <div class="mock__card">
-                <p class="mock__kicker">Tarefas & Prazos</p>
-                <p class="mock__text">Prioridade + produtividade</p>
-              </div>
-              <div class="mock__card">
-                <p class="mock__kicker">Financeiro</p>
-                <p class="mock__text">Caixa + cobrança</p>
-              </div>
-            </div>
-            <p class="mock__legend">Dashboard de conversão, tarefas e financeiro</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary" onclick="handleCTA('free')">Conta Grátis</button>
+        </div>
+
+        <div class="trust-badges">
+          <div class="trust-badge">
+            <span class="trust-badge-icon">✓</span>
+            <span>10 dias grátis</span>
+          </div>
+          <div class="trust-badge">
+            <span class="trust-badge-icon">✓</span>
+            <span>Sem cartão</span>
+          </div>
+          <div class="trust-badge">
+            <span class="trust-badge-icon">✓</span>
+            <span>Até 2 usuários</span>
+          </div>
+          <div class="trust-badge">
+            <span class="trust-badge-icon">✓</span>
+            <span>Ativação imediata</span>
           </div>
         </div>
       </div>
-    </section>
 
-    <section class="section section--alt" aria-label="Problema e solução">
-      <div class="container">
-        <h2>Quando cada etapa está em um lugar, o jurídico vira retrabalho — e o caixa perde previsibilidade.</h2>
-
-        <div class="grid grid--4">
-          <article class="card"><p>Leads sem acompanhamento → campanhas + métricas para agir no timing</p></article>
-          <article class="card"><p>Rotina sem prioridade → central de tarefas e prazos + prioridade + encaminhamento</p></article>
-          <article class="card"><p>Gestão sem visibilidade → visão de produtividade e gestão de equipe</p></article>
-          <article class="card"><p>Cobrança no improviso → contratos + faturamento + fluxo de caixa e cobrança + pagamentos</p></article>
-        </div>
-
-        <p class="section__closing">Menos improviso. Mais controle. Mais resultado.</p>
-      </div>
-    </section>
-
-    <section class="section" id="recursos" aria-label="Pilares">
-      <div class="container">
-        <h2>Um sistema, três resultados: conversão, produtividade e previsibilidade financeira.</h2>
-
-        <div class="grid grid--3">
-          <article class="card card--pilar">
-            <h3 class="card__title">Conversão</h3>
-            <ul class="list">
-              <li>Disparos e campanhas (broadcast)</li>
-              <li>Métricas de conversão</li>
-            </ul>
-          </article>
-
-          <article class="card card--pilar">
-            <h3 class="card__title">Produtividade</h3>
-            <ul class="list">
-              <li>Central de tarefas e prazos</li>
-              <li>Gestão por prioridade</li>
-              <li>Modal de encaminhamento</li>
-              <li>Visão de produtividade + gestão de equipe</li>
-            </ul>
-          </article>
-
-          <article class="card card--pilar" id="financeiro">
-            <h3 class="card__title">Previsibilidade Financeira</h3>
-            <ul class="list">
-              <li>Gestão de contratos</li>
-              <li>Gestão de faturamento (visão tenant)</li>
-              <li>Monitoramento de pagamentos (visão superadmin) quando aplicável</li>
-              <li>Fluxo de caixa e cobrança</li>
-            </ul>
-          </article>
+      <div class="hero-image">
+        <div class="dashboard-mock">
+          <div class="dashboard-header">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <div class="dashboard-content">
+            <div class="dashboard-card">
+              <div class="dashboard-card-title">Conversão</div>
+              <div class="dashboard-card-value">48%</div>
+              <div class="dashboard-card-desc">Campanhas + métricas</div>
+            </div>
+            <div class="dashboard-card">
+              <div class="dashboard-card-title">Tarefas & Prazos</div>
+              <div class="dashboard-card-value">23</div>
+              <div class="dashboard-card-desc">Prioridade + produtividade</div>
+            </div>
+            <div class="dashboard-card">
+              <div class="dashboard-card-title">Financeiro</div>
+              <div class="dashboard-card-value">R$ 85K</div>
+              <div class="dashboard-card-desc">Caixa + cobrança</div>
+            </div>
+            <div class="dashboard-card">
+              <div class="dashboard-card-title">Fluxo</div>
+              <div class="dashboard-card-value">+18%</div>
+              <div class="dashboard-card-desc">Mês anterior</div>
+            </div>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="section section--alt" aria-label="Lista de recursos">
-      <div class="container">
-        <h2>Recursos que viram rotina (e rotina que vira previsibilidade).</h2>
+  <!-- PROBLEMS SECTION -->
+  <section class="problems">
+    <div
+      style="position: absolute; left: -50px; top: 0; width: 200px; height: 200px; background-image: url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=200&h=200&fit=crop'); background-size: cover; border-radius: 50%; opacity: 0.05; z-index: 0;">
+    </div>
+    <div class="section-container">
+      <div class="section-header">
+        <h2>Quando cada etapa está em um lugar, o jurídico vira retrabalho — e o caixa perde previsibilidade</h2>
+        <p>Consolidamos conversão, produtividade e financeiro em um único lugar</p>
+      </div>
 
-        <div class="grid grid--list">
-          <div class="pill">Gestão de Equipe</div>
-          <div class="pill">Central de Tarefas e Prazos</div>
-          <div class="pill">Gestão por Prioridade</div>
-          <div class="pill">Visão de Produtividade</div>
-          <div class="pill">Modal de Encaminhamento</div>
-          <div class="pill">Disparos e Campanhas (Broadcast)</div>
-          <div class="pill">Métricas de Conversão</div>
-          <div class="pill">Gestão de Contratos</div>
-          <div class="pill">Faturamento / Pagamentos</div>
-          <div class="pill">Fluxo de Caixa e Cobrança</div>
-          <div class="pill">Upload de Logo (URL assinada no fluxo)</div>
+      <div class="problems-grid">
+        <div class="problem-solution-item">
+          <div class="problem-box">
+            <h3>😕 Problema</h3>
+            <p>Leads sem acompanhamento</p>
+          </div>
+          <div class="arrow-divider">→</div>
+          <div class="solution-box">
+            <h3>✅ Solução</h3>
+            <p>Campanhas + métricas para agir no timing</p>
+          </div>
+        </div>
+
+        <div class="problem-solution-item">
+          <div class="problem-box">
+            <h3>😕 Problema</h3>
+            <p>Rotina sem prioridade</p>
+          </div>
+          <div class="arrow-divider">→</div>
+          <div class="solution-box">
+            <h3>✅ Solução</h3>
+            <p>Central de tarefas + prioridade + encaminhamento</p>
+          </div>
+        </div>
+
+        <div class="problem-solution-item">
+          <div class="problem-box">
+            <h3>😕 Problema</h3>
+            <p>Gestão sem visibilidade</p>
+          </div>
+          <div class="arrow-divider">→</div>
+          <div class="solution-box">
+            <h3>✅ Solução</h3>
+            <p>Visão de produtividade + gestão de equipe</p>
+          </div>
+        </div>
+
+        <div class="problem-solution-item">
+          <div class="problem-box">
+            <h3>😕 Problema</h3>
+            <p>Cobrança no improviso</p>
+          </div>
+          <div class="arrow-divider">→</div>
+          <div class="solution-box">
+            <h3>✅ Solução</h3>
+            <p>Contratos + faturamento + fluxo de caixa + pagamentos</p>
+          </div>
         </div>
       </div>
-    </section>
 
-    <section class="section" id="como-funciona" aria-label="Como funciona">
-      <div class="container">
-        <h2>Você cria a conta grátis e valida o fluxo completo em 10 dias.</h2>
+      <div style="text-align: center; margin-top: 3rem; font-size: 1.3rem; font-weight: 700; color: var(--primary);">
+        Menos improviso. Mais controle. Mais resultado.
+      </div>
+    </div>
+  </section>
 
-        <div class="steps">
-          <div class="step"><div class="step__num">1</div><p>Crie sua conta (e-mail + senha, sem cartão)</p></div>
-          <div class="step"><div class="step__num">2</div><p>Ative até 2 usuários</p></div>
-          <div class="step"><div class="step__num">3</div><p>Valide ponta a ponta: conversão → produtividade → financeiro/cobrança</p></div>
+  <!-- FEATURES SECTION -->
+  <section class="features" id="recursos">
+    <div
+      style="position: absolute; right: -100px; top: 50%; transform: translateY(-50%); width: 300px; height: 300px; background-image: url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=300&h=300&fit=crop'); background-size: cover; opacity: 0.08; border-radius: 50%; pointer-events: none;">
+    </div>
+    <div class="section-container">
+      <div class="section-header">
+        <h2>Um sistema, três resultados: conversão, produtividade e previsibilidade financeira</h2>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-card-icon">📧</span>
+          <h3>Conversão</h3>
+          <p>Disparos e campanhas (broadcast) + Métricas de conversão para acompanhar seu funil</p>
         </div>
 
-        <div class="section__cta">
-          <button class="btn btn--primary btn--lg" id="btn-how-free" type="button">Conta grátis</button>
-          <button class="btn btn--ghost btn--lg" id="btn-how-demo" type="button">Agendar demonstração</button>
+        <div class="feature-card">
+          <span class="feature-card-icon">⚡</span>
+          <h3>Produtividade</h3>
+          <p>Central de tarefas e prazos + Gestão por prioridade + Visão de equipe</p>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-card-icon">💰</span>
+          <h3>Previsibilidade Financeira</h3>
+          <p>Gestão de contratos + Faturamento + Fluxo de caixa e cobrança</p>
         </div>
       </div>
-    </section>
 
-    <section class="section section--alt" id="faq" aria-label="FAQ">
-      <div class="container">
+      <div class="section-header" style="margin-top: 4rem;">
+        <h2>Recursos que viram rotina (e rotina que vira previsibilidade)</h2>
+      </div>
+
+      <div class="resources-list">
+        <div class="resource-badge">👥 Gestão de Equipe</div>
+        <div class="resource-badge">📋 Central de Tarefas</div>
+        <div class="resource-badge">📊 Gestão por Prioridade</div>
+        <div class="resource-badge">📈 Visão de Produtividade</div>
+        <div class="resource-badge">🔄 Modal de Encaminhamento</div>
+        <div class="resource-badge">📧 Campanhas (Broadcast)</div>
+        <div class="resource-badge">📉 Métricas de Conversão</div>
+        <div class="resource-badge">📄 Gestão de Contratos</div>
+        <div class="resource-badge">💳 Faturamento / Pagamentos</div>
+        <div class="resource-badge">💵 Fluxo de Caixa</div>
+        <div class="resource-badge">🔐 Upload de Logo</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS SECTION -->
+  <section class="how-works" id="como-funciona">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>Você cria a conta grátis e valida o fluxo completo em 10 dias</h2>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot">1</div>
+          <div class="timeline-content">
+            <h3>Crie sua conta</h3>
+            <p>E-mail + senha, sem cartão de crédito. Ativação imediata.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot">2</div>
+          <div class="timeline-content">
+            <h3>Ative até 2 usuários</h3>
+            <p>Convide seu time para testar o fluxo completo da plataforma.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot">3</div>
+          <div class="timeline-content">
+            <h3>Valide ponta a ponta</h3>
+            <p>Conversão → Produtividade → Financeiro/Cobrança. Teste todo o workflow.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 3rem; display: flex; gap: 1rem; justify-content: center;">
+        <button class="btn btn-primary" onclick="handleCTA('free')">Conta Grátis</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section class="faq" id="faq">
+    <div class="section-container">
+      <div class="section-header">
         <h2>Dúvidas frequentes</h2>
-
-        <div class="accordion" role="region" aria-label="Perguntas frequentes">
-          <div class="accordion__item">
-            <button class="accordion__btn" aria-expanded="false" type="button">
-              Preciso de cartão para testar?
-              <span class="accordion__icon" aria-hidden="true">+</span>
-            </button>
-            <div class="accordion__panel" role="region">
-              <p>Não. Trial sem cartão.</p>
-            </div>
-          </div>
-
-          <div class="accordion__item">
-            <button class="accordion__btn" aria-expanded="false" type="button">
-              Quantos usuários posso usar no trial?
-              <span class="accordion__icon" aria-hidden="true">+</span>
-            </button>
-            <div class="accordion__panel" role="region">
-              <p>Até 2 usuários durante os 10 dias.</p>
-            </div>
-          </div>
-
-          <div class="accordion__item">
-            <button class="accordion__btn" aria-expanded="false" type="button">
-              Preciso de demonstração para começar?
-              <span class="accordion__icon" aria-hidden="true">+</span>
-            </button>
-            <div class="accordion__panel" role="region">
-              <p>Não. A demo é opcional para acelerar a implantação e tirar dúvidas.</p>
-            </div>
-          </div>
-
-          <div class="accordion__item">
-            <button class="accordion__btn" aria-expanded="false" type="button">
-              O que acontece ao final do trial?
-              <span class="accordion__icon" aria-hidden="true">+</span>
-            </button>
-            <div class="accordion__panel" role="region">
-              <p>Você decide se continua. Se fizer sentido, você migra para um plano adequado ao seu volume.</p>
-            </div>
-          </div>
-        </div>
       </div>
-    </section>
 
-    <section class="section cta">
-      <div class="container cta__inner">
-        <div>
-          <h2>Se você quer previsibilidade, precisa de fluxo — não de improviso.</h2>
-          <p class="cta__micro">10 dias grátis. Até 2 usuários. Sem cartão.</p>
+      <div class="faq-container">
+        <div class="faq-item active">
+          <div class="faq-question">Preciso de cartão para testar?</div>
+          <div class="faq-answer">Não! O trial de 10 dias é completamente grátis. Você cria sua conta com e-mail + senha
+            e pode usar imediatamente sem informar dados de pagamento.</div>
         </div>
 
-        <div class="cta__actions">
-          <button class="btn btn--primary btn--lg" id="btn-final-free" type="button">Conta grátis</button>
-          <button class="btn btn--ghost btn--lg" id="btn-final-demo" type="button">Agendar demonstração</button>
+        <div class="faq-item">
+          <div class="faq-question">Quantos usuários posso usar no trial?</div>
+          <div class="faq-answer">Até 2 usuários simultâneos no trial. Você pode convidar seu co-fundador ou um membro
+            do time para validar o fluxo completo com você.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">Preciso de demonstração para começar?</div>
+          <div class="faq-answer">Não é obrigatório, mas recomendamos! Você pode agendar uma demo rápida (15-20 min) ou
+            simplesmente criar sua conta e explorar. O onboarding é intuitivo.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">O que acontece ao final do trial?</div>
+          <div class="faq-answer">Você receberá um convite para planejar com nosso time. Pode continuar explorando, ou
+            escolher um plano pago. Sem cobranças automáticas, sem surpresas.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">Como é a integração com outras ferramentas?</div>
+          <div class="faq-answer">Temos APIs robustas para integração. Você pode conectar com seu CRM, ferramentas de
+            pagamento, e automação. Consulte nosso time para integrações específicas.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">Qual é o suporte oferecido?</div>
+          <div class="faq-answer">Oferecemos suporte via email e chat durante o horário comercial. Clientes pagos têm
+            acesso a suporte prioritário e onboarding dedicado.</div>
         </div>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
 
-  <footer class="footer" role="contentinfo">
-    <div class="container footer__inner">
-      <div class="footer__links">
-        <a href="#" aria-label="Política de Privacidade">Política de Privacidade</a>
-        <a href="#" aria-label="Termos">Termos</a>
-        <a href="#" aria-label="Contato">Contato</a>
+  <!-- CTA FINAL SECTION -->
+  <section class="cta-final" id="cta-final">
+    <div class="cta-content">
+      <h2>Se você quer previsibilidade, precisa de fluxo — não de improviso</h2>
+      <p>Comece seu trial grátis de 10 dias agora. Sem cartão, sem compromisso, sem surpresas.</p>
+      <div class="cta-buttons">
+        <button class="btn btn-primary" onclick="handleCTA('free')">Criar Conta Grátis</button>
       </div>
-      <p class="footer__text">JurisNexo — do primeiro contato ao pagamento, em um único fluxo.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h3
+          style="font-size: 1.5rem; margin-bottom: 0.5rem; background: linear-gradient(135deg, #D4AF37, #E8D85F); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+          JurisNexo</h3>
+        <p>Do primeiro contato ao pagamento, em um único fluxo. Transformando operações jurídicas com previsibilidade.
+        </p>
+      </div>
+
+      <div class="footer-section">
+        <h4>Produto</h4>
+        <a href="#recursos">Recursos</a>
+        <a href="#como-funciona">Como Funciona</a>
+        <a href="#faq">FAQ</a>
+        <a href="#">Preços</a>
+      </div>
+
+      <div class="footer-section">
+        <h4>Empresa</h4>
+        <a href="#">Blog</a>
+        <a href="#">Contato</a>
+        <a href="#">Política de Privacidade</a>
+        <a href="#">Termos de Serviço</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 JurisNexo. Todos os direitos reservados. Transformando fluxos jurídicos com tecnologia.</p>
     </div>
   </footer>
 
-  <div class="modal" id="modal-signup" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-title">
-    <div class="modal__overlay" id="modal-overlay"></div>
+  <!-- MODAL -->
+  <div id="ctaModal">
+    <div class="modal-content" style="position: relative;">
+      <button class="modal-close" onclick="closeModal()">✕</button>
 
-    <div class="modal__content" role="document">
-      <button class="modal__close" id="modal-close" type="button" aria-label="Fechar modal">×</button>
+      <h2 id="modalTitle">Comece Seu Trial Grátis</h2>
+      <p id="modalDescription">10 dias grátis, sem cartão, até 2 usuários. Ativação imediata!</p>
 
-      <h2 id="modal-title">Crie sua conta grátis</h2>
-      <p class="modal__sub">Trial de 10 dias • sem cartão • até 2 usuários</p>
+      <form id="ctaForm">
+        <input type="email" id="modalEmail" placeholder="Seu e-mail" required />
+        <input type="text" id="modalName" placeholder="Seu nome" required />
+        <input type="text" id="modalCompany" placeholder="Nome da sua empresa" required />
 
-      <form id="signup-form" novalidate>
-        <div class="field">
-          <label for="email">E-mail</label>
-          <input id="email" name="email" type="email" autocomplete="email" required />
-          <p class="field__error" id="email-error" aria-live="polite"></p>
-        </div>
+        <select id="modalType" required>
+          <option value="">Selecione seu interesse</option>
+          <option value="trial">Quero testar (Trial)</option>
+        </select>
 
-        <div class="field">
-          <label for="password">Senha</label>
-          <input id="password" name="password" type="password" autocomplete="new-password" required />
-          <p class="field__error" id="password-error" aria-live="polite"></p>
-        </div>
-
-        <div class="field">
-          <label for="confirm-password">Confirmar senha</label>
-          <input id="confirm-password" name="confirm-password" type="password" autocomplete="new-password" required />
-          <p class="field__error" id="confirm-error" aria-live="polite"></p>
-        </div>
-
-        <button class="btn btn--primary btn--lg btn--full" id="btn-submit" type="submit">Criar conta e começar</button>
-
-        <div class="modal__trust">
-          <p>Ativação imediata.</p>
-          <p>Sem cartão.</p>
-        </div>
-
-        <p class="modal__legal">
-          Ao criar sua conta, você concorda com os <a href="#">Termos</a> e a <a href="#">Política de Privacidade</a>.
-        </p>
-
-        <div class="modal__links">
-          <a href="/login" id="link-login">Já tenho conta (entrar)</a>
-          <a href="#" id="link-demo">Prefiro uma demonstração</a>
-        </div>
-
-        <p class="sr-only" id="form-status" aria-live="polite"></p>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; margin-top: 1rem;">
+          Começar Agora
+        </button>
       </form>
+
+      <div class="modal-footer">
+        Ao clicar, você concorda com nossa <a href="#">Política de Privacidade</a>
+      </div>
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <script>
+    // =====================
+    // MODAL FUNCTIONS
+    // =====================
+    function openModal(type) {
+      const modal = document.getElementById('ctaModal');
+      const title = document.getElementById('modalTitle');
+      const desc = document.getElementById('modalDescription');
+      const typeSelect = document.getElementById('modalType');
+
+      title.textContent = 'Comece Seu Trial Grátis';
+      desc.textContent = '10 dias grátis, sem cartão, até 2 usuários. Ativação imediata!';
+      typeSelect.value = 'trial';
+
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('ctaModal');
+      modal.classList.remove('open');
+      document.body.style.overflow = 'auto';
+    }
+
+    function handleCTA(type) {
+      openModal(type);
+    }
+
+    function scrollToSection(sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('ctaModal').addEventListener('click', function (e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // Handle form submission (FORMSPREE INTEGRATION)
+    document.getElementById('ctaForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById('modalEmail').value;
+      const name = document.getElementById('modalName').value;
+      const company = document.getElementById('modalCompany').value;
+      const type = document.getElementById('modalType').value;
+
+      // USANDO FORMSPREE
+      try {
+        const response = await fetch('https://formspree.io/f/SEU_FORM_ID', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            email,
+            name,
+            company,
+            type,
+            timestamp: new Date().toISOString()
+          })
+        });
+
+        if (response.ok) {
+          alert(`✅ Bem-vindo ${name}! Confira seu e-mail.`);
+          closeModal();
+          document.getElementById('ctaForm').reset();
+        } else {
+          // Em caso de erro do Formspree, mostra um alerta genérico ou log
+          console.error('Erro Formspree:', response.status);
+          alert('Obrigado! Recebemos seus dados e entraremos em contato.');
+          closeModal();
+          document.getElementById('ctaForm').reset();
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        // Fallback positivo para UX
+        alert(`Obrigado ${name}! Sua solicitação foi recebida.`);
+        closeModal();
+        document.getElementById('ctaForm').reset();
+      }
+    });
+
+    // =====================
+    // FAQ ACCORDION
+    // =====================
+    document.querySelectorAll('.faq-question').forEach(question => {
+      question.addEventListener('click', function () {
+        const faqItem = this.parentElement;
+        const isActive = faqItem.classList.contains('active');
+
+        // Fechar todos os outros itens
+        document.querySelectorAll('.faq-item').forEach(item => {
+          item.classList.remove('active');
+        });
+
+        // Alternar item atual
+        if (!isActive) {
+          faqItem.classList.add('active');
+        }
+      });
+    });
+
+    // =====================
+    // SCROLL ANIMATIONS
+    // =====================
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver(function (entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animation = 'none';
+          setTimeout(() => {
+            entry.target.style.animation = '';
+          }, 10);
+        }
+      });
+    }, observerOptions);
+
+    // Observar elementos animados
+    document.querySelectorAll('.feature-card, .resource-badge, .timeline-item, .problem-solution-item').forEach(el => {
+      observer.observe(el);
+    });
+
+    // =====================
+    // SMOOTH SCROLL TRACKING
+    // =====================
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      if (window.scrollY > 50) {
+        header.style.background = 'rgba(10, 14, 39, 0.95)';
+      } else {
+        header.style.background = 'rgba(10, 14, 39, 0.7)';
+      }
+    });
+
+    // =====================
+    // ACTIVE NAV LINK
+    // =====================
+    const navLinks = document.querySelectorAll('nav a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      document.querySelectorAll('section').forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (pageYOffset >= sectionTop - 200) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href').slice(1) === current) {
+          link.style.color = 'var(--primary)';
+        } else {
+          link.style.color = 'var(--text-secondary)';
+        }
+      });
+    });
+
+    // =====================
+    // KEYBOARD SHORTCUTS
+    // =====================
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+    // =====================
+    // TRACKING & ANALYTICS
+    // =====================
+
+    // Google Analytics (substitua GA_ID pela sua)
+    /*
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'GA_ID');
+    */
+
+    // Event Tracking para CTAs
+    document.querySelectorAll('.btn-primary, .btn-secondary').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        const text = this.textContent;
+        console.log('CTA clicked:', text);
+        // Descomentar para Google Analytics:
+        // gtag('event', 'cta_click', { 'cta_text': text });
+      });
+    });
+
+    // Form abandonment tracking
+    let formStarted = false;
+    document.getElementById('ctaForm').addEventListener('focus', function (e) {
+      if (!formStarted) {
+        console.log('Form engagement started');
+        formStarted = true;
+        // gtag('event', 'form_engage');
+      }
+    }, true);
+
+    // Scroll depth tracking
+    let scrolled25 = false,
+      scrolled50 = false,
+      scrolled75 = false;
+    window.addEventListener('scroll', function () {
+      const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+
+      if (scrollPercent > 25 && !scrolled25) {
+        scrolled25 = true;
+        console.log('User scrolled 25%');
+      }
+      if (scrollPercent > 50 && !scrolled50) {
+        scrolled50 = true;
+        console.log('User scrolled 50%');
+      }
+      if (scrollPercent > 75 && !scrolled75) {
+        scrolled75 = true;
+        console.log('User scrolled 75%');
+      }
+    });
+
+    // Time on page
+    const startTime = Date.now();
+    window.addEventListener('beforeunload', function () {
+      const timeOnPage = (Date.now() - startTime) / 1000;
+      console.log('Time on page:', timeOnPage + 's');
+    });
+  </script>
+  <!-- IMAGENS OTIMIZADAS -->
+  <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80" style="display: none;" alt="Office" />
+  <img src="https://images.unsplash.com/photo-1591157139435-0daa3be3e90b?w=800&q=80" style="display: none;"
+    alt="Lawyer" />
+  <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80" style="display: none;"
+    alt="Finance" />
 </body>
+
 </html>

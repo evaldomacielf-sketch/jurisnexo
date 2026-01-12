@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
-    ArrowRight, Bot, Zap, ShieldCheck, Scale, Globe, CheckCheck, LineChart, Users, CreditCard, BookOpen, Menu, X
+    ArrowRight, Bot, Zap, Globe, Menu, X
 } from 'lucide-react';
 
 const LandingPage = () => {

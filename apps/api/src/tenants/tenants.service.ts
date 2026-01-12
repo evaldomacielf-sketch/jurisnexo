@@ -391,4 +391,22 @@ export class TenantsService {
         const allowedFeatures = matrix[plan] || [];
         return allowedFeatures.includes(feature);
     }
+
+    async lookupBySlug(slug: string) {
+        const { data: tenant, error } = await this.db
+            .from('tenants')
+            .select('id, name, slug, status') // Expose status to frontend to handle disabled tenants
+            .eq('slug', slug)
+            .single();
+
+        if (error || !tenant) {
+            // Quiet fail or throw?
+            // Throwing 404 is better for API
+            // But service usually throws BadRequest or similar.
+            // Let's return null and handle 404 in controller
+            return null;
+        }
+
+        return tenant;
+    }
 }

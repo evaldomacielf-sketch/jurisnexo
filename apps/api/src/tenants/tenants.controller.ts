@@ -105,4 +105,11 @@ export class TenantsController {
     async expireTrials() {
         return this.tenantsService.checkTrialExpiration();
     }
+
+    @Get('lookup/:slug')
+    async lookupBySlug(@Param('slug') slug: string) {
+        const tenant = await this.tenantsService.lookupBySlug(slug);
+        if (!tenant) throw new BadRequestException('Tenant not found');
+        return tenant;
+    }
 }

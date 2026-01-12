@@ -1,11 +1,9 @@
 {
     "extends": "../tsconfig.json",
     "include": [
-        "**/*.ts"
+        "*.ts"
     ],
-    "exclude": [
-        "node_modules"
-    ],
+    "exclude": [],
     "compilerOptions": {
         "module": "commonjs",
         "target": "es2021",
