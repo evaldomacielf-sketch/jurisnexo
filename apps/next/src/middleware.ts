@@ -24,10 +24,13 @@ function isAuthRoute(pathname: string): boolean {
 
 function decodeJWT(token: string): { exp: number } | null {
     try {
-        const parts = token.split('.'); // ✅ CORRIGIDO - removido \n
+        const parts = token.split('.'); // ✅ CORRIGIDO
         if (parts.length !== 3) return null;
+        const payloadBase64 = parts[1];
+        if (!payloadBase64) return null;
+
         const payload = JSON.parse(
-            Buffer.from(parts[1], 'base64url').toString('utf-8')
+            Buffer.from(payloadBase64, 'base64url').toString('utf-8')
         );
         return payload;
     } catch {
@@ -44,7 +47,7 @@ function isTokenExpired(token: string): boolean {
 
 async function refreshAccessToken(refreshToken: string): Promise<string | null> {
     try {
-        const API_URL = process.env.API_URL || 'http://localhost:4000';
+        const API_URL = process.env.API_URL || 'http://localhost:4000/api';
         const response = await fetch(`${API_URL}/auth/refresh`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -63,7 +66,7 @@ async function refreshAccessToken(refreshToken: string): Promise<string | null> 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // ✅ Permitir arquivos estáticos
+    // Permitir arquivos estáticos
     if (
         pathname.startsWith('/_next') ||
         pathname.startsWith('/api') ||
@@ -83,7 +86,7 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/dashboard', request.url));
     }
 
-    // Rota pública - permite
+    // Rota pública
     if (isPublicRoute(pathname)) {
         return NextResponse.next();
     }

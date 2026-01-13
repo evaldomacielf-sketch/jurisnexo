@@ -185,10 +185,10 @@ export function InstagramInbox() {
                     {/* Input */}
                     <div className="p-4 border-t border-gray-200 dark:border-gray-700">
                         <div className="flex items-center gap-2">
-                            <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full">
+                            <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full" aria-label="Anexar arquivo">
                                 <Paperclip className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                             </button>
-                            <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full">
+                            <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full" aria-label="Enviar imagem">
                                 <ImageIcon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                             </button>
                             <input
@@ -203,6 +203,7 @@ export function InstagramInbox() {
                                 onClick={sendMessage}
                                 disabled={!messageText.trim() || loading}
                                 className="p-2 bg-blue-500 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-full"
+                                aria-label="Enviar mensagem"
                             >
                                 <Send className="w-5 h-5" />
                             </button>

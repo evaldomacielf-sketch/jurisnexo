@@ -3,7 +3,7 @@
 import { getAccessToken } from './cookies';
 import type { AuthUser } from './types';
 
-const API_URL = process.env.API_URL || 'http://localhost:4000';
+const API_URL = process.env.API_URL || 'http://localhost:4000/api';
 
 export async function getCurrentUser(): Promise<AuthUser | null> {
     try {

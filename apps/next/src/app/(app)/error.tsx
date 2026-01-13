@@ -26,20 +26,18 @@ export default function DashboardError({
                 <p className="text-gray-600 dark:text-gray-400 mb-6">
                     Ocorreu um erro ao carregar o dashboard.
                 </p>
-                <div className="space-y-3">
-                    <button
-                        onClick={reset}
-                        className="w-full bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition"
-                    >
-                        Tentar Novamente
-                    </button>
-                    <a
-                        href="/auth/login"
-                        className="block w-full text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-                    >
-                        Voltar ao Login
-                    </a>
-                </div>
+                <button
+                    onClick={reset}
+                    className="w-full bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition mb-3"
+                >
+                    Tentar Novamente
+                </button>
+                <a
+                    href="/auth/login"
+                    className="block w-full text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                >
+                    Voltar ao Login
+                </a>
             </div>
         </div>
     );
