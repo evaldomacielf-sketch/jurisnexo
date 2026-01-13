@@ -1,7 +1,8 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { usePlan } from '@/hooks/usePlan';
 import { useTenantContext } from '@/providers/TenantProvider';
@@ -11,7 +12,49 @@ export function Sidebar() {
     const { tenant, isSubdomain } = useTenantContext();
     const pathname = usePathname();
 
+    const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
+    const [tenants, setTenants] = useState<any[]>([]);
+    const [loadingTenants, setLoadingTenants] = useState(false);
+    const router = useRouter();
+
     const isActive = (path: string) => pathname === path;
+
+    useEffect(() => {
+        if (isSwitcherOpen && tenants.length === 0) {
+            setLoadingTenants(true);
+            fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tenants/me`, { credentials: 'include' })
+                .then(res => res.json())
+                .then(data => {
+                    const list = Array.isArray(data) ? data : (data.data || []);
+                    setTenants(list);
+                    setLoadingTenants(false);
+                })
+                .catch(err => {
+                    console.error("Failed to load tenants", err);
+                    setLoadingTenants(false);
+                });
+        }
+    }, [isSwitcherOpen, tenants.length]);
+
+    const handleSwitchTenant = async (tenantId: string) => {
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tenants/me/active-tenant`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tenantId }),
+                credentials: 'include',
+            });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.token) {
+                    document.cookie = `access_token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
+                }
+                window.location.reload(); // Reload to refresh context
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
 
     const navItems = [
         { name: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
