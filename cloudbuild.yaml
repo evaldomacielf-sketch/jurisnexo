@@ -1,0 +1,59 @@
+steps:
+  # Step 1: Install dependencies & Run tests
+  - name: 'node:20'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        npm install -g pnpm
+        echo "📦 Installing Dependencies..."
+        pnpm install --frozen-lockfile
+        echo "🧪 Running Tests..."
+        pnpm --filter @jurisnexo/api test
+
+  # Step 2: Build Docker image (API)
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/jurisnexo/jurisnexo-api:$SHORT_SHA'
+      - '-t'
+      - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/jurisnexo/jurisnexo-api:latest'
+      - '-f'
+      - 'docker/Dockerfile.api'
+      - '.'
+
+  # Step 3: Push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/jurisnexo/jurisnexo-api'
+
+  # Step 4: Deploy to Cloud Run (API)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'jurisnexo-api'
+      - '--image'
+      - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/jurisnexo/jurisnexo-api:$SHORT_SHA'
+      - '--region'
+      - 'southamerica-east1'
+      - '--platform'
+      - 'managed'
+
+  # Optional Step 5: Update GKE Deployment (if needed for stateful service)
+  # - name: 'gcr.io/cloud-builders/kubectl'
+  #   args: ['set', 'image', 'deployment/inbox-service', 'inbox-service=southamerica-east1-docker.pkg.dev/$PROJECT_ID/jurisnexo/jurisnexo-api:$SHORT_SHA']
+  #   env:
+  #     - 'CLOUDSDK_COMPUTE_REGION=southamerica-east1'
+  #     - 'CLOUDSDK_CONTAINER_CLUSTER=jurisnexo-cluster'
+
+images:
+  - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/jurisnexo/jurisnexo-api:$SHORT_SHA'
+  - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/jurisnexo/jurisnexo-api:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY

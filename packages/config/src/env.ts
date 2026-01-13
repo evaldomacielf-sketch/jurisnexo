@@ -27,6 +27,8 @@ export const apiEnvSchema = baseSchema.extend({
     JWT_EXPIRES_IN: z.string().default('7d'),
     CORS_ORIGINS: z.string().optional(),
     REDIS_URL: z.string().url().optional().or(z.literal('')),
+    REDIS_HOST: z.string().optional(),
+    REDIS_PORT: z.coerce.number().optional().default(6379),
     // SendGrid is strictly required for Prod, but optional for Dev (we'll mock it)
     SENDGRID_API_KEY: z.string().optional().or(z.literal('')),
     EMAIL_FROM: z.string().email().default('noreply@jurisnexo.com.br'),
@@ -37,6 +39,8 @@ export const workerEnvSchema = baseSchema.extend({
     SUPABASE_URL: z.string().url('SUPABASE_URL is required'),
     SUPABASE_SERVICE_ROLE_KEY: z.string().min(1, 'SUPABASE_SERVICE_ROLE_KEY is required'),
     REDIS_URL: z.string().url().optional(),
+    REDIS_HOST: z.string().optional(),
+    REDIS_PORT: z.coerce.number().optional().default(6379),
 });
 
 // Full schema (for validation reference)
@@ -66,6 +70,8 @@ export const envSchema = z.object({
     // Worker
     WORKER_PORT: z.coerce.number().default(4001),
     REDIS_URL: z.string().url().optional(),
+    REDIS_HOST: z.string().optional(),
+    REDIS_PORT: z.coerce.number().optional().default(6379),
 
     // JWT
     JWT_SECRET: z.string().min(32).optional(),

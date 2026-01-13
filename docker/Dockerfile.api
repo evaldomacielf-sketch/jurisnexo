@@ -1,0 +1,58 @@
+# Dockerfile.api
+# Builds the @jurisnexo/api application
+
+FROM node:20-alpine AS builder
+# Set working directory
+WORKDIR /app
+# Enable corepack for pnpm
+RUN corepack enable
+
+# Copy root package.json and lockfile
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+# Copy all packages manifest
+COPY apps/api/package.json apps/api/package.json
+COPY apps/next/package.json apps/next/package.json
+COPY packages/config/package.json packages/config/package.json
+COPY packages/db/package.json packages/db/package.json
+COPY packages/shared/package.json packages/shared/package.json
+
+# Install dependencies (frozen lockfile for speed/consistency)
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
+COPY . .
+
+# Build API
+RUN pnpm --filter @jurisnexo/api build
+
+# --- Production Runner ---
+FROM node:20-alpine AS runner
+WORKDIR /app
+RUN corepack enable
+
+ENV NODE_ENV=production
+
+# Copy built artifacts and node_modules
+# Note: In a real production setup, we should prune devDependencies. 
+# For simplicity here, we copy node_modules. Better approach uses turbo prune.
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/apps/api/dist ./apps/api/dist
+COPY --from=builder /app/apps/api/package.json ./apps/api/package.json
+# We might need config/dist if it's built, or just sources if it's ts-node (but api is compiled).
+# Checking dependencies: api depends on @jurisnexo/config, shared, db.
+# If these are workspace dependencies, they need to be present or bundled.
+# NestJS build usually bundles everything in dist/main.js? No, creates dist folders.
+# If NestJS monorepo, it might need the packages in node_modules or built.
+# Safest bet for monorepo without specialized pruning: Copy necessary built packages.
+
+# Actually, let's keep it simple: Copy the whole monorepo state from builder that has everything built/installed.
+# Optimization: Just copy what's needed.
+COPY --from=builder /app/package.json ./package.json
+
+# Expose port
+EXPOSE 4000
+ENV API_PORT=4000
+
+# Start command
+CMD ["node", "apps/api/dist/main"]

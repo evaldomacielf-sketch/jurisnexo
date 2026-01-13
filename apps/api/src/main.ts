@@ -9,6 +9,9 @@ import cookieParser from 'cookie-parser';
 
 import { validateEnv, apiEnvSchema } from '@jurisnexo/config';
 
+import { GcpLoggerService } from './common/services/gcp-logger.service';
+import helmet from 'helmet';
+
 async function bootstrap() {
     // Validate Env first
     console.log('🔍 Checking Env Variables...');
@@ -16,12 +19,21 @@ async function bootstrap() {
     console.log('SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'Set' : 'Unset');
     validateEnv(apiEnvSchema, 'API');
 
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(AppModule, {
+        bufferLogs: true, // Buffer logs until logger is attached
+    });
+
+    // Security Headers (Helmet)
+    app.use(helmet());
+
+    // Attach Custom GCP Logger
+    app.useLogger(new GcpLoggerService());
+
     app.use(cookieParser());
 
     // CORS
     app.enableCors({
-        origin: process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000'],
+        origin: process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000', 'https://app.jurisnexo.com'],
         credentials: true,
     });
 

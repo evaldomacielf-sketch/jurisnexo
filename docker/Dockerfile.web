@@ -1,0 +1,44 @@
+# Dockerfile.web
+# Builds the @jurisnexo/next application
+
+FROM node:20-alpine AS builder
+WORKDIR /app
+RUN corepack enable
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+# Copy manifests
+COPY apps/api/package.json apps/api/package.json
+COPY apps/next/package.json apps/next/package.json
+COPY packages/config/package.json packages/config/package.json
+COPY packages/db/package.json packages/db/package.json
+COPY packages/shared/package.json packages/shared/package.json
+
+RUN pnpm install --frozen-lockfile
+
+COPY . .
+
+# Build Next.js
+# env vars needed for build if they are inlined?
+ENV NEXT_PUBLIC_API_URL=https://api-prod-url-placeholder.com
+RUN pnpm --filter @jurisnexo/next build
+
+# --- Production Runner ---
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+
+# Next.js Standalone Output (Recommended)
+# Does apps/next/next.config.js have output: 'standalone'?
+# Assuming yes or standard build.
+# If standard build, we need node_modules.
+
+COPY --from=builder /app/apps/next/.next/standalone ./
+COPY --from=builder /app/apps/next/.next/static ./apps/next/.next/static
+COPY --from=builder /app/apps/next/public ./apps/next/public
+
+EXPOSE 3000
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+CMD ["node", "apps/next/server.js"]

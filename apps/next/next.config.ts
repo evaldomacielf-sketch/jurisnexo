@@ -49,7 +49,14 @@ const nextConfig: NextConfig = {
                 headers: [
                     { key: 'X-Frame-Options', value: 'DENY' },
                     { key: 'X-Content-Type-Options', value: 'nosniff' },
-                    { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
+                    { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+                    { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+                    { key: 'X-XSS-Protection', value: '1; mode=block' },
+                    // Content Security Policy (Basic)
+                    {
+                        key: 'Content-Security-Policy',
+                        value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' blob: data: https://*.googleusercontent.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://*.jurisnexo.com https://*.googleapis.com wss://*.jurisnexo.com;",
+                    },
                 ],
             },
         ];

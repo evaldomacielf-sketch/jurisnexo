@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jurisnexo-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "jurisnexo-ip" # Static IP we should reserve
+    networking.gke.io/managed-certificates: "jurisnexo-cert" # Managed SSL
+    networking.gke.io/v1beta1.FrontendConfig: "ingress-security-config"
+spec:
+  rules:
+  - http:
+      paths:
+      # Route WebSocket/Socket.io traffic to GKE
+      - path: /socket.io/*
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: inbox-service
+            port:
+              name: websocket
+      # Can also route generic API traffic here if we wanted to replace Cloud Run
+      # - path: /api/*
+      #   pathType: ImplementationSpecific
+      #   backend: ...
