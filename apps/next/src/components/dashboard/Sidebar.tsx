@@ -15,6 +15,7 @@ import {
     ChevronRight,
     Gavel,
     Plus,
+    Instagram,
 } from 'lucide-react';
 import { logoutAction } from '@/actions/auth';
 import type { AuthUser } from '@/lib/auth/types';
@@ -63,6 +64,11 @@ const MENU_ITEMS = [
         label: 'Configurações',
         href: '/dashboard/settings',
         icon: Settings,
+    },
+    {
+        label: 'Instagram',
+        href: '/dashboard/instagram/inbox',
+        icon: Instagram,
     },
 ] as const;
 

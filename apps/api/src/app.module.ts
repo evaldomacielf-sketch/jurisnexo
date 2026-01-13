@@ -10,6 +10,8 @@ import { HealthController } from './health.controller';
 import { CommonModule } from './common/common.module';
 import { WorkersModule } from './workers/workers.module';
 
+import { InstagramModule } from './instagram/instagram.module';
+
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -22,7 +24,8 @@ import { WorkersModule } from './workers/workers.module';
         CrmModule,
         SuperadminModule,
         EventsModule,
-        WorkersModule
+        WorkersModule,
+        InstagramModule,
     ],
     controllers: [HealthController],
     providers: [],
