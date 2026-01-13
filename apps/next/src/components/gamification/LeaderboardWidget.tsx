@@ -36,7 +36,8 @@ export function LeaderboardWidget() {
             // Best to use the implicit cookie if credentials=include.
             try {
                 // Determine API URL (env or localhost)
-                const apiUrl = 'http://localhost:4001/api/gamification/leaderboard';
+                // Fix: Correct path is /api/crm/gamification/leaderboard (per API logs)
+                const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/crm/gamification/leaderboard`;
 
                 // We need the token. The previous `SuperadminPage` used `useAuth` which I couldn't find.
                 // I will try to read the token from localStorage if the app stores it there, or just failing that, console error.
