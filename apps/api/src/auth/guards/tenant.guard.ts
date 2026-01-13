@@ -1,20 +1,16 @@
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
 
-/**
- * TenantGuard
- * Ensures the user has a loaded Tenant ID in their request context.
- * Must run AFTER JwtAuthGuard.
- */
 @Injectable()
 export class TenantGuard implements CanActivate {
     canActivate(context: ExecutionContext): boolean {
         const request = context.switchToHttp().getRequest();
         const user = request.user;
 
-        if (!user || !user.tenantId) {
-            // Could try to load default tenant if not present?
-            // For now, strict check: API calls needing context must have it.
-            throw new ForbiddenException('Tenant Context Required');
+        // Verificar se tenantId no JWT corresponde ao tenant do recurso
+        const resourceTenantId = request.params.tenantId || request.body.tenantId;
+
+        if (resourceTenantId && user.tenantId !== resourceTenantId) {
+            throw new ForbiddenException('Acesso negado a recursos de outro tenant');
         }
 
         return true;

@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { validate } from './config/env.validation';
 import { TenantsModule } from './tenants/tenants.module';
 import { CrmModule } from './crm/crm.module';
 import { SuperadminModule } from './superadmin/superadmin.module';
@@ -8,16 +10,19 @@ import { HealthController } from './health.controller';
 import { CommonModule } from './common/common.module';
 import { WorkersModule } from './workers/workers.module';
 
-import { ConfigModule } from '@nestjs/config';
-import { validate } from './config/env.validation';
-
 @Module({
     imports: [
         ConfigModule.forRoot({
-            validate,
             isGlobal: true,
+            validate,
         }),
-        CommonModule, AuthModule, TenantsModule, CrmModule, SuperadminModule, EventsModule, WorkersModule
+        AuthModule,
+        CommonModule,
+        TenantsModule,
+        CrmModule,
+        SuperadminModule,
+        EventsModule,
+        WorkersModule
     ],
     controllers: [HealthController],
     providers: [],

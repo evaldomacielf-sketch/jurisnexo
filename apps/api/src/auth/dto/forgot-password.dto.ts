@@ -1,7 +1,8 @@
-import { z } from 'zod';
+import { IsEmail } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-export const ForgotPasswordSchema = z.object({
-    email: z.string().email(),
-});
-
-export type ForgotPasswordDto = z.infer<typeof ForgotPasswordSchema>;
+export class ForgotPasswordDto {
+    @ApiProperty({ example: 'user@example.com' })
+    @IsEmail({}, { message: 'Email inválido' })
+    email: string;
+}

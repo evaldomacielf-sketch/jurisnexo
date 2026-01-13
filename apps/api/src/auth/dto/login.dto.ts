@@ -1,8 +1,12 @@
-import { z } from 'zod';
+import { IsEmail, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-export const LoginSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(1),
-});
+export class LoginDto {
+    @ApiProperty({ example: 'user@example.com' })
+    @IsEmail({}, { message: 'Email inválido' })
+    email: string;
 
-export type LoginDto = z.infer<typeof LoginSchema>;
+    @ApiProperty({ example: 'SecurePass123!' })
+    @IsString()
+    password: string;
+}

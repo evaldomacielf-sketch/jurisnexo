@@ -1,8 +1,8 @@
 import { IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class RefreshTokenDto {
+export class VerifyEmailDto {
     @ApiProperty()
     @IsString()
-    refreshToken: string;
+    token: string;
 }

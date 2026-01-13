@@ -1,9 +1,16 @@
-import { z } from 'zod';
+import { IsString, MinLength, Matches } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-export const ResetPasswordSchema = z.object({
-    email: z.string().email(),
-    code: z.string().length(6),
-    newPassword: z.string().min(6),
-});
+export class ResetPasswordDto {
+    @ApiProperty()
+    @IsString()
+    token: string;
 
-export type ResetPasswordDto = z.infer<typeof ResetPasswordSchema>;
+    @ApiProperty({ example: 'NewSecurePass123!' })
+    @IsString()
+    @MinLength(8)
+    @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
+        message: 'Senha deve conter letra maiúscula, minúscula e número/símbolo',
+    })
+    newPassword: string;
+}

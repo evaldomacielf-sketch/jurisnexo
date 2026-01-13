@@ -29,6 +29,7 @@ export const apiEnvSchema = baseSchema.extend({
     REDIS_URL: z.string().url().optional().or(z.literal('')),
     REDIS_HOST: z.string().optional(),
     REDIS_PORT: z.coerce.number().optional().default(6379),
+    FRONTEND_URL: z.string().url().default('http://localhost:3000'),
     // SendGrid is strictly required for Prod, but optional for Dev (we'll mock it)
     SENDGRID_API_KEY: z.string().optional().or(z.literal('')),
     EMAIL_FROM: z.string().email().default('noreply@jurisnexo.com.br'),

@@ -1,35 +1,50 @@
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { env } from '@jurisnexo/config';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { ConfigService } from '@nestjs/config';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { Request } from 'express';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor() {
+    private supabase: SupabaseClient;
+
+    constructor(private configService: ConfigService) {
         super({
             jwtFromRequest: ExtractJwt.fromExtractors([
-                (req) => {
-                    // Extract from cookie or header
-                    if (req && req.cookies && req.cookies['access_token']) {
-                        return req.cookies['access_token'];
-                    }
-                    // Fallback to Bearer token
-                    return ExtractJwt.fromAuthHeaderAsBearerToken()(req);
-                }
+                ExtractJwt.fromAuthHeaderAsBearerToken(),
+                (req: Request) => req?.cookies?.['access_token']
             ]),
             ignoreExpiration: false,
-            secretOrKey: env.JWT_SECRET || 'fallback_secret', // Should validate config properly
+            secretOrKey: configService.get('JWT_SECRET'),
         });
+
+        this.supabase = createClient(
+            this.configService.get('SUPABASE_URL'),
+            // Fallback to SERVICE_ROLE_KEY if SERVICE_KEY is missing (env.ts uses ROLE_KEY)
+            this.configService.get('SUPABASE_SERVICE_KEY') || this.configService.get('SUPABASE_SERVICE_ROLE_KEY'),
+        );
     }
 
     async validate(payload: any) {
-        if (!payload.sub) throw new UnauthorizedException();
-        // Use admin client to verify if user still exists? Or just trust token?
-        // For performance, trust token.
+        // Validar se usuário ainda existe e está ativo
+        const { data: user, error } = await this.supabase
+            .from('users')
+            .select('id, email, name, role, tenant_id, status')
+            .eq('id', payload.sub)
+            .single();
+
+        if (error || !user || user.status !== 'active') {
+            throw new UnauthorizedException('Usuário inválido ou inativo');
+        }
+
+        // Retornar dados do usuário (será injetado em req.user)
         return {
-            userId: payload.sub,
-            email: payload.email,
-            tenantId: payload.app_metadata?.tenant_id || payload.tenant_id // normalize
+            userId: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            tenantId: user.tenant_id,
         };
     }
 }
