@@ -6,6 +6,11 @@ export class RegisterDto {
     @IsEmail({}, { message: 'Email inválido' })
     email: string;
 
+    @ApiProperty({ example: 'My Company Name', minLength: 3 })
+    @IsString()
+    @MinLength(3, { message: 'Nome da empresa deve ter no mínimo 3 caracteres' })
+    tenantName: string;
+
     @ApiProperty({ example: 'SecurePass123!', minLength: 8 })
     @IsString()
     @MinLength(8, { message: 'Senha deve ter no mínimo 8 caracteres' })

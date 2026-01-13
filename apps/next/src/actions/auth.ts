@@ -59,7 +59,7 @@ export async function loginAction(
         console.error('[Auth] Login error:', error);
         return {
             success: false,
-            error: 'Erro ao conectar com o servidor. Tente novamente.',
+            error: `Login Error: ${error instanceof Error ? error.message : String(error)} (URL: ${API_URL})`,
         };
     }
 }
@@ -93,7 +93,7 @@ export async function registerAction(
         console.error('[Auth] Register error:', error);
         return {
             success: false,
-            error: 'Erro ao conectar com o servidor. Tente novamente.',
+            error: `Erro: ${error instanceof Error ? error.message : String(error)} (URL: ${API_URL})`,
         };
     }
 }
