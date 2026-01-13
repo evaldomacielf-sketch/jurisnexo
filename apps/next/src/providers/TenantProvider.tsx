@@ -66,7 +66,7 @@ export function TenantProvider({ children }: { children: ReactNode }): React.Rea
       if (slug) {
         setIsSubdomain(true);
         try {
-          const res = await fetch(`http://localhost:3000/tenants/lookup/${slug}`);
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tenants/lookup/${slug}`);
           if (res.ok) {
             const data = await res.json();
             setTenant(data);
@@ -76,6 +76,20 @@ export function TenantProvider({ children }: { children: ReactNode }): React.Rea
           }
         } catch (err) {
           console.error('[TenantProvider] Error resolving tenant', err);
+        }
+      } else {
+        // Not a subdomain, try to get active tenant from session
+        try {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tenants/current`, { credentials: 'include' });
+          if (res.ok) {
+            const data = await res.json();
+            if (data) {
+              setTenant(data);
+              console.log('[TenantProvider] Resolved active tenant:', data.name);
+            }
+          }
+        } catch (err) {
+          // Ignore error, maybe not logged in
         }
       }
 

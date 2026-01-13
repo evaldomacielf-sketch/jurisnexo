@@ -408,4 +408,15 @@ export class TenantsService {
 
         return tenant;
     }
+
+    async getTenantById(tenantId: string) {
+        const { data: tenant, error } = await this.db
+            .from('tenants')
+            .select('id, name, slug, status')
+            .eq('id', tenantId)
+            .single();
+
+        if (error) throw new BadRequestException('Tenant not found');
+        return tenant;
+    }
 }

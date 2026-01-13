@@ -112,4 +112,10 @@ export class TenantsController {
         if (!tenant) throw new BadRequestException('Tenant not found');
         return tenant;
     }
+    @UseGuards(AuthGuard)
+    @Get('current')
+    async getCurrent(@Request() req: any) {
+        if (!req.user?.tenant_id) return null;
+        return this.tenantsService.getTenantById(req.user.tenant_id);
+    }
 }
