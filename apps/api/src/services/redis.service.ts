@@ -35,8 +35,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
             this.client.on('error', (err) => {
                 console.error('Redis connection error:', err);
-                // We keep using Redis client in hopes it reconnects, 
-                // but checking connection status might be needed for fallback logic.
+                this.useMemory = true; // Switch to fallback on error
             });
 
             this.client.on('connect', () => {

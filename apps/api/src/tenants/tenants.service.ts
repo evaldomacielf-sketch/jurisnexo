@@ -175,7 +175,7 @@ export class TenantsService {
         // Check if user exists
         const { data: { users } } = await this.db.auth.admin.listUsers();
         // Pagination ignored for MVP
-        const userExists = users.some(u => u.email === invite.email);
+        const userExists = (users as any[]).some(u => u.email === invite.email);
 
         return {
             email: invite.email,

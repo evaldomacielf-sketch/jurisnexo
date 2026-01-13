@@ -15,6 +15,9 @@ async function bootstrap() {
         }),
     );
 
+    // Global Prefix
+    app.setGlobalPrefix('api');
+
     // CORS
     app.enableCors({
         origin: process.env.FRONTEND_URL || 'http://localhost:3000', // Fallback defaults
