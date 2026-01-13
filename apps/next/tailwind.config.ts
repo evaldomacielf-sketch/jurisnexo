@@ -1,35 +1,39 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
-    darkMode: 'class',
     content: [
-        './src/**/*.{js,ts,jsx,tsx,mdx}',
-        '../../packages/ui/src/**/*.{js,ts,jsx,tsx}',
+        './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+        './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+        './src/app/**/*.{js,ts,jsx,tsx,mdx}',
     ],
     theme: {
         extend: {
             colors: {
-                primary: {
-                    50: '#eef2ff',
-                    100: '#e0e7ff',
-                    200: '#c7d2fe',
-                    300: '#a5b4fc',
-                    400: '#818cf8',
-                    500: '#6366f1',
-                    600: '#1152d4',
-                    700: '#0f48ba',
-                    800: '#0d3ea1',
-                    900: '#0a3487',
+                primary: '#1152d4',
+            },
+            keyframes: {
+                'in': {
+                    '0%': { opacity: '0' },
+                    '100%': { opacity: '1' },
+                },
+                'slide-in-from-top-5': {
+                    '0%': { transform: 'translateY(-20px)', opacity: '0' },
+                    '100%': { transform: 'translateY(0)', opacity: '1' },
+                },
+                'zoom-in-95': {
+                    '0%': { transform: 'scale(0.95)', opacity: '0' },
+                    '100%': { transform: 'scale(1)', opacity: '1' },
                 },
             },
-            fontFamily: {
-                sans: ['Inter', 'system-ui', 'sans-serif'],
+            animation: {
+                'in': 'in 200ms ease-out',
+                'slide-in-from-top-5': 'slide-in-from-top-5 200ms ease-out',
+                'zoom-in-95': 'zoom-in-95 200ms ease-out',
             },
         },
     },
     plugins: [],
+    darkMode: 'class',
 };
 
 export default config;
-// Force rebuild 1
-
