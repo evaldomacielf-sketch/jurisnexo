@@ -29,7 +29,7 @@ export default function LoginPage() {
             });
 
             if (res.ok) {
-                router.push('/tenants');
+                router.push('/tenants/select');
             } else {
                 const data = await res.json();
                 setError(data.message || 'Email ou senha inválidos.');
