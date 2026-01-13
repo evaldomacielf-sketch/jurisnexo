@@ -70,10 +70,44 @@ export function Sidebar() {
                 <div className="w-40 h-auto shrink-0">
                     <img src="/logo-dashboard.png" alt="JurisNexo Premium" className="w-full h-full object-contain" />
                 </div>
-                <div>
-                    <h1 className="text-sm font-bold leading-tight dark:text-gray-100">
-                        {tenant?.name || 'Crm Juridico + Whatsapp'}
-                    </h1>
+                <div className="relative w-full px-2">
+                    <button
+                        onClick={() => setIsSwitcherOpen(!isSwitcherOpen)}
+                        className="flex items-center justify-center gap-2 w-full text-sm font-bold leading-tight dark:text-gray-100 hover:text-blue-600 transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
+                    >
+                        <span className="truncate">{tenant?.name || 'Selecione o Escritório'}</span>
+                        <span className="material-symbols-outlined text-lg">expand_more</span>
+                    </button>
+
+                    {isSwitcherOpen && (
+                        <>
+                            <div className="fixed inset-0 z-40" onClick={() => setIsSwitcherOpen(false)}></div>
+                            <div className="absolute top-full left-0 w-full mt-2 bg-white dark:bg-[#1c2230] border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl z-50 overflow-hidden text-left animate-in fade-in zoom-in-95 duration-200">
+                                <div className="max-h-48 overflow-y-auto py-1">
+                                    {loadingTenants ? (
+                                        <div className="p-3 text-center text-xs text-gray-500">Carregando...</div>
+                                    ) : (
+                                        tenants.map(t => (
+                                            <button
+                                                key={t.id}
+                                                onClick={() => handleSwitchTenant(t.id)}
+                                                className={`w-full text-left px-4 py-2.5 text-xs font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center justify-between ${t.id === tenant?.id ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/10' : 'text-gray-700 dark:text-gray-300'}`}
+                                            >
+                                                <span className="truncate">{t.name}</span>
+                                                {t.id === tenant?.id && <span className="material-symbols-outlined text-sm">check</span>}
+                                            </button>
+                                        ))
+                                    )}
+                                </div>
+                                <div className="border-t border-gray-100 dark:border-gray-700 p-1">
+                                    <Link href="/tenants/create" className="flex items-center gap-2 w-full px-3 py-2 text-xs font-bold text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                        <span className="material-symbols-outlined text-sm">add_circle</span>
+                                        Novo Escritório
+                                    </Link>
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
 
