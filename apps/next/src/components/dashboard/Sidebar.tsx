@@ -29,7 +29,7 @@ export function Sidebar() {
                 </div>
                 <div>
                     <h1 className="text-sm font-bold leading-tight dark:text-gray-100">
-                        Crm Juridico + Whatsapp
+                        {tenant?.name || 'Crm Juridico + Whatsapp'}
                     </h1>
                 </div>
             </div>

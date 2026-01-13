@@ -11,7 +11,7 @@ export default function DashboardClient() {
 
     useEffect(() => {
         // Fetch Kanban Data
-        fetch('http://localhost:4001/api/crm/kanban')
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/crm/kanban`)
             .then(res => res.json())
             .then(data => {
                 setKanbanData(data);

@@ -14,7 +14,7 @@ export default function CreateTenantPage() {
         setLoading(true);
 
         try {
-            const res = await fetch('http://localhost:4001/api/tenants', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tenants`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name }),
@@ -23,7 +23,7 @@ export default function CreateTenantPage() {
 
             if (res.ok) {
                 const tenant = await res.json();
-                const resActive = await fetch('http://localhost:4001/api/tenants/me/active-tenant', {
+                const resActive = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tenants/me/active-tenant`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ tenantId: tenant.id }),

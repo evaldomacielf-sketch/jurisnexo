@@ -11,7 +11,7 @@ export function usePlan() {
 
     const fetchPlan = async () => {
         try {
-            const res = await fetch('http://localhost:4001/api/tenants/me/plan', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tenants/me/plan`, {
                 credentials: 'include'
             });
             if (res.ok) {
