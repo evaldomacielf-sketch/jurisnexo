@@ -24,7 +24,7 @@ export class InstagramMessagingService {
     async sendTextMessage(recipientId: string, text: string) {
         try {
             const response = await firstValueFrom(
-                this.httpService.post(
+                this.httpService.post<any>(
                     `${this.apiUrl}/me/messages`,
                     {
                         recipient: { id: recipientId },
@@ -41,7 +41,7 @@ export class InstagramMessagingService {
             this.logger.log(`Mensagem enviada para ${recipientId}`);
             return response.data;
         } catch (error) {
-            this.logger.error('Erro ao enviar mensagem:', error.response?.data);
+            this.logger.error('Erro ao enviar mensagem:', (error as any).response?.data);
             throw error;
         }
     }
@@ -52,7 +52,7 @@ export class InstagramMessagingService {
     async sendImageMessage(recipientId: string, imageUrl: string) {
         try {
             const response = await firstValueFrom(
-                this.httpService.post(
+                this.httpService.post<any>(
                     `${this.apiUrl}/me/messages`,
                     {
                         recipient: { id: recipientId },
@@ -73,7 +73,7 @@ export class InstagramMessagingService {
 
             return response.data;
         } catch (error) {
-            this.logger.error('Erro ao enviar imagem:', error.response?.data);
+            this.logger.error('Erro ao enviar imagem:', (error as any).response?.data);
             throw error;
         }
     }
@@ -88,7 +88,7 @@ export class InstagramMessagingService {
     ) {
         try {
             const response = await firstValueFrom(
-                this.httpService.post(
+                this.httpService.post<any>(
                     `${this.apiUrl}/me/messages`,
                     {
                         recipient: { id: recipientId },
@@ -111,7 +111,7 @@ export class InstagramMessagingService {
 
             return response.data;
         } catch (error) {
-            this.logger.error('Erro ao enviar quick reply:', error.response?.data);
+            this.logger.error('Erro ao enviar quick reply:', (error as any).response?.data);
             throw error;
         }
     }
@@ -122,7 +122,7 @@ export class InstagramMessagingService {
     async getConversations() {
         try {
             const response = await firstValueFrom(
-                this.httpService.get(
+                this.httpService.get<any>(
                     `${this.apiUrl}/${this.igUserId}/conversations`,
                     {
                         params: {
@@ -135,7 +135,7 @@ export class InstagramMessagingService {
 
             return response.data.data;
         } catch (error) {
-            this.logger.error('Erro ao buscar conversas:', error.response?.data);
+            this.logger.error('Erro ao buscar conversas:', (error as any).response?.data);
             throw error;
         }
     }
@@ -146,7 +146,7 @@ export class InstagramMessagingService {
     async getConversationMessages(conversationId: string) {
         try {
             const response = await firstValueFrom(
-                this.httpService.get(
+                this.httpService.get<any>(
                     `${this.apiUrl}/${conversationId}`,
                     {
                         params: {
@@ -159,7 +159,7 @@ export class InstagramMessagingService {
 
             return response.data.messages.data;
         } catch (error) {
-            this.logger.error('Erro ao buscar mensagens:', error.response?.data);
+            this.logger.error('Erro ao buscar mensagens:', (error as any).response?.data);
             throw error;
         }
     }
@@ -170,7 +170,7 @@ export class InstagramMessagingService {
     async markAsRead(messageId: string) {
         try {
             const response = await firstValueFrom(
-                this.httpService.post(
+                this.httpService.post<any>(
                     `${this.apiUrl}/me/messages`,
                     {
                         recipient: { id: messageId },
@@ -186,7 +186,7 @@ export class InstagramMessagingService {
 
             return response.data;
         } catch (error) {
-            this.logger.error('Erro ao marcar como lida:', error.response?.data);
+            this.logger.error('Erro ao marcar como lida:', (error as any).response?.data);
             throw error;
         }
     }

@@ -85,7 +85,7 @@ export class AuthController {
         return this.authService.verifyEmail(dto.token);
     }
 
-    @Post('me')
+    @Get('me')
     @ApiBearerAuth()
     @ApiOperation({ summary: 'Obter dados do usuário logado' })
     @ApiResponse({ status: 200, description: 'Dados do usuário' })

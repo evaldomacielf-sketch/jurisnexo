@@ -34,8 +34,8 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
       return null;
     }
 
-    const user: AuthUser = await response.json();
-    return user;
+    const data = await response.json();
+    return data.user;
   } catch (error: any) {
     if (error.name === 'AbortError') {
       console.error('[Session] Request timeout');

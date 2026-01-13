@@ -25,7 +25,7 @@ export class InstagramService {
         try {
             // 1. Criar container da mídia
             const containerResponse = await firstValueFrom(
-                this.httpService.post(
+                this.httpService.post<any>(
                     `${this.apiUrl}/${this.igUserId}/media`,
                     {
                         image_url: imageUrl,
@@ -39,7 +39,7 @@ export class InstagramService {
 
             // 2. Publicar o container
             const publishResponse = await firstValueFrom(
-                this.httpService.post(
+                this.httpService.post<any>(
                     `${this.apiUrl}/${this.igUserId}/media_publish`,
                     {
                         creation_id: creationId,
@@ -51,7 +51,7 @@ export class InstagramService {
             this.logger.log(`Post publicado: ${publishResponse.data.id}`);
             return publishResponse.data;
         } catch (error) {
-            this.logger.error('Erro ao publicar imagem:', error.response?.data);
+            this.logger.error('Erro ao publicar imagem:', (error as any).response?.data);
             throw error;
         }
     }
@@ -65,7 +65,7 @@ export class InstagramService {
             const containerIds = await Promise.all(
                 items.map(async (item) => {
                     const response = await firstValueFrom(
-                        this.httpService.post(
+                        this.httpService.post<any>(
                             `${this.apiUrl}/${this.igUserId}/media`,
                             {
                                 image_url: item.imageUrl,
@@ -80,7 +80,7 @@ export class InstagramService {
 
             // 2. Criar container do carrossel
             const carouselResponse = await firstValueFrom(
-                this.httpService.post(
+                this.httpService.post<any>(
                     `${this.apiUrl}/${this.igUserId}/media`,
                     {
                         media_type: 'CAROUSEL',
@@ -93,7 +93,7 @@ export class InstagramService {
 
             // 3. Publicar
             const publishResponse = await firstValueFrom(
-                this.httpService.post(
+                this.httpService.post<any>(
                     `${this.apiUrl}/${this.igUserId}/media_publish`,
                     {
                         creation_id: carouselResponse.data.id,
@@ -104,7 +104,7 @@ export class InstagramService {
 
             return publishResponse.data;
         } catch (error) {
-            this.logger.error('Erro ao publicar carrossel:', error.response?.data);
+            this.logger.error('Erro ao publicar carrossel:', (error as any).response?.data);
             throw error;
         }
     }
@@ -115,7 +115,7 @@ export class InstagramService {
     async getPostComments(mediaId: string) {
         try {
             const response = await firstValueFrom(
-                this.httpService.get(
+                this.httpService.get<any>(
                     `${this.apiUrl}/${mediaId}/comments`,
                     {
                         params: {
@@ -128,7 +128,7 @@ export class InstagramService {
 
             return response.data.data;
         } catch (error) {
-            this.logger.error('Erro ao buscar comentários:', error.response?.data);
+            this.logger.error('Erro ao buscar comentários:', (error as any).response?.data);
             throw error;
         }
     }
@@ -139,7 +139,7 @@ export class InstagramService {
     async replyToComment(commentId: string, message: string) {
         try {
             const response = await firstValueFrom(
-                this.httpService.post(
+                this.httpService.post<any>(
                     `${this.apiUrl}/${commentId}/replies`,
                     {
                         message: message,
@@ -150,7 +150,7 @@ export class InstagramService {
 
             return response.data;
         } catch (error) {
-            this.logger.error('Erro ao responder comentário:', error.response?.data);
+            this.logger.error('Erro ao responder comentário:', (error as any).response?.data);
             throw error;
         }
     }
@@ -161,7 +161,7 @@ export class InstagramService {
     async getAccountInsights(metrics: string[] = ['impressions', 'reach', 'profile_views']) {
         try {
             const response = await firstValueFrom(
-                this.httpService.get(
+                this.httpService.get<any>(
                     `${this.apiUrl}/${this.igUserId}/insights`,
                     {
                         params: {
@@ -175,7 +175,7 @@ export class InstagramService {
 
             return response.data.data;
         } catch (error) {
-            this.logger.error('Erro ao buscar insights:', error.response?.data);
+            this.logger.error('Erro ao buscar insights:', (error as any).response?.data);
             throw error;
         }
     }
@@ -186,7 +186,7 @@ export class InstagramService {
     async getProfile() {
         try {
             const response = await firstValueFrom(
-                this.httpService.get(
+                this.httpService.get<any>(
                     `${this.apiUrl}/${this.igUserId}`,
                     {
                         params: {
@@ -199,7 +199,7 @@ export class InstagramService {
 
             return response.data;
         } catch (error) {
-            this.logger.error('Erro ao buscar perfil:', error.response?.data);
+            this.logger.error('Erro ao buscar perfil:', (error as any).response?.data);
             throw error;
         }
     }
