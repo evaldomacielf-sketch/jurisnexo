@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject, forwardRef } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { UrgencyService, UrgencyLevel } from './urgency.service';
 import { PartnersService } from './partners/partners.service';
@@ -10,6 +10,7 @@ export class CrmService {
     constructor(
         private readonly db: DatabaseService, // Was Database, now DatabaseService
         private readonly urgencyService: UrgencyService,
+        @Inject(forwardRef(() => PartnersService))
         private readonly partnersService: PartnersService,
         private readonly gamificationService: GamificationService,
         private readonly eventsGateway: EventsGateway,
@@ -128,7 +129,7 @@ export class CrmService {
             .from('crm_conversations')
             .select('*')
             .eq('tenant_id', tenantId)
-            .eq('contact_id', contact.id)
+            .eq('contact_id', contact ? contact.id : '')
             .eq('status', 'OPEN')
             .single();
 
@@ -137,7 +138,7 @@ export class CrmService {
                 .from('crm_conversations')
                 .insert({
                     tenant_id: tenantId,
-                    contact_id: contact.id,
+                    contact_id: contact ? contact.id : '',
                     status: 'OPEN',
                     urgency: 'NORMAL',
                 })

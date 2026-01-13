@@ -6,9 +6,8 @@ import * as crypto from 'crypto';
 import { SendGridService } from '../services/sendgrid.service';
 
 // Reserved slugs
-const RESERVED_SLUGS = [
-    'app', 'api', 'auth', 'www', 'admin', 'public', 'assets', 'mail', 'smtp', 'support', 'dashboard', 'billing', 'settings'
-];
+
+
 
 @Injectable()
 export class TenantsService {
@@ -148,13 +147,13 @@ export class TenantsService {
         if (error) throw new BadRequestException('Failed to create invite');
 
         // Send Email
-        const baseUrl = env.WEB_URL || 'http://localhost:3000';
+        const baseUrl = process.env.WEB_URL || 'http://localhost:3000';
         const inviteLink = `${baseUrl}/invites/${token}`;
 
         // Fetch tenant details for name
         const { data: tenant } = await this.db.from('tenants').select('name').eq('id', tenantId).single();
 
-        await this.sendGrid.sendInviteEmail(email, inviteLink, tenant?.name || 'JurisNexo');
+        await this.sendGrid.sendInviteEmail(email, inviteLink, (tenant as any)?.name || 'JurisNexo');
 
         await this.logAudit(userId, tenantId, 'TENANT_INVITE_CREATED', 'invite', null, { email, role });
 
@@ -353,7 +352,7 @@ export class TenantsService {
     }
 
     async getPlanStatus(tenantId: string) {
-        const { data: tenant } = await this.db.from('tenants').select('plan, trial_ends_at').eq('id', tenantId).single();
+        const { data: tenant } = await this.db.from('tenants').select('plan, trial_ends_at').eq('id', tenantId).single() as any;
         if (!tenant) throw new BadRequestException('Tenant not found');
 
         const isTrial = tenant.plan === 'trial';

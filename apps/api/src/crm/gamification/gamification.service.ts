@@ -7,7 +7,7 @@ export class GamificationService {
 
     constructor(private readonly db: DatabaseService) { }
 
-    async awardPoints(userId: string, points: number, tenantId: string) {
+    async awardPoints(userId: string, points: number, _tenantId: string) {
         // 1. Get current points
         const { data: user } = await this.db.client.from('users').select('points, level').eq('id', userId).single();
         if (!user) return; // Should not happen
@@ -19,7 +19,7 @@ export class GamificationService {
         const calculatedLevel = 1 + Math.floor(newPoints / 1000);
         if (calculatedLevel > newLevel) {
             newLevel = calculatedLevel;
-            this.logger.log(\`User \${userId} leveled up to \${newLevel}!\`);
+            this.logger.log(`User ${userId} leveled up to ${newLevel}!`);
             // TODO: Notify user
         }
 
@@ -47,13 +47,13 @@ export class GamificationService {
             .from('crm_user_achievements')
             .select('achievement_id')
             .eq('user_id', userId);
-        
+
         const unlockedIds = new Set(unlocked?.map(u => u.achievement_id) || []);
 
         for (const achievement of achievements) {
             if (!unlockedIds.has(achievement.id)) {
                 // Unlock!
-                this.logger.log(\`Unlocking achievement \${achievement.name} for user \${userId}\`);
+                this.logger.log(`Unlocking achievement ${achievement.name} for user ${userId}`);
                 await this.db.client.from('crm_user_achievements').insert({
                     tenant_id: tenantId,
                     user_id: userId,
@@ -75,7 +75,7 @@ export class GamificationService {
             .eq('tenant_id', tenantId)
             .order('points', { ascending: false })
             .limit(10);
-        
+
         if (error) throw new Error(error.message);
         return users;
     }

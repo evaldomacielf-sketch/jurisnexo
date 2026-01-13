@@ -11,21 +11,21 @@ export class CrmController {
     @UseGuards(AuthGuard)
     @Get('conversations')
     @ApiOperation({ summary: 'List conversations' })
-    async getConversations(@Request() req, @Query() query) {
+    async getConversations(@Request() req: any, @Query() query: any) {
         return this.crmService.getConversations(req.user.tenantId, query);
     }
 
     @UseGuards(AuthGuard)
     @Get('conversations/:id')
     @ApiOperation({ summary: 'Get conversation details' })
-    async getConversation(@Request() req, @Param('id') id: string) {
+    async getConversation(@Request() req: any, @Param('id') id: string) {
         return this.crmService.getConversation(req.user.tenantId, id);
     }
 
     @UseGuards(AuthGuard)
     @Post('conversations/:id/messages')
     @ApiOperation({ summary: 'Send a message' })
-    async sendMessage(@Request() req, @Param('id') id: string, @Body('content') content: string) {
+    async sendMessage(@Request() req: any, @Param('id') id: string, @Body('content') content: string) {
         return this.crmService.sendMessage(req.user.tenantId, id, content, req.user.id);
     }
 

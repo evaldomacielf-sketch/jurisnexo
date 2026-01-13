@@ -11,14 +11,14 @@ export class PartnersController {
     @UseGuards(AuthGuard)
     @Post()
     @ApiOperation({ summary: 'Create a new partner' })
-    async createPartner(@Request() req, @Body() body: { name: string; phone: string; email: string; areas: string[] }) {
+    async createPartner(@Request() req: any, @Body() body: { name: string; phone: string; email: string; areas: string[] }) {
         return this.partnersService.createPartner(req.user.tenantId, body);
     }
 
     @UseGuards(AuthGuard)
     @Get()
     @ApiOperation({ summary: 'List all partners' })
-    async listPartners(@Request() req) {
+    async listPartners(@Request() req: any) {
         return this.partnersService.listPartners(req.user.tenantId);
     }
 }

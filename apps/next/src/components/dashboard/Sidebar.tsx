@@ -25,7 +25,7 @@ export function Sidebar() {
         <aside className="flex flex-col w-64 bg-white dark:bg-[#1a2130] border-r border-[#dbdfe6] dark:border-[#2d3748] h-full shrink-0 font-display">
             <div className="p-6 flex flex-col items-center gap-4 text-center">
                 <div className="w-40 h-auto shrink-0">
-                    <img src="/images/jurisnexo-v2.png" alt="JurisNexo Premium" className="w-full h-full object-contain" />
+                    <img src="/logo-dashboard.png" alt="JurisNexo Premium" className="w-full h-full object-contain" />
                 </div>
                 <div>
                     <h1 className="text-sm font-bold leading-tight dark:text-gray-100">

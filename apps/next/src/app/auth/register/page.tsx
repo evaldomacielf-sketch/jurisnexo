@@ -16,7 +16,7 @@ export default function RegisterPage() {
 
         try {
             // Reusing the same request-code endpoint as it handles creation implicitly
-            const res = await fetch('http://localhost:4001/api/auth/request-code', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/auth/request-code`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

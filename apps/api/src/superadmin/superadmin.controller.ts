@@ -11,7 +11,7 @@ export class SuperadminController {
     @UseGuards(AuthGuard)
     @Get('tenants')
     @ApiOperation({ summary: 'List all tenants (Superadmin only)' })
-    async listTenants(@Request() req) {
+    async listTenants(@Request() req: any) {
         await this.superadminService.checkIsSuperadmin(req.user.id);
         return this.superadminService.listTenants();
     }
@@ -19,7 +19,7 @@ export class SuperadminController {
     @UseGuards(AuthGuard)
     @Get('audit')
     @ApiOperation({ summary: 'Get global audit logs (Superadmin only)' })
-    async getAuditLogs(@Request() req) {
+    async getAuditLogs(@Request() req: any) {
         await this.superadminService.checkIsSuperadmin(req.user.id);
         return this.superadminService.getGlobalAuditLogs();
     }
@@ -27,7 +27,7 @@ export class SuperadminController {
     @UseGuards(AuthGuard)
     @Post('tenants/:id/disable')
     @ApiOperation({ summary: 'Disable a tenant' })
-    async disableTenant(@Request() req, @Param('id') id: string, @Body('reason') reason: string) {
+    async disableTenant(@Request() req: any, @Param('id') id: string, @Body('reason') reason: string) {
         await this.superadminService.checkIsSuperadmin(req.user.id);
         return this.superadminService.disableTenant(req.user.id, id, reason);
     }

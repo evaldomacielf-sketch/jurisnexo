@@ -12,7 +12,7 @@ export const useSocket = () => {
             const token = getCookie('token'); // Assuming we store JWT here
 
             // Adjust URL based on environment
-            const socketUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+            const socketUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
             socketRef.current = io(socketUrl, {
                 query: { token },

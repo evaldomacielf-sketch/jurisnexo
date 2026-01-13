@@ -12,10 +12,8 @@ import { DatabaseModule } from '../database/database.module';
 
 @Module({
     imports: [DatabaseModule],
-    controllers: [CrmController, PartnersController, CalendarController],
     controllers: [CrmController, PartnersController, CalendarController, GamificationController],
     providers: [CrmService, UrgencyService, PartnersService, CalendarService, GamificationService],
-    exports: [CrmService],
     exports: [CrmService],
 })
 export class CrmModule { }

@@ -1,9 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '../../database/database.service';
 
 @Injectable()
 export class CalendarService {
-    private readonly logger = new Logger(CalendarService.name);
+
 
     constructor(private readonly db: DatabaseService) { }
 
@@ -15,7 +15,7 @@ export class CalendarService {
         return `https://accounts.google.com/o/oauth2/v2/auth?client_id=MOCK_CLIENT_ID&redirect_uri=MOCK_CALLBACK&response_type=code&scope=calendar&state=${userId}`;
     }
 
-    async connect(userId: string, code: string) {
+    async connect(userId: string, _code: string) {
         // In real app: exchange code for tokens via Google API
         const mockTokens = {
             access_token: 'mock_access_token_' + Date.now(),

@@ -8,7 +8,7 @@ import {
     MessageBody,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Logger, UseGuards } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 @WebSocketGateway({
@@ -18,7 +18,7 @@ import { JwtService } from '@nestjs/jwt';
 })
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer()
-    server: Server;
+    server!: Server;
 
     private readonly logger = new Logger(EventsGateway.name);
 
@@ -40,8 +40,8 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
             // Join Tenant Room
             const tenantId = payload.tenant_id;
             if (tenantId) {
-                await client.join(\`tenant:\${tenantId}\`);
-                this.logger.log(\`Client \${client.id} joined tenant room: \${tenantId}\`);
+                await client.join(`tenant:${tenantId}`);
+                this.logger.log(`Client ${client.id} joined tenant room: ${tenantId}`);
             }
 
         } catch (e) {
@@ -51,7 +51,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     handleDisconnect(client: Socket) {
-        this.logger.log(\`Client disconnected: \${client.id}\`);
+        this.logger.log(`Client disconnected: ${client.id}`);
     }
 
     @SubscribeMessage('joinConversation')
@@ -59,8 +59,8 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         @ConnectedSocket() client: Socket,
         @MessageBody() conversationId: string
     ) {
-        client.join(\`conversation:\${conversationId}\`);
-        this.logger.log(\`Client \${client.id} joined conversation: \${conversationId}\`);
+        client.join(`conversation:${conversationId}`);
+        this.logger.log(`Client ${client.id} joined conversation: ${conversationId}`);
     }
 
     @SubscribeMessage('leaveConversation')
@@ -68,7 +68,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         @ConnectedSocket() client: Socket,
         @MessageBody() conversationId: string
     ) {
-        client.leave(\`conversation:\${conversationId}\`);
+        client.leave(`conversation:${conversationId}`);
     }
 
     @SubscribeMessage('typing')
@@ -76,8 +76,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         @ConnectedSocket() client: Socket,
         @MessageBody() payload: { conversationId: string; isTyping: boolean }
     ) {
-        // Broadcast to conversation room (excluding sender)
-        client.to(\`conversation:\${payload.conversationId}\`).emit('typing', {
+        client.to(`conversation:${payload.conversationId}`).emit('typing', {
             userId: client.data.user?.sub,
             userName: client.data.user?.full_name, // Optional if we put it in token
             ...payload
@@ -87,11 +86,11 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // Helper to emit new messages
     emitNewMessage(tenantId: string, conversationId: string, message: any) {
         // Emit to conversation room
-        this.server.to(\`conversation:\${conversationId}\`).emit('message.new', message);
-        
+        this.server.to(`conversation:${conversationId}`).emit('message.new', message);
+
         // Also emit to tenant room for Inbox list updates? Or separate room?
         // Maybe just conversation update event
-        this.server.to(\`tenant:\${tenantId}\`).emit('conversation.updated', {
+        this.server.to(`tenant:${tenantId}`).emit('conversation.updated', {
             id: conversationId,
             last_message: message,
             last_message_at: new Date().toISOString()

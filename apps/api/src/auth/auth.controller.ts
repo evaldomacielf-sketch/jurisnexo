@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Res, HttpCode } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RequestCodeDto, RequestCodeSchema, ExchangeCodeDto, ExchangeCodeSchema } from './dto/auth.dto';
+import { RequestCodeDto, RequestCodeSchema, ExchangeCodeDto, ExchangeCodeSchema, LoginDto, LoginSchema } from './dto/auth.dto';
 import { Response } from 'express';
 // Pipe for Zod? Or manual validation. 
 // Standard NestJS Zod Pipe is common. I'll do manual for simplicity or use ValidationPipe if setup.
@@ -25,6 +25,13 @@ export class AuthController {
     async exchange(@Body() body: ExchangeCodeDto, @Res({ passthrough: true }) res: Response) {
         const { email, code } = ExchangeCodeSchema.parse(body);
         return this.authService.exchangeCode(email, code, res);
+    }
+
+    @Post('login')
+    @HttpCode(200)
+    async login(@Body() body: LoginDto, @Res({ passthrough: true }) res: Response) {
+        const { email, password } = LoginSchema.parse(body);
+        return this.authService.loginWithPassword(email, password, res);
     }
 
     @Post('register-invite')

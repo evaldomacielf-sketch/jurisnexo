@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Inject, forwardRef } from '@nestjs/common';
 import { DatabaseService } from '../../database/database.service';
 import { CrmService } from '../crm.service';
 
@@ -8,7 +8,7 @@ export class PartnersService {
 
     constructor(
         private readonly db: DatabaseService,
-        // Circular dependency note: In real app use forwardRef, here assume CrmService handles messages generic
+        @Inject(forwardRef(() => CrmService))
         private readonly crmService: CrmService,
     ) { }
 
