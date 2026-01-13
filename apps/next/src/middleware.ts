@@ -24,9 +24,11 @@ function isAuthRoute(pathname: string): boolean {
 
 function decodeJWT(token: string): { exp: number } | null {
     try {
-        const parts = token.split('.');
+        const parts = token.split('.'); // ✅ CORRIGIDO - removido \n
         if (parts.length !== 3) return null;
-        const payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf-8'));
+        const payload = JSON.parse(
+            Buffer.from(parts[1], 'base64url').toString('utf-8')
+        );
         return payload;
     } catch {
         return null;
@@ -61,12 +63,12 @@ async function refreshAccessToken(refreshToken: string): Promise<string | null> 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // ✅ CRÍTICO: Permitir arquivos estáticos e API routes
+    // ✅ Permitir arquivos estáticos
     if (
         pathname.startsWith('/_next') ||
         pathname.startsWith('/api') ||
         pathname.startsWith('/static') ||
-        pathname.includes('.') // Arquivos com extensão (CSS, JS, etc)
+        pathname.includes('.')
     ) {
         return NextResponse.next();
     }
@@ -76,24 +78,24 @@ export async function middleware(request: NextRequest) {
 
     const hasValidToken = accessToken && !isTokenExpired(accessToken);
 
-    // ✅ Usuário autenticado tentando acessar rotas de auth → redireciona para dashboard
+    // Usuário autenticado em rota de auth → dashboard
     if (hasValidToken && isAuthRoute(pathname)) {
         return NextResponse.redirect(new URL('/dashboard', request.url));
     }
 
-    // ✅ Rota pública - permite acesso
+    // Rota pública - permite
     if (isPublicRoute(pathname)) {
         return NextResponse.next();
     }
 
-    // ❌ Sem token - redireciona para login (APENAS UMA VEZ)
+    // Sem token - redireciona
     if (!accessToken) {
         const loginUrl = new URL('/auth/login', request.url);
         loginUrl.searchParams.set('redirect', pathname);
         return NextResponse.redirect(loginUrl);
     }
 
-    // 🔄 Token expirado - tenta renovar
+    // Token expirado - tenta renovar
     if (isTokenExpired(accessToken) && refreshToken) {
         const newAccessToken = await refreshAccessToken(refreshToken);
 
@@ -103,12 +105,11 @@ export async function middleware(request: NextRequest) {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'lax',
-                maxAge: 900, // 15 minutos
+                maxAge: 900,
                 path: '/',
             });
             return response;
         } else {
-            // Falha ao renovar - limpa cookies e redireciona
             const loginUrl = new URL('/auth/login', request.url);
             loginUrl.searchParams.set('redirect', pathname);
             loginUrl.searchParams.set('session_expired', 'true');
@@ -116,24 +117,15 @@ export async function middleware(request: NextRequest) {
             const response = NextResponse.redirect(loginUrl);
             response.cookies.delete(COOKIE_NAME);
             response.cookies.delete(REFRESH_COOKIE_NAME);
-
             return response;
         }
     }
 
-    // ✅ Token válido - permite acesso
     return NextResponse.next();
 }
 
 export const config = {
     matcher: [
-        /*
-         * Match all request paths except:
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         * - public folder
-         */
         '/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
     ],
 };

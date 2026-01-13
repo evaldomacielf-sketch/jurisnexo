@@ -3,10 +3,6 @@
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
 
-// ============================================
-// ❌ Dashboard Error Boundary
-// ============================================
-
 export default function DashboardError({
     error,
     reset,
@@ -28,7 +24,7 @@ export default function DashboardError({
                     Algo deu errado
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    Ocorreu um erro ao carregar o dashboard. Por favor, tente novamente.
+                    Ocorreu um erro ao carregar o dashboard.
                 </p>
                 <div className="space-y-3">
                     <button
@@ -44,16 +40,6 @@ export default function DashboardError({
                         Voltar ao Login
                     </a>
                 </div>
-                {error.message && (
-                    <details className="mt-6 text-left">
-                        <summary className="text-sm text-gray-500 cursor-pointer hover:text-gray-700">
-                            Detalhes técnicos
-                        </summary>
-                        <pre className="mt-2 text-xs bg-gray-100 dark:bg-gray-900 p-3 rounded overflow-auto text-red-600">
-                            {error.message}
-                        </pre>
-                    </details>
-                )}
             </div>
         </div>
     );
