@@ -65,25 +65,40 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     }
 
     async delPattern(pattern: string): Promise<void> {
+        const keys = await this.keys(pattern);
+        if (keys.length > 0) {
+            await this.del(...keys);
+        }
+    }
+
+    async keys(pattern: string): Promise<string[]> {
         if (this.useMemory) {
-            // Simple regex match for memory store
             const regex = new RegExp(pattern.replace('*', '.*'));
+            const matches: string[] = [];
             for (const key of this.memoryStore.keys()) {
                 if (regex.test(key)) {
-                    this.memoryStore.delete(key);
+                    matches.push(key);
                 }
             }
-            return;
+            return matches;
         }
 
         try {
-            const keys = await this.client.keys(pattern);
-            if (keys.length > 0) {
-                await this.client.del(...keys);
-            }
+            return await this.client.keys(pattern);
         } catch (e) {
-            console.error('Error deleting pattern', e);
+            console.error('Error getting keys', e);
+            return [];
         }
+    }
+
+    async del(...keys: string[]): Promise<void> {
+        if (keys.length === 0) return;
+
+        if (this.useMemory) {
+            keys.forEach(k => this.memoryStore.delete(k));
+            return;
+        }
+        await this.client.del(...keys);
     }
 
     private hits = 0;
@@ -209,13 +224,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
         return data;
     }
 
-    async del(key: string): Promise<void> {
-        if (this.useMemory) {
-            this.memoryStore.delete(key);
-            return;
-        }
-        await this.client.del(key);
-    }
+
 
     /**
      * Store a one-time auth code with 120s expiration

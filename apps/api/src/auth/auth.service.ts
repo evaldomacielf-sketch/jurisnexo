@@ -10,19 +10,19 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import Redis from 'ioredis';
 import { randomBytes } from 'crypto';
+import { RedisService } from '../services/redis.service';
 import { RegisterDto, LoginDto, ResetPasswordDto, ForgotPasswordDto } from './dto';
 
 @Injectable()
 export class AuthService {
     private supabase: SupabaseClient;
-    private redis: Redis;
     private readonly logger = new Logger(AuthService.name);
 
     constructor(
         private jwtService: JwtService,
         private configService: ConfigService,
+        private redisService: RedisService,
     ) {
         // Inicializar Supabase
         this.supabase = createClient(
@@ -30,22 +30,6 @@ export class AuthService {
             // Patch: Using SUPABASE_SERVICE_ROLE_KEY to match global env config
             this.configService.get('SUPABASE_SERVICE_ROLE_KEY') || this.configService.get('SUPABASE_SERVICE_KEY'),
         );
-
-        // Inicializar Redis
-        const redisUrl = this.configService.get('REDIS_URL');
-        if (redisUrl) {
-            this.redis = new Redis(redisUrl, { lazyConnect: true });
-        } else {
-            this.redis = new Redis({
-                host: this.configService.get('REDIS_HOST'),
-                port: this.configService.get('REDIS_PORT'),
-                lazyConnect: true,
-            });
-        }
-
-        this.redis.connect().catch((err) => {
-            this.logger.error('Redis connection error:', err);
-        });
     }
 
     /**
@@ -82,7 +66,7 @@ export class AuthService {
             .from('tenants')
             .insert({
                 slug: dto.tenantSlug,
-                name: dto.name,
+                name: dto.tenantName,
                 plan: 'trial',
                 status: 'active',
                 trial_ends_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 dias
@@ -116,10 +100,10 @@ export class AuthService {
 
         // 6. Gerar token de verificação de email
         const verificationToken = randomBytes(32).toString('hex');
-        await this.redis.setex(
+        await this.redisService.set(
             `email-verification:${verificationToken}`,
-            3600, // 1 hora
             user.id,
+            3600 // 1 hora
         );
 
         // 7. Enviar email de verificação (TODO: implementar SendGrid)
@@ -147,11 +131,13 @@ export class AuthService {
      */
     async login(dto: LoginDto) {
         // 1. Rate limiting (evitar brute force)
-        const attempts = await this.redis.incr(`login-attempts:${dto.email}`);
-        if (attempts === 1) {
-            await this.redis.expire(`login-attempts:${dto.email}`, 900); // 15 min
-        }
-        if (attempts > 5) {
+        const isLimited = await this.redisService.isRateLimited(
+            `login-attempts:${dto.email}`,
+            5,
+            900 // 15 min
+        );
+
+        if (isLimited) {
             throw new UnauthorizedException(
                 'Muitas tentativas de login. Tente novamente em 15 minutos.',
             );
@@ -180,7 +166,7 @@ export class AuthService {
         }
 
         // 5. Reset rate limiting (login bem-sucedido)
-        await this.redis.del(`login-attempts:${dto.email}`);
+        await this.redisService.del(`login-attempts:${dto.email}`);
 
         // 6. Atualizar last_login_at
         await this.supabase
@@ -210,7 +196,7 @@ export class AuthService {
     async refreshToken(refreshToken: string) {
         try {
             // 1. Verificar se refresh token está no Redis
-            const userId = await this.redis.get(`refresh-token:${refreshToken}`);
+            const userId = await this.redisService.get<string>(`refresh-token:${refreshToken}`);
             if (!userId) {
                 throw new UnauthorizedException('Refresh token inválido ou expirado');
             }
@@ -236,7 +222,7 @@ export class AuthService {
             const tokens = await this.generateTokens(user);
 
             // 5. Remover refresh token antigo
-            await this.redis.del(`refresh-token:${refreshToken}`);
+            await this.redisService.del(`refresh-token:${refreshToken}`);
 
             return tokens;
         } catch (error) {
@@ -249,7 +235,7 @@ export class AuthService {
      */
     async logout(refreshToken: string) {
         if (refreshToken) {
-            await this.redis.del(`refresh-token:${refreshToken}`);
+            await this.redisService.del(`refresh-token:${refreshToken}`);
         }
         return { message: 'Logout realizado com sucesso' };
     }
@@ -274,10 +260,10 @@ export class AuthService {
 
         // 2. Gerar token de reset
         const resetToken = randomBytes(32).toString('hex');
-        await this.redis.setex(
+        await this.redisService.set(
             `password-reset:${resetToken}`,
-            3600, // 1 hora
             user.id,
+            3600 // 1 hora
         );
 
         // 3. Enviar email (TODO: implementar SendGrid)
@@ -296,7 +282,7 @@ export class AuthService {
      */
     async resetPassword(dto: ResetPasswordDto) {
         // 1. Verificar token no Redis
-        const userId = await this.redis.get(`password-reset:${dto.token}`);
+        const userId = await this.redisService.get<string>(`password-reset:${dto.token}`);
         if (!userId) {
             throw new BadRequestException('Token inválido ou expirado');
         }
@@ -315,14 +301,14 @@ export class AuthService {
         }
 
         // 4. Remover token (uso único)
-        await this.redis.del(`password-reset:${dto.token}`);
+        await this.redisService.del(`password-reset:${dto.token}`);
 
         // 5. Invalidar todos os refresh tokens do usuário
-        const keys = await this.redis.keys(`refresh-token:*`);
+        const keys = await this.redisService.keys(`refresh-token:*`);
         for (const key of keys) {
-            const storedUserId = await this.redis.get(key);
+            const storedUserId = await this.redisService.get<string>(key);
             if (storedUserId === userId) {
-                await this.redis.del(key);
+                await this.redisService.del(key);
             }
         }
 
@@ -334,7 +320,7 @@ export class AuthService {
      */
     async verifyEmail(token: string) {
         // 1. Verificar token no Redis
-        const userId = await this.redis.get(`email-verification:${token}`);
+        const userId = await this.redisService.get<string>(`email-verification:${token}`);
         if (!userId) {
             throw new BadRequestException('Token inválido ou expirado');
         }
@@ -350,7 +336,7 @@ export class AuthService {
         }
 
         // 3. Remover token
-        await this.redis.del(`email-verification:${token}`);
+        await this.redisService.del(`email-verification:${token}`);
 
         return { message: 'Email verificado com sucesso!' };
     }
@@ -379,10 +365,10 @@ export class AuthService {
         });
 
         // Armazenar refresh token no Redis
-        await this.redis.setex(
+        await this.redisService.set(
             `refresh-token:${refreshToken}`,
-            this.configService.get('JWT_REFRESH_EXPIRATION'),
             user.id,
+            this.configService.get('JWT_REFRESH_EXPIRATION')
         );
 
         return {

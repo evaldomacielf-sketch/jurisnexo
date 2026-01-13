@@ -3,8 +3,8 @@ import { redirect } from 'next/navigation';
 import { decode } from 'jsonwebtoken';
 import DashboardClient from './DashboardClient';
 
-export default function DashboardPage() {
-    const cookieStore = cookies();
+export default async function DashboardPage() {
+    const cookieStore = await cookies();
     const token = cookieStore.get('access_token')?.value;
 
     if (!token) {

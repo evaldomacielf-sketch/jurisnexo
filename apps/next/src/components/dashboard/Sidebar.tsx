@@ -18,14 +18,7 @@ export function Sidebar() {
     const [loadingTenants, setLoadingTenants] = useState(false);
 
     const isActive = (path: string) => pathname === path;
-    // ... (omitting middle parts)
-    <div className="w-full bg-gray-700 h-1.5 rounded-full overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <div
-            className="bg-blue-500 h-full rounded-full"
-            style={{ width: `${(plan.daysLeft / 7) * 100}%` }}
-        ></div>
-    </div>
+
 
     useEffect(() => {
         if (isSwitcherOpen && tenants.length === 0) {
