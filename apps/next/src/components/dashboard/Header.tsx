@@ -2,9 +2,11 @@
 
 import { ThemeToggle } from './ThemeToggle';
 import { usePlan } from '@/hooks/usePlan';
+import { useTenantContext } from '@/providers/TenantProvider';
 
 export function Header() {
     const { plan } = usePlan();
+    const { tenant } = useTenantContext();
     return (
         <header className="h-16 flex items-center justify-between px-8 bg-white dark:bg-[#1a2130] border-b border-[#dbdfe6] dark:border-[#2d3748] shrink-0 font-display">
             <div className="flex items-center gap-4 flex-1">
@@ -13,7 +15,7 @@ export function Header() {
                         <span className="material-symbols-outlined text-blue-600">business</span>
                         <div className="text-left">
                             <p className="text-[10px] text-[#616f89] font-bold uppercase tracking-tight leading-none">Escritório</p>
-                            <p className="text-sm font-bold leading-tight dark:text-gray-100">Silva & Associados</p>
+                            <p className="text-sm font-bold leading-tight dark:text-gray-100">{tenant?.name || 'Selecionar Escritório'}</p>
                         </div>
                         <span className="material-symbols-outlined text-gray-400">unfold_more</span>
                     </button>

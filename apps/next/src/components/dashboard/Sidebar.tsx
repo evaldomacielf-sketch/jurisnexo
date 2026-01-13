@@ -65,15 +65,15 @@ export function Sidebar() {
     ];
 
     return (
-        <aside className="flex flex-col w-64 bg-white dark:bg-[#1a2130] border-r border-[#dbdfe6] dark:border-[#2d3748] h-full shrink-0 font-display">
+        <aside className="flex flex-col w-64 bg-[#0A0E27] border-r border-white/10 h-full shrink-0 font-display text-white">
             <div className="p-6 flex flex-col items-center gap-4 text-center">
-                <div className="w-40 h-auto shrink-0">
-                    <img src="/logo-dashboard.png" alt="JurisNexo Premium" className="w-full h-full object-contain" />
+                <div className="w-40 h-auto shrink-0 mb-2">
+                    <img src="/logo-dashboard.png" alt="JurisNexo Premium" className="w-full h-full object-contain filter brightness-0 invert" />
                 </div>
                 <div className="relative w-full px-2">
                     <button
                         onClick={() => setIsSwitcherOpen(!isSwitcherOpen)}
-                        className="flex items-center justify-center gap-2 w-full text-sm font-bold leading-tight dark:text-gray-100 hover:text-blue-600 transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
+                        className="flex items-center justify-center gap-2 w-full text-sm font-bold leading-tight text-white hover:text-blue-300 transition-colors p-2 rounded-lg hover:bg-white/10 border border-white/10"
                     >
                         <span className="truncate">{tenant?.name || 'Selecione o Escritório'}</span>
                         <span className="material-symbols-outlined text-lg">expand_more</span>
@@ -82,7 +82,7 @@ export function Sidebar() {
                     {isSwitcherOpen && (
                         <>
                             <div className="fixed inset-0 z-40" onClick={() => setIsSwitcherOpen(false)}></div>
-                            <div className="absolute top-full left-0 w-full mt-2 bg-white dark:bg-[#1c2230] border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl z-50 overflow-hidden text-left animate-in fade-in zoom-in-95 duration-200">
+                            <div className="absolute top-full left-0 w-full mt-2 bg-white dark:bg-[#1c2230] border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl z-50 overflow-hidden text-left animate-in fade-in zoom-in-95 duration-200 text-gray-900 dark:text-gray-100">
                                 <div className="max-h-48 overflow-y-auto py-1">
                                     {loadingTenants ? (
                                         <div className="p-3 text-center text-xs text-gray-500">Carregando...</div>
@@ -117,42 +117,42 @@ export function Sidebar() {
                         key={item.path}
                         href={item.path}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors cursor-pointer ${isActive(item.path)
-                            ? 'bg-blue-600/10 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400'
-                            : 'text-[#616f89] hover:bg-gray-100 dark:hover:bg-gray-800'
+                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50'
+                            : 'text-gray-400 hover:bg-white/5 hover:text-white'
                             }`}
                     >
-                        <span className="material-symbols-outlined">{item.icon}</span>
+                        <span className={`material-symbols-outlined ${isActive(item.path) ? 'text-white' : 'text-gray-400 group-hover:text-white'}`}>{item.icon}</span>
                         <p className={`text-sm font-medium ${isActive(item.path) ? 'font-semibold' : ''}`}>{item.name}</p>
                     </Link>
                 ))}
             </nav>
 
-            <div className="p-4 border-t border-[#dbdfe6] dark:border-[#2d3748]">
+            <div className="p-4 border-t border-white/10">
                 {/* Dynamic Plan Status Card */}
                 {plan?.status === 'TRIAL' && (
-                    <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl mb-4 border border-blue-100 dark:border-blue-800">
+                    <div className="bg-blue-900/30 p-4 rounded-xl mb-4 border border-blue-500/30 backdrop-blur-sm">
                         <div className="flex items-center justify-between mb-2">
-                            <p className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">Período Trial</p>
-                            <span className="text-xs font-bold text-blue-600 dark:text-blue-400">{plan.daysLeft} dias</span>
+                            <p className="text-xs font-bold text-blue-400 uppercase tracking-wider">Período Trial</p>
+                            <span className="text-xs font-bold text-blue-400">{plan.daysLeft} dias</span>
                         </div>
-                        <div className="w-full bg-gray-200 dark:bg-gray-700 h-1.5 rounded-full overflow-hidden">
+                        <div className="w-full bg-gray-700 h-1.5 rounded-full overflow-hidden">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <div className="bg-blue-600 h-full rounded-full w-[var(--prog)]" style={{ '--prog': `${(plan.daysLeft / 7) * 100}%` } as React.CSSProperties}></div>
+                            <div className="bg-blue-500 h-full rounded-full w-[var(--prog)]" style={{ '--prog': `${(plan.daysLeft / 7) * 100}%` } as React.CSSProperties}></div>
                         </div>
-                        <p className="text-[10px] text-[#616f89] mt-2 leading-tight">Assine agora para manter o acesso total.</p>
+                        <p className="text-[10px] text-blue-200/70 mt-2 leading-tight">Assine agora para manter o acesso total.</p>
                     </div>
                 )}
                 {plan?.status === 'EXPIRED' && (
-                    <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-xl mb-4 border border-red-100 dark:border-red-800">
+                    <div className="bg-red-900/20 p-4 rounded-xl mb-4 border border-red-500/30">
                         <div className="flex items-center gap-2 mb-2">
-                            <span className="material-symbols-outlined text-red-500 text-lg">lock</span>
-                            <p className="text-xs font-bold text-red-600 dark:text-red-400 uppercase tracking-wider">Plano Expirado</p>
+                            <span className="material-symbols-outlined text-red-400 text-lg">lock</span>
+                            <p className="text-xs font-bold text-red-400 uppercase tracking-wider">Plano Expirado</p>
                         </div>
-                        <p className="text-[10px] text-red-800 dark:text-red-200 mt-2 leading-tight">Atualize seu plano para recuperar o acesso.</p>
+                        <p className="text-[10px] text-red-200 mt-2 leading-tight">Atualize seu plano para recuperar o acesso.</p>
                         <button className="mt-3 w-full py-1.5 bg-red-600 text-white rounded text-xs font-bold hover:bg-red-700 transition">Atualizar Agora</button>
                     </div>
                 )}
-                <button className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2.5 rounded-lg font-bold text-sm hover:bg-opacity-90 transition-all font-display">
+                <button className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-blue-500 transition-all font-display shadow-lg shadow-blue-900/50">
                     <span className="material-symbols-outlined text-sm">add</span>
                     Novo Caso
                 </button>
