@@ -42,7 +42,7 @@ export default function DashboardClient() {
                     {loading ? (
                         <div className="flex w-full items-center justify-center text-gray-500">Caregando quadros...</div>
                     ) : (
-                        kanbanData.columns.map((column: any) => (
+                        kanbanData?.columns?.map((column: any) => (
                             <div key={column.id} className="kanban-column flex flex-col gap-4 flex-1">
                                 <div className="flex items-center justify-between px-1">
                                     <div className="flex items-center gap-2">
