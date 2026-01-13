@@ -204,7 +204,7 @@ export class CrmService {
         return { message, urgencyUpdated, newUrgency };
     }
 
-    async getKanbanData(tenantId: string) {
+    async getKanbanData() {
         // Mock Data for Demo
         return {
             columns: [

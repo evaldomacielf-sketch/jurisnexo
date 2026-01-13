@@ -18,7 +18,8 @@ import type {
 // 🚀 Server Actions - Authentication
 // ============================================
 
-const API_URL = process.env.API_URL || 'http://localhost:4000';
+const BASE_URL = process.env.API_URL || 'http://127.0.0.1:4000';
+const API_URL = BASE_URL.endsWith('/api') ? BASE_URL : `${BASE_URL}/api`;
 
 /**
  * 🔐 LOGIN - Autentica usuário e setta cookies

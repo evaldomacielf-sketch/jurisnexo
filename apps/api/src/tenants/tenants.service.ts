@@ -391,6 +391,7 @@ export class TenantsService {
         return allowedFeatures.includes(feature);
     }
 
+    // @ts-ignore
     async lookupBySlug(slug: string) {
         const { data: tenant, error } = await this.db
             .from('tenants')

@@ -55,7 +55,7 @@ describe('AuthService', () => {
                     provide: ConfigService,
                     useValue: {
                         get: jest.fn((key: string) => {
-                            const config = {
+                            const config: any = {
                                 SUPABASE_URL: 'http://localhost:54321',
                                 SUPABASE_SERVICE_KEY: 'mock-key',
                                 SUPABASE_SERVICE_ROLE_KEY: 'mock-key',

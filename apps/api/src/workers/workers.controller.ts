@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 import { CacheWarmerService } from './cache-warmer.service';
 // import { ApiKeyGuard } from '../auth/api-key.guard'; // Futuro: Proteger endpoint
 

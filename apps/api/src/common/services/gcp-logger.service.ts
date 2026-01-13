@@ -4,13 +4,13 @@ import { Logging } from '@google-cloud/logging';
 @Injectable()
 export class GcpLoggerService implements LoggerService {
     private logging: Logging;
-    private log: any;
+    private gcpLog: any;
     private metadata: any;
 
     constructor() {
         this.logging = new Logging();
         // Identifies the log in Cloud Logging
-        this.log = this.logging.log('jurisnexo-api');
+        this.gcpLog = this.logging.log('jurisnexo-api');
 
         // Resource metadata helps filter logs by resource type
         this.metadata = {
@@ -39,7 +39,7 @@ export class GcpLoggerService implements LoggerService {
     }
 
     private async writeLog(severity: string, message: any, optionalParams: any[]) {
-        const entry = this.log.entry(
+        const entry = this.gcpLog.entry(
             { ...this.metadata, severity },
             {
                 message: typeof message === 'string' ? message : JSON.stringify(message),
@@ -51,7 +51,7 @@ export class GcpLoggerService implements LoggerService {
 
         try {
             if (process.env.NODE_ENV === 'production') {
-                await this.log.write(entry);
+                await this.gcpLog.write(entry);
             } else {
                 // Fallback to console in dev
                 console.log(`[${severity}]`, message, ...optionalParams);

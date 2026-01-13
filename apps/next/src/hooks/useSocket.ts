@@ -1,15 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { getCookie } from 'cookies-next';
+
+// Helper to get cookie by name
+function getCookie(name: string): string | undefined {
+    if (typeof document === 'undefined') return undefined;
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift();
+}
 
 export const useSocket = () => {
+    // Explicitly type the ref to match socket.io-client Socket
     const socketRef = useRef<Socket | null>(null);
     const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
         // Initialize socket only once
         if (!socketRef.current) {
-            const token = getCookie('token'); // Assuming we store JWT here
+            const token = getCookie('jurisnexo_session'); // Updated to use correct cookie name
 
             // Adjust URL based on environment
             const socketUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';

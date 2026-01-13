@@ -40,10 +40,10 @@ export class CrmController {
     }
     @Get('kanban')
     @ApiOperation({ summary: 'Get Kanban board data' })
-    async getKanban(@Request() req: any) {
+    async getKanban() {
         // Mock: just require authentication, ignore tenant for mock
         // If AuthGuard is fully strict, we neeed a valid user.
         // Assuming req.user exists from AuthGuard.
-        return this.crmService.getKanbanData(req.user?.tenantId || 'demo');
+        return this.crmService.getKanbanData();
     }
 }

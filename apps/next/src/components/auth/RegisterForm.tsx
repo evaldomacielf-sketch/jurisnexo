@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { User, Mail, Lock, Building2, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
+import { User, Mail, Lock, Building2, AlertCircle, Loader2, CheckCircle2, Link as LinkIcon } from 'lucide-react';
 import { registerAction } from '@/actions/auth';
 import { generateSlug, isValidSlug } from '@/lib/utils/slug';
 import type { RegisterDTO } from '@/lib/auth/types';
@@ -100,7 +100,7 @@ export function RegisterForm() {
     // Success State
     if (success) {
         return (
-            <div className="w-full max-w-md mx-auto">
+            <div className="w-full max-w-lg mx-auto">
                 <div className="bg-white rounded-lg shadow-lg p-8 text-center">
                     <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <CheckCircle2 className="w-8 h-8 text-green-600" />
@@ -120,7 +120,7 @@ export function RegisterForm() {
     }
 
     return (
-        <div className="w-full max-w-md mx-auto">
+        <div className="w-full max-w-2xl mx-auto">
             <div className="bg-white rounded-lg shadow-lg p-8">
                 {/* Header */}
                 <div className="text-center mb-8">
@@ -209,7 +209,7 @@ export function RegisterForm() {
                                 disabled={isLoading}
                                 value={formData.tenantName}
                                 onChange={handleChange}
-                                placeholder="Advocacia Silva & Souza"
+                                placeholder="Ex: Advocacia Silva"
                                 className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1152d4] focus:border-transparent outline-none transition disabled:bg-gray-50"
                             />
                         </div>
@@ -221,9 +221,10 @@ export function RegisterForm() {
                             htmlFor="tenantSlug"
                             className="block text-sm font-medium text-gray-700 mb-2"
                         >
-                            Domínio do Escritório
+                            Link Personalizado
                         </label>
                         <div className="relative">
+                            <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                             <input
                                 id="tenantSlug"
                                 name="tenantSlug"
@@ -233,11 +234,11 @@ export function RegisterForm() {
                                 value={formData.tenantSlug}
                                 onChange={handleChange}
                                 placeholder="advocacia-silva"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1152d4] focus:border-transparent outline-none transition disabled:bg-gray-50 font-mono text-sm"
+                                className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1152d4] focus:border-transparent outline-none transition disabled:bg-gray-50 font-mono text-sm bg-gray-50"
                             />
                         </div>
-                        <p className="mt-1 text-xs text-gray-500">
-                            Será usado como identificador único: <span className="font-mono">{formData.tenantSlug || 'seu-escritorio'}.jurisnexo.com</span>
+                        <p className="mt-1 text-[10px] text-gray-500 truncate pl-1">
+                            {formData.tenantSlug ? `${formData.tenantSlug}.jurisnexo.com` : 'escolha-seu-link'}
                         </p>
                     </div>
 

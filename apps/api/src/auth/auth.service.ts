@@ -5,6 +5,7 @@ import {
     ConflictException,
     Logger
 } from '@nestjs/common';
+import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
@@ -389,5 +390,54 @@ export class AuthService {
             refreshToken,
             expiresIn: this.configService.get('JWT_EXPIRATION'),
         };
+    }
+    /**
+     * Set cookies for authentication
+     */
+    setCookies(res: Response, accessToken: string, refreshToken: string) {
+        res.cookie('access_token', accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: parseInt(this.configService.get('JWT_EXPIRATION')) * 1000,
+        });
+
+        res.cookie('refresh_token', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: parseInt(this.configService.get('JWT_REFRESH_EXPIRATION')) * 1000,
+        });
+    }
+
+    /**
+     * Create a session for a specific tenant context
+     */
+    async createTenantSession(userId: string, tenantId: string) {
+        // Verify user exists
+        const { data: user, error } = await this.supabase
+            .from('users')
+            .select('id, email, name, role, status')
+            .eq('id', userId)
+            .single();
+
+        if (error || !user) {
+            throw new UnauthorizedException('User not found');
+        }
+
+        // Create token payload with new tenantId
+        const payload = {
+            sub: user.id,
+            email: user.email,
+            role: user.role,
+            tenantId: tenantId,
+        };
+
+        // Reuse generateTokens logic but with specific payload needs or call generateTokens if it accepted payload override?
+        // generateTokens takes user object. user object has tenant_id.
+        // We can just mock a user object with the new tenant_id.
+
+        const userWithTenant = { ...user, tenant_id: tenantId };
+        return this.generateTokens(userWithTenant);
     }
 }

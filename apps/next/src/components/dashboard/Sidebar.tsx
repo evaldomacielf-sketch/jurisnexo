@@ -7,17 +7,25 @@ import { usePathname, useRouter } from 'next/navigation';
 import { usePlan } from '@/hooks/usePlan';
 import { useTenantContext } from '@/providers/TenantProvider';
 
+// ... (imports remain)
 export function Sidebar() {
     const { plan } = usePlan();
-    const { tenant, isSubdomain } = useTenantContext();
+    const { tenant } = useTenantContext(); // Removed isSubdomain
     const pathname = usePathname();
 
     const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
     const [tenants, setTenants] = useState<any[]>([]);
     const [loadingTenants, setLoadingTenants] = useState(false);
-    const router = useRouter();
 
     const isActive = (path: string) => pathname === path;
+    // ... (omitting middle parts)
+    <div className="w-full bg-gray-700 h-1.5 rounded-full overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <div
+            className="bg-blue-500 h-full rounded-full"
+            style={{ width: `${(plan.daysLeft / 7) * 100}%` }}
+        ></div>
+    </div>
 
     useEffect(() => {
         if (isSwitcherOpen && tenants.length === 0) {
@@ -137,7 +145,10 @@ export function Sidebar() {
                         </div>
                         <div className="w-full bg-gray-700 h-1.5 rounded-full overflow-hidden">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <div className="bg-blue-500 h-full rounded-full w-[var(--prog)]" style={{ '--prog': `${(plan.daysLeft / 7) * 100}%` } as React.CSSProperties}></div>
+                            <div
+                                className="bg-blue-500 h-full rounded-full"
+                                style={{ width: `${(plan.daysLeft / 7) * 100}%` }}
+                            ></div>
                         </div>
                         <p className="text-[10px] text-blue-200/70 mt-2 leading-tight">Assine agora para manter o acesso total.</p>
                     </div>

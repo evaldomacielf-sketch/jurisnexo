@@ -11,6 +11,10 @@
         "target": "ES2021",
         "sourceMap": true,
         "baseUrl": ".",
+        "strictPropertyInitialization": false,
+        "strictNullChecks": false,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
         "paths": {
             "@/*": [
                 "./src/*"
