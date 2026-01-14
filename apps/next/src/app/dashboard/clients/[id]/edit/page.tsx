@@ -14,7 +14,7 @@ export default async function EditClientPage({ params }: PageProps) {
 
     return (
         <>
-            <Header tenantName="Silva & Associados" showSearch={false} />
+            <Header showSearch={false} />
             <div className="p-8">
                 <ClientForm clientId={id} />
             </div>

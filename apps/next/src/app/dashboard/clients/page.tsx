@@ -11,7 +11,7 @@ export const metadata = {
 export default function ClientsPage() {
     return (
         <>
-            <Header tenantName="Silva & Associados" showSearch={false} />
+            <Header showSearch={false} />
 
             <div className="p-8">
                 <div className="flex items-center justify-between mb-6">

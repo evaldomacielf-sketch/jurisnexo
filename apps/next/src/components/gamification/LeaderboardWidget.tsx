@@ -26,47 +26,28 @@ interface UserScore {
 export function LeaderboardWidget() {
     const [users, setUsers] = useState<UserScore[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
-        // Fetch from API
-        // Assuming Next.js rewrites /api -> localhost:3000 or using localhost:3000 directly
         const fetchLeaderboard = async () => {
-            // Extract token from cookie (simple parse) if needed, or rely on browser cookie for same-origin
-            // But API is on 3000, App on 300?. Likely CORS.
-            // Best to use the implicit cookie if credentials=include.
             try {
-                // Determine API URL (env or localhost)
-                // Fix: Correct path is /api/crm/gamification/leaderboard (per API logs)
                 const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/crm/gamification/leaderboard`;
-
-                // We need the token. The previous `SuperadminPage` used `useAuth` which I couldn't find.
-                // I will try to read the token from localStorage if the app stores it there, or just failing that, console error.
-                // Assuming app stores 'token' in localStorage based on other files I've seen in other prompts?
-                // Or maybe cookie. 
-                // Let's try basic fetch with credentials.
-
-                // Workaround: Read cookie 'access_token' manually if possible or just rely on proxy?
-                // Apps often use an `api` utility.
-
-                // Let's implement a safe retry with localStorage 'access_token' if it exists.
                 const token = (document.cookie.match(/access_token=([^;]+)/) || [])[1];
 
-                if (!token) {
-                    // Try localStorage
-                    // const localToken = localStorage.getItem('access_token');
-                }
-
                 const res = await fetch(apiUrl, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                    headers: token ? { Authorization: `Bearer ${token}` } : {},
+                    signal: AbortSignal.timeout(5000), // 5s timeout
                 });
+
                 if (res.ok) {
                     const data = await res.json();
                     setUsers(data);
+                } else {
+                    setError(true);
                 }
-            } catch (err) {
-                console.error('Failed to fetch leaderboard', err);
+            } catch {
+                // Silently fail - API might not be running
+                setError(true);
             } finally {
                 setLoading(false);
             }
@@ -76,6 +57,24 @@ export function LeaderboardWidget() {
     }, []);
 
     if (loading) return <Card className="animate-pulse"><CardContent className="h-40" /></Card>;
+
+    if (error) {
+        return (
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-yellow-500">trophy</span>
+                        Ranking da Equipe
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-slate-500 text-center py-4">
+                        Ranking indisponível no momento.
+                    </p>
+                </CardContent>
+            </Card>
+        );
+    }
 
     return (
         <Card>

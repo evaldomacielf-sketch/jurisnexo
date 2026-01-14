@@ -17,7 +17,7 @@ export default async function ClientDetailPage({ params }: PageProps) {
 
     return (
         <>
-            <Header tenantName="Silva & Associados" showSearch={false} />
+            <Header showSearch={false} />
 
             <div className="p-8">
                 <Suspense fallback={<DetailsSkeleton />}>

@@ -2,23 +2,30 @@
 
 import { Search, ChevronDown, Building2 } from 'lucide-react';
 import { NotificationCenter } from './NotificationCenter';
+import { useTenantContext } from '@/providers/TenantProvider';
 
 // ============================================
 // 🎯 Dashboard Header (com Notificações)
 // ============================================
 
 interface HeaderProps {
-    tenantName?: string;
     showSearch?: boolean;
 }
 
-export function Header({ tenantName = 'Seu Escritório', showSearch = true }: HeaderProps) {
+export function Header({ showSearch = true }: HeaderProps) {
+    const { tenant, loading } = useTenantContext();
+
+    const tenantName = loading ? 'Carregando...' : (tenant?.name || 'Seu Escritório');
+
     return (
         <header className="h-16 flex items-center justify-between px-8 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shrink-0">
             <div className="flex items-center gap-4 flex-1">
                 {/* Tenant Selector */}
                 <div className="relative group">
-                    <button className="flex items-center gap-3 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 hover:bg-white dark:hover:bg-gray-700 transition-colors">
+                    <button
+                        className="flex items-center gap-3 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 hover:bg-white dark:hover:bg-gray-700 transition-colors"
+                        aria-label="Selecionar escritório"
+                    >
                         <Building2 className="w-5 h-5 text-primary" />
                         <div className="text-left">
                             <p className="text-[10px] text-gray-600 dark:text-gray-400 font-bold uppercase tracking-tight leading-none">
