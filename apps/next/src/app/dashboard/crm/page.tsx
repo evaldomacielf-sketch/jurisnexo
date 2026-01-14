@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ConversationList } from '../../../components/crm/ConversationList';
+import { ConversationList } from '../../../components/inbox/ConversationList';
 import { ChatWindow } from '../../../components/crm/ChatWindow';
 
 // MOCK DATA for initial render (until API is connected via proxy/env)

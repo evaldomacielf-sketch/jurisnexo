@@ -21,6 +21,7 @@ export interface AuthUser {
     emailVerified: boolean;
     createdAt: string;
     updatedAt: string;
+    tenantId?: string; // Added to support new client logic
     tenant?: {
         name: string;
         slug: string;
@@ -64,6 +65,8 @@ export interface LoginResponse {
     user: AuthUser;
 }
 
+export type AuthResponse = LoginResponse; // Alias for new code
+
 /**
  * Resposta de Register da API
  */
@@ -80,6 +83,8 @@ export interface LoginDTO {
     password: string;
 }
 
+export type LoginCredentials = LoginDTO; // Alias
+
 export interface RegisterDTO {
     name: string;
     email: string;
@@ -87,6 +92,8 @@ export interface RegisterDTO {
     tenantSlug: string; // Será gerado automaticamente do nome do escritório
     tenantName: string; // Nome do escritório
 }
+
+export type RegisterData = RegisterDTO; // Alias
 
 export interface ForgotPasswordDTO {
     email: string;
@@ -96,6 +103,16 @@ export interface ResetPasswordDTO {
     token: string;
     password: string;
 }
+
+export type ResetPasswordData = ResetPasswordDTO; // Alias
+
+export interface VerifyEmailData {
+    email: string;
+    code: string;
+}
+
+// User alias for compatibility
+export type User = AuthUser;
 
 /**
  * Respostas de ações

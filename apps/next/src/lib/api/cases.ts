@@ -1,94 +1,35 @@
-import { getSession } from '../auth/session';
+import { apiClient } from '@/services/api/client';
 import type { Case, CreateCaseDTO } from '../types/cases';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
-
-async function getHeaders() {
-    const session = await getSession();
-    const headers: HeadersInit = {
-        'Content-Type': 'application/json',
-    };
-
-    if (session?.accessToken) {
-        headers['Authorization'] = `Bearer ${session.accessToken}`;
-    }
-
-    return headers;
-}
-
 export const casesApi = {
-    getCases: async (filters?: { status?: string }) => {
-        const headers = await getHeaders();
-        let url = `${API_URL}/cases`;
-        if (filters?.status) {
-            url += `?status=${filters.status}`;
-        }
-
-        const response = await fetch(url, {
-            method: 'GET',
-            headers,
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch cases');
-        }
-
-        return response.json() as Promise<Case[]>;
+    getCases: async (params?: { search?: string; status?: string }) => {
+        const { data } = await apiClient.get<Case[]>('/cases', { params });
+        return data;
     },
 
     getCaseById: async (id: string) => {
-        const headers = await getHeaders();
-        const response = await fetch(`${API_URL}/cases/${id}`, {
-            method: 'GET',
-            headers,
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch case');
-        }
-
-        return response.json() as Promise<Case>;
+        const { data } = await apiClient.get<Case>(`/cases/${id}`);
+        return data;
     },
 
     createCase: async (data: CreateCaseDTO) => {
-        const headers = await getHeaders();
-        const response = await fetch(`${API_URL}/cases`, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(data),
-        });
+        const { response } = await apiClient.post<Case>('/cases', data);
+        return response;
+    },
 
-        if (!response.ok) {
-            throw new Error('Failed to create case');
-        }
+    // Method expected by CaseDetails component
+    getCase: async (id: string) => {
+        const { data } = await apiClient.get<Case>(`/cases/${id}`);
+        return data;
+    },
 
-        return response.json() as Promise<Case>;
+    // Method expected by CaseDetails component
+    deleteCase: async (id: string) => {
+        await apiClient.delete(`/cases/${id}`);
     },
 
     updateCase: async (id: string, data: Partial<CreateCaseDTO>) => {
-        const headers = await getHeaders();
-        const response = await fetch(`${API_URL}/cases/${id}`, {
-            method: 'PATCH',
-            headers,
-            body: JSON.stringify(data),
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to update case');
-        }
-
-        return response.json() as Promise<Case>;
-    },
-
-    deleteCase: async (id: string) => {
-        const headers = await getHeaders();
-        const response = await fetch(`${API_URL}/cases/${id}`, {
-            method: 'DELETE',
-            headers,
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to delete case');
-        }
-    },
+        const { data: response } = await apiClient.patch<Case>(`/cases/${id}`, data);
+        return response;
+    }
 };

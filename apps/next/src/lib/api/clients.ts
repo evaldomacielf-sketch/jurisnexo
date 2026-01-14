@@ -1,107 +1,42 @@
-'use client';
-
-import type { Client, CreateClientDTO, CreateInteractionDTO, CreateDocumentDTO } from '@/lib/types/client';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
-
-// ============================================
-// 👥 Clients API
-// ============================================
+import { apiClient } from '@/services/api/client';
+import type { Client, CreateClientDTO, ClientInteraction, ClientDocument } from '../types/client';
 
 export const clientsApi = {
-    // CRUD
-    async getAll(filters?: any): Promise<Client[]> {
-        const params = new URLSearchParams(filters);
-        const response = await fetch(`${API_URL}/clients?${params}`, {
-            credentials: 'include',
-        });
-        if (!response.ok) throw new Error('Erro ao buscar clientes');
-        return response.json();
+    getClients: async (params?: { search?: string; status?: string; type?: string }) => {
+        const { data } = await apiClient.get<Client[]>('/clients', { params });
+        return data;
     },
 
-    async getById(id: string): Promise<Client> {
-        const response = await fetch(`${API_URL}/clients/${id}`, {
-            credentials: 'include',
-        });
-        if (!response.ok) throw new Error('Erro ao buscar cliente');
-        return response.json();
+    getClientById: async (id: string) => {
+        const { data } = await apiClient.get<Client>(`/clients/${id}`);
+        return data;
     },
 
-    async create(data: CreateClientDTO): Promise<Client> {
-        const response = await fetch(`${API_URL}/clients`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify(data),
-        });
-        if (!response.ok) throw new Error('Erro ao criar cliente');
-        return response.json();
+    createClient: async (client: CreateClientDTO) => {
+        const { data } = await apiClient.post<Client>('/clients', client);
+        return data;
     },
 
-    async update(id: string, data: Partial<CreateClientDTO>): Promise<Client> {
-        const response = await fetch(`${API_URL}/clients/${id}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify(data),
-        });
-        if (!response.ok) throw new Error('Erro ao atualizar cliente');
-        return response.json();
+    updateClient: async (id: string, client: Partial<CreateClientDTO>) => {
+        const { data } = await apiClient.patch<Client>(`/clients/${id}`, client);
+        return data;
     },
 
-    async delete(id: string): Promise<void> {
-        const response = await fetch(`${API_URL}/clients/${id}`, {
-            method: 'DELETE',
-            credentials: 'include',
-        });
-        if (!response.ok) throw new Error('Erro ao deletar cliente');
+    deleteClient: async (id: string) => {
+        await apiClient.delete(`/clients/${id}`);
     },
 
-    // Interações
-    async createInteraction(data: CreateInteractionDTO) {
-        const response = await fetch(`${API_URL}/clients/interactions`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify(data),
-        });
-        if (!response.ok) throw new Error('Erro ao criar interação');
-        return response.json();
+    addInteraction: async (clientId: string, interaction: Omit<ClientInteraction, 'id' | 'createdAt'>) => {
+        const { data } = await apiClient.post<ClientInteraction>(`/clients/${clientId}/interactions`, interaction);
+        return data;
     },
 
-    async getInteractions(clientId: string) {
-        const response = await fetch(`${API_URL}/clients/${clientId}/interactions`, {
-            credentials: 'include',
-        });
-        if (!response.ok) throw new Error('Erro ao buscar interações');
-        return response.json();
+    addDocument: async (clientId: string, document: Omit<ClientDocument, 'id' | 'uploadedAt'>) => {
+        const { data } = await apiClient.post<ClientDocument>(`/clients/${clientId}/documents`, document);
+        return data;
     },
 
-    // Documentos
-    async uploadDocument(data: CreateDocumentDTO) {
-        const response = await fetch(`${API_URL}/clients/documents`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify(data),
-        });
-        if (!response.ok) throw new Error('Erro ao fazer upload');
-        return response.json();
-    },
-
-    async getDocuments(clientId: string) {
-        const response = await fetch(`${API_URL}/clients/${clientId}/documents`, {
-            credentials: 'include',
-        });
-        if (!response.ok) throw new Error('Erro ao buscar documentos');
-        return response.json();
-    },
-
-    async deleteDocument(id: string) {
-        const response = await fetch(`${API_URL}/clients/documents/${id}`, {
-            method: 'DELETE',
-            credentials: 'include',
-        });
-        if (!response.ok) throw new Error('Erro ao deletar documento');
-    },
+    deleteDocument: async (clientId: string, documentId: string) => {
+        await apiClient.delete(`/clients/${clientId}/documents/${documentId}`);
+    }
 };

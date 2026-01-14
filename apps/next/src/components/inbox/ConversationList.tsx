@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
 import { UrgencyBadge } from './UrgencyBadge';
-
-interface Conversation {
-    id: string;
-    contact: { name: string; phone: string };
-    last_message?: { content: string; created_at: string };
-    urgency: 'NORMAL' | 'HIGH' | 'PLANTAO';
-    status: 'OPEN' | 'CLOSED';
-}
+import type { Conversation, ConversationPriority } from '@/types/inbox';
 
 interface ConversationListProps {
     conversations: Conversation[];
@@ -16,9 +9,9 @@ interface ConversationListProps {
 }
 
 export const ConversationList: React.FC<ConversationListProps> = ({ conversations, selectedId, onSelect }) => {
-    const [filter, setFilter] = useState<'ALL' | 'PLANTAO'>('ALL');
+    const [filter, setFilter] = useState<'ALL' | 'URGENT'>('ALL');
 
-    const filtered = conversations.filter(c => filter === 'ALL' || c.urgency === 'PLANTAO');
+    const filtered = conversations.filter(c => filter === 'ALL' || c.priority === 'urgent');
 
     return (
         <div className="flex flex-col h-full bg-white border-r border-slate-200 w-80">
@@ -33,11 +26,11 @@ export const ConversationList: React.FC<ConversationListProps> = ({ conversation
                         Todas
                     </button>
                     <button
-                        onClick={() => setFilter('PLANTAO')}
-                        className={`flex-1 py-1 px-2 text-xs rounded-md font-medium transition-colors ${filter === 'PLANTAO' ? 'bg-red-600 text-white shadow-sm' : 'bg-red-50 text-red-600 hover:bg-red-100'
+                        onClick={() => setFilter('URGENT')}
+                        className={`flex-1 py-1 px-2 text-xs rounded-md font-medium transition-colors ${filter === 'URGENT' ? 'bg-red-600 text-white shadow-sm' : 'bg-red-50 text-red-600 hover:bg-red-100'
                             }`}
                     >
-                        🚨 Plantão
+                        🚨 Urgentes
                     </button>
                 </div>
             </div>
@@ -57,13 +50,13 @@ export const ConversationList: React.FC<ConversationListProps> = ({ conversation
                         >
                             <div className="flex justify-between items-start mb-1">
                                 <span className="font-semibold text-slate-800 truncate pr-2">{conv.contact.name || conv.contact.phone}</span>
-                                <UrgencyBadge urgency={conv.urgency} />
+                                <UrgencyBadge urgency={conv.priority} />
                             </div>
                             <p className="text-xs text-slate-500 truncate mb-1">
                                 {conv.last_message?.content || 'Nova conversa'}
                             </p>
                             <div className="text-[10px] text-slate-400">
-                                {conv.last_message ? new Date(conv.last_message.created_at).toLocaleDateString() : ''}
+                                {conv.last_message ? new Date(conv.last_message.sent_at).toLocaleDateString() : ''}
                             </div>
                         </button>
                     ))

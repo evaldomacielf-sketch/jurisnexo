@@ -1,0 +1,37 @@
+
+> @jurisnexo/next@0.0.1 test /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/next
+> vitest run "src/components/clients/__tests__/ClientForm.test.tsx"
+
+
+ RUN  v2.1.9 /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/next
+
+ ❯ src/components/clients/__tests__/ClientForm.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/clients/__tests__/ClientForm.test.tsx [ src/components/clients/__tests__/ClientForm.test.tsx ]
+Error: Failed to resolve import "@tanstack/react-query" from "src/tests/utils.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/next/src/tests/utils.tsx:3:49
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+  2  |  import { render } from "@testing-library/react";
+  3  |  import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+     |                                                    ^
+  4  |  import { BrowserRouter } from "react-router-dom";
+  5  |  function createTestQueryClient() {
+ ❯ TransformPluginContext._formatError ../../../../crm%20JurisNexo/jurisnexo/node_modules/.pnpm/vite@5.4.21_@types+node@22.19.5_terser@5.44.1/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41
+ ❯ TransformPluginContext.error ../../../../crm%20JurisNexo/jurisnexo/node_modules/.pnpm/vite@5.4.21_@types+node@22.19.5_terser@5.44.1/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16
+ ❯ normalizeUrl ../../../../crm%20JurisNexo/jurisnexo/node_modules/.pnpm/vite@5.4.21_@types+node@22.19.5_terser@5.44.1/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23
+ ❯ ../../../../crm%20JurisNexo/jurisnexo/node_modules/.pnpm/vite@5.4.21_@types+node@22.19.5_terser@5.44.1/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+ ❯ TransformPluginContext.transform ../../../../crm%20JurisNexo/jurisnexo/node_modules/.pnpm/vite@5.4.21_@types+node@22.19.5_terser@5.44.1/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7
+ ❯ PluginContainer.transform ../../../../crm%20JurisNexo/jurisnexo/node_modules/.pnpm/vite@5.4.21_@types+node@22.19.5_terser@5.44.1/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18
+ ❯ loadAndTransform ../../../../crm%20JurisNexo/jurisnexo/node_modules/.pnpm/vite@5.4.21_@types+node@22.19.5_terser@5.44.1/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  08:04:16
+   Duration  3.70s (transform 100ms, setup 481ms, collect 0ms, tests 0ms, environment 1.31s, prepare 245ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

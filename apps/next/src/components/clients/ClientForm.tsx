@@ -77,7 +77,7 @@ export function ClientForm({ clientId }: ClientFormProps) {
         reset,
         formState: { errors, isSubmitting },
     } = useForm<ClientFormData>({
-        resolver: zodResolver(clientSchema),
+        resolver: zodResolver(clientSchema) as any,
         defaultValues: {
             name: '',
             email: '',
@@ -98,7 +98,7 @@ export function ClientForm({ clientId }: ClientFormProps) {
             if (isEditMode && clientId) {
                 try {
                     setLoading(true);
-                    const clientData = await clientsApi.getById(clientId);
+                    const clientData = await clientsApi.getClientById(clientId);
 
                     // Map API data to form
                     reset({
@@ -134,11 +134,11 @@ export function ClientForm({ clientId }: ClientFormProps) {
     const onSubmit = async (data: ClientFormData) => {
         try {
             if (isEditMode && clientId) {
-                await clientsApi.update(clientId, data);
+                await clientsApi.updateClient(clientId, data);
                 toast.success('Cliente atualizado com sucesso');
                 router.push(`/dashboard/clients/${clientId}`);
             } else {
-                await clientsApi.create(data);
+                await clientsApi.createClient(data);
                 toast.success('Cliente criado com sucesso');
                 router.push('/dashboard/clients');
             }
@@ -188,7 +188,7 @@ export function ClientForm({ clientId }: ClientFormProps) {
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit as any)} className="space-y-6" noValidate>
                 {/* Informações Básicas */}
                 <Card>
                     <CardHeader>
@@ -403,8 +403,8 @@ export function ClientForm({ clientId }: ClientFormProps) {
                                             }
                                         }}
                                         className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${currentTags.includes(tag)
-                                                ? 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800'
-                                                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700'
+                                            ? 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800'
+                                            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700'
                                             }`}
                                     >
                                         {tag}
