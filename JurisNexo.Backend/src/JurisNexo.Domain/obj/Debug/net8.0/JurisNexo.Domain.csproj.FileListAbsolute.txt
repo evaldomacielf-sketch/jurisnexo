@@ -1,0 +1,12 @@
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/bin/Debug/net8.0/JurisNexo.Domain.deps.json
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/bin/Debug/net8.0/JurisNexo.Domain.dll
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/bin/Debug/net8.0/JurisNexo.Domain.pdb
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/obj/Debug/net8.0/JurisNexo.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/obj/Debug/net8.0/JurisNexo.Domain.AssemblyInfoInputs.cache
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/obj/Debug/net8.0/JurisNexo.Domain.AssemblyInfo.cs
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/obj/Debug/net8.0/JurisNexo.Domain.csproj.CoreCompileInputs.cache
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/obj/Debug/net8.0/JurisNexo.Domain.sourcelink.json
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/obj/Debug/net8.0/JurisNexo.Domain.dll
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/obj/Debug/net8.0/refint/JurisNexo.Domain.dll
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/obj/Debug/net8.0/JurisNexo.Domain.pdb
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/obj/Debug/net8.0/ref/JurisNexo.Domain.dll

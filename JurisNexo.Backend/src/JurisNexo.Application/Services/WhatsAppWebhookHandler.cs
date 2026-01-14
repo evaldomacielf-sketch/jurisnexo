@@ -4,9 +4,8 @@ using JurisNexo.Application.Common.Interfaces;
 using JurisNexo.Application.DTOs.Inbox;
 using JurisNexo.Application.DTOs.WhatsApp;
 using JurisNexo.Domain.Entities;
-using JurisNexo.Domain.Enums;
 using JurisNexo.Domain.Interfaces;
-using JurisNexo.Infrastructure.Hubs;
+// using JurisNexo.Infrastructure.Hubs;
 
 namespace JurisNexo.Application.Services;
 
@@ -15,7 +14,7 @@ public class WhatsAppWebhookHandler : IWhatsAppWebhookHandler
     private readonly IConversationRepository _conversationRepository;
     private readonly IContactRepository _contactRepository;
     private readonly IRepository<Message> _messageRepository;
-    private readonly IHubContext<InboxHub, IInboxHubClient> _hubContext;
+    // private readonly IHubContext<InboxHub, IInboxHubClient> _hubContext;
     private readonly IAIClassifierService _aiClassifier;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<WhatsAppWebhookHandler> _logger;
@@ -24,7 +23,7 @@ public class WhatsAppWebhookHandler : IWhatsAppWebhookHandler
         IConversationRepository conversationRepository,
         IContactRepository contactRepository,
         IRepository<Message> messageRepository,
-        IHubContext<InboxHub, IInboxHubClient> hubContext,
+        // IHubContext<InboxHub, IInboxHubClient> hubContext,
         IAIClassifierService aiClassifier,
         IUnitOfWork unitOfWork,
         ILogger<WhatsAppWebhookHandler> logger)
@@ -32,7 +31,7 @@ public class WhatsAppWebhookHandler : IWhatsAppWebhookHandler
         _conversationRepository = conversationRepository;
         _contactRepository = contactRepository;
         _messageRepository = messageRepository;
-        _hubContext = hubContext;
+        // _hubContext = hubContext;
         _aiClassifier = aiClassifier;
         _unitOfWork = unitOfWork;
         _logger = logger;
@@ -143,9 +142,9 @@ public class WhatsAppWebhookHandler : IWhatsAppWebhookHandler
             message.SentAt
         );
 
-        await _hubContext.Clients
-            .Group($"tenant:{tenantId}")
-            .NewMessage(messageDto);
+        // await _hubContext.Clients
+        //     .Group($"tenant:{tenantId}")
+        //     .NewMessage(messageDto);
     }
 
     private async Task HandleMessageUpdateAsync(WhatsAppWebhookPayload payload, CancellationToken cancellationToken)

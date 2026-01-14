@@ -28,6 +28,11 @@ public class ApplicationDbContext : DbContext
     public DbSet<Conversation> Conversations => Set<Conversation>();
     public DbSet<Message> Messages => Set<Message>();
     public DbSet<MessageTemplate> MessageTemplates => Set<MessageTemplate>();
+    public DbSet<Pipeline> Pipelines => Set<Pipeline>();
+    public DbSet<Stage> Stages => Set<Stage>();
+    public DbSet<Lead> Leads => Set<Lead>();
+    public DbSet<LeadActivity> LeadActivities => Set<LeadActivity>();
+    public DbSet<LeadNote> LeadNotes => Set<LeadNote>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

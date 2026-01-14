@@ -1,0 +1,76 @@
+/* wwwroot/swagger-ui/custom.css */
+.swagger-ui .topbar {
+    background-color: #1a1a1a;
+}
+
+.swagger-ui .topbar .download-url-wrapper .select-label {
+    color: #ffffff;
+}
+
+.swagger-ui .info .title {
+    color: #3b82f6;
+    font-size: 36px;
+}
+
+.swagger-ui .scheme-container {
+    background: #fafafa;
+    border-radius: 4px;
+    padding: 20px;
+}
+
+.swagger-ui .opblock-tag {
+    font-size: 18px;
+    font-weight: 600;
+    border-bottom: 2px solid #3b82f6;
+}
+
+.swagger-ui .opblock.opblock-post {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.swagger-ui .opblock.opblock-get {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.swagger-ui .opblock.opblock-put {
+    border-color: #f59e0b;
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.swagger-ui .opblock.opblock-patch {
+    border-color: #8b5cf6;
+    background: rgba(139, 92, 246, 0.1);
+}
+
+.swagger-ui .opblock.opblock-delete {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.swagger-ui .opblock-summary-method {
+    font-weight: 700;
+    border-radius: 4px;
+}
+
+.swagger-ui .btn.execute {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.swagger-ui .btn.execute:hover {
+    background-color: #2563eb;
+    border-color: #2563eb;
+}
+
+.swagger-ui .model-box {
+    background: #fafafa;
+    border-radius: 4px;
+}
+
+/* Lock icon for authenticated endpoints */
+.swagger-ui .opblock-summary-description::before {
+    content: "";
+    margin-right: 5px;
+}

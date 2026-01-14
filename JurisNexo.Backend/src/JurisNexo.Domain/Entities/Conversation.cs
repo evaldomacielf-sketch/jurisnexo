@@ -25,6 +25,7 @@ public class Conversation : TenantEntity
     public ConversationPriority Priority { get; set; }
     public Guid? AssignedToUserId { get; set; }
     public string? WhatsappChatId { get; set; }
+    public DateTime? LastMessageAt { get; set; }
     
     // Navigation properties
     public virtual Contact Contact { get; set; } = null!;

@@ -1,67 +1,36 @@
-# Docker Compose for Local Development
-# Run with: docker-compose up
+version: '3.8'
 
 services:
-  next:
-    build:
-      context: .
-      dockerfile: apps/next/Dockerfile
-    ports:
-      - "3000:3000"
+  # ==========================================
+  # DATABASE
+  # ==========================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: jurisnexo-postgres
     environment:
-      - NODE_ENV=development
-      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
-      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
-      - NEXT_PUBLIC_APP_URL=http://localhost:3000
-    depends_on:
-      - api
-    healthcheck:
-      test: [ "CMD", "wget", "--spider", "http://localhost:3000/api/health" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  api:
-    build:
-      context: .
-      dockerfile: apps/api/Dockerfile
+      POSTGRES_DB: jurisnexo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "4000:4000"
-    environment:
-      - NODE_ENV=development
-      - PORT=4000
-      - SUPABASE_URL=${SUPABASE_URL}
-      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
-      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
-      - JWT_SECRET=${JWT_SECRET}
+      - "5432:5432"
     healthcheck:
-      test: [ "CMD", "wget", "--spider", "http://localhost:4000/api/health" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - jurisnexo-network
 
-  worker:
-    build:
-      context: .
-      dockerfile: apps/worker/Dockerfile
-    ports:
-      - "4001:4001"
-    environment:
-      - NODE_ENV=development
-      - PORT=4001
-      - SUPABASE_URL=${SUPABASE_URL}
-      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
-      - REDIS_URL=${REDIS_URL:-}
-    depends_on:
-      - redis
-    healthcheck:
-      test: [ "CMD", "wget", "--spider", "http://localhost:4001/health" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
+  # ==========================================
+  # REDIS
+  # ==========================================
   redis:
     image: redis:7-alpine
+    container_name: jurisnexo-redis
+    command: redis-server --requirepass ${REDIS_PASSWORD:-redis123}
     ports:
       - "6379:6379"
     volumes:
@@ -71,6 +40,103 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - jurisnexo-network
+
+  # ==========================================
+  # RABBITMQ
+  # ==========================================
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: jurisnexo-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-admin}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-admin}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - jurisnexo-network
+
+  # ==========================================
+  # BACKEND API
+  # ==========================================
+  backend:
+    build:
+      context: ./JurisNexo.Backend
+      dockerfile: src/JurisNexo.API/Dockerfile
+    container_name: jurisnexo-backend
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=jurisnexo;Username=postgres;Password=${POSTGRES_PASSWORD:-postgres}
+      - ConnectionStrings__Redis=redis:6379,password=${REDIS_PASSWORD:-redis123}
+      - Jwt__SecretKey=${JWT_SECRET_KEY:-SUPER_SECRET_KEY_MUST_BE_VERY_LONG_FOR_SECURITY}
+      - Jwt__Issuer=JurisNexo
+      - Jwt__Audience=JurisNexoApp
+      - Smtp__Host=${SMTP_HOST}
+      - Smtp__Port=${SMTP_PORT}
+      - Smtp__Username=${SMTP_USERNAME}
+      - Smtp__Password=${SMTP_PASSWORD}
+      - WhatsApp__EvolutionApiUrl=${EVOLUTION_API_URL}
+      - WhatsApp__ApiKey=${EVOLUTION_API_KEY}
+      - WhatsApp__InstanceName=${EVOLUTION_INSTANCE_NAME}
+    ports:
+      - "5000:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - jurisnexo-network
+    restart: unless-stopped
+
+  # ==========================================
+  # FRONTEND (Next.js)
+  # ==========================================
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/next/Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: http://localhost:5000/api
+        NEXT_PUBLIC_WS_URL: ws://localhost:5000/hubs
+    container_name: jurisnexo-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    healthcheck:
+      test: [ "CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - jurisnexo-network
+    restart: unless-stopped
 
 volumes:
+  postgres_data:
   redis_data:
+  rabbitmq_data:
+
+
+networks:
+  jurisnexo-network:
+    driver: bridge

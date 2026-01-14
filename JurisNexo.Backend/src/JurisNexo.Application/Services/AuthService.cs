@@ -2,10 +2,8 @@ using JurisNexo.Application.DTOs;
 using JurisNexo.Application.DTOs.Auth;
 using JurisNexo.Domain.Entities;
 using JurisNexo.Domain.Interfaces;
-// Interfaces and Exceptions are assumed to be in these namespaces or similar, 
-// to be resolved when defining IPasswordHasher, IUnitOfWork etc.
-// using JurisNexo.Application.Common.Interfaces;
-// using JurisNexo.Application.Common.Exceptions;
+using JurisNexo.Application.Common.Interfaces;
+using JurisNexo.Application.Common.Exceptions;
 
 namespace JurisNexo.Application.Services;
 
@@ -17,6 +15,7 @@ public class AuthService : IAuthService
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IEmailService _emailService;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IPipelineSeeder _pipelineSeeder;
 
     public AuthService(
         IUserRepository userRepository,
@@ -24,7 +23,8 @@ public class AuthService : IAuthService
         IPasswordHasher passwordHasher,
         IJwtTokenGenerator jwtTokenGenerator,
         IEmailService emailService,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IPipelineSeeder pipelineSeeder)
     {
         _userRepository = userRepository;
         _tenantRepository = tenantRepository;
@@ -32,6 +32,7 @@ public class AuthService : IAuthService
         _jwtTokenGenerator = jwtTokenGenerator;
         _emailService = emailService;
         _unitOfWork = unitOfWork;
+        _pipelineSeeder = pipelineSeeder;
     }
 
     public async Task<LoginResponse> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)
@@ -98,6 +99,9 @@ public class AuthService : IAuthService
 
         // Envia e-mail de verificação
         await _emailService.SendVerificationEmailAsync(user.Email, user.Name, verificationCode);
+
+        // Seed default pipeline
+        await _pipelineSeeder.SeedDefaultPipelineAsync(tenant.Id);
 
         var token = _jwtTokenGenerator.GenerateToken(user);
         var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();

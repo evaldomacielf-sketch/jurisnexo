@@ -1,6 +1,6 @@
 import { Controller, Get, UseGuards, Req } from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
-import { AuthGuard } from '../auth/auth.guard';
+import { AuthGuard } from '../auth.guard';
 
 @Controller('schedule')
 @UseGuards(AuthGuard)

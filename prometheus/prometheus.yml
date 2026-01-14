@@ -1,0 +1,46 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'jurisnexo-production'
+    region: 'us-east-1'
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+rule_files:
+  - '/etc/prometheus/alerts/*.yml'
+
+scrape_configs:
+  # Backend API
+  # NOTE: In ECS Fargate, consider using 'dns_sd_configs' or AWS Cloud Map service discovery 
+  # instead of 'ec2_sd_configs' if tasks are not registering as EC2 instances.
+  - job_name: 'jurisnexo-api'
+    ec2_sd_configs:
+      - region: us-east-1
+        port: 9090
+        filters:
+          - name: tag:Service
+            values: ['jurisnexo-api']
+    relabel_configs:
+      - source_labels: [__meta_ec2_tag_Name]
+        target_label: instance
+
+  # PostgreSQL Exporter
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+
+  # Redis Exporter
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+
+  # Node Exporter (if using EC2)
+  - job_name: 'node'
+    ec2_sd_configs:
+      - region: us-east-1
+        port: 9100

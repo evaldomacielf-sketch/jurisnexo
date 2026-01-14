@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -10,10 +11,44 @@ using JurisNexo.Application.Services;
 using JurisNexo.Application.Common.Interfaces;
 using JurisNexo.Application.Common.Settings;
 using JurisNexo.Domain.Interfaces;
-using JurisNexo.API.Hubs;
+using JurisNexo.Infrastructure.Hubs;
 using JurisNexo.API.Controllers;
+using JurisNexo.API.Configuration;
+using JurisNexo.API.Startup;
+using JurisNexo.Infrastructure.Monitoring;
+using Amazon.CloudWatch;
+using Amazon.Extensions.NETCore.Setup;
 
-var builder = WebApplication.CreateBuilder(args);
+using Serilog;
+using Sentry;
+
+// Initialize Serilog first
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
+
+try
+{
+    var builder = WebApplication.CreateBuilder(args);
+
+    // Add Serilog
+    builder.Host.UseSerilog((context, services, configuration) => configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services)
+        .Enrich.FromLogContext()
+        .WriteTo.Console());
+
+    // Add Sentry
+    builder.WebHost.UseSentry(options =>
+    {
+        options.Dsn = builder.Configuration["Sentry:Dsn"];
+        options.TracesSampleRate = 1.0;
+        options.Debug = false;
+        options.Environment = builder.Environment.EnvironmentName;
+    });
+
+    // Add X-Ray Tracing
+    builder.Services.AddXRayTracing();
 
 // Configuration
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
@@ -34,6 +69,9 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IContactRepository, ContactRepository>();
 builder.Services.AddScoped<ICaseRepository, CaseRepository>();
 builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
+builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IPipelineRepository, PipelineRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -42,6 +80,15 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IStorageService, LocalStorageService>();
+builder.Services.AddScoped<IPipelineService, PipelineService>();
+builder.Services.AddScoped<ILeadService, LeadService>();
+builder.Services.AddScoped<ILeadRepository, LeadRepository>();
+builder.Services.AddScoped<IPipelineSeeder, PipelineSeeder>();
+
+// Monitoring
+builder.Services.AddAWSService<IAmazonCloudWatch>();
+builder.Services.AddSingleton<IMetricsPublisher, CloudWatchMetricsPublisher>();
 
 // HttpContext
 builder.Services.AddHttpContextAccessor();
@@ -80,43 +127,39 @@ builder.Services.AddCors(options =>
 
 // Controllers
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "JWT Authorization header usando Bearer scheme",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
+builder.Services.AddApiVersioningConfiguration();
+builder.Services.AddSwaggerDocumentation();
 
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
+// Enable XML documentation & JSON Defaults
+builder.Services.Configure<Microsoft.AspNetCore.Mvc.MvcOptions>(options =>
+{
+    options.Filters.Add(new Microsoft.AspNetCore.Mvc.ProducesAttribute("application/json"));
+    options.Filters.Add(new Microsoft.AspNetCore.Mvc.ConsumesAttribute("application/json"));
 });
 
 var app = builder.Build();
 
+// X-Ray Tracing Middleware (Must be early in the pipeline)
+app.UseXRayTracing();
+
 // Middleware
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerDocumentation();
+    app.UseReDocDocumentation();
+    app.UseStaticFiles(); // Enable serving static files (css, js, images)
+    
+    // Endpoint para gerar Postman Collection
+    app.MapGet("/api/docs/postman", (IServiceProvider services) =>
+    {
+        var collection = PostmanCollectionGenerator.GenerateCollection(services);
+        return Results.Content(collection, "application/json", System.Text.Encoding.UTF8);
+    }).ExcludeFromDescription();
 }
 
+
+app.UseSerilogRequestLogging();
+app.UseMiddleware<PerformanceMonitoringMiddleware>();
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseAuthentication();
@@ -125,4 +168,13 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHub<InboxHub>("/hubs/inbox");
 
-app.Run();
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

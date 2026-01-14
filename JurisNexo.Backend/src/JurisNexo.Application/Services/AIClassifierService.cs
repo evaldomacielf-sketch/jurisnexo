@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 using JurisNexo.Application.Common.Interfaces;
-using JurisNexo.Domain.Enums;
+using JurisNexo.Domain.Entities;
 
 namespace JurisNexo.Application.Services;
 

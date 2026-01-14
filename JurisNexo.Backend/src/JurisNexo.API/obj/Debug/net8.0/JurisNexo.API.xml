@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JurisNexo.API</name>
+    </assembly>
+    <members>
+        <member name="T:JurisNexo.API.Controllers.AuthController">
+            <summary>
+            Endpoints de autenticação e gerenciamento de usuários
+            </summary>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.AuthController.Login(JurisNexo.Application.DTOs.Auth.LoginRequest,System.Threading.CancellationToken)">
+            <summary>
+            Realiza login de usuário
+            </summary>
+            <param name="request">Credenciais de login (email e senha)</param>
+            <param name="cancellationToken">Token de cancelamento</param>
+            <returns>Token JWT, refresh token e dados do usuário</returns>
+            <response code="200">Login realizado com sucesso</response>
+            <response code="401">Credenciais inválidas ou e-mail não verificado</response>
+            <response code="400">Requisição inválida</response>
+            <remarks>
+            Exemplo de requisição:
+            
+                POST /api/auth/login
+                {
+                    "email": "joao@exemplo.com",
+                    "password": "SenhaSegura123!"
+                }
+            
+            O token JWT retornado deve ser incluído no header Authorization de todas as requisições subsequentes:
+            
+                Authorization: Bearer {token}
+                
+            O token expira em 1 hora. Use o refresh token para renovar.
+            </remarks>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.AuthController.Register(JurisNexo.Application.DTOs.Auth.RegisterRequest,System.Threading.CancellationToken)">
+            <summary>
+            Registra novo usuário e escritório (tenant)
+            </summary>
+            <param name="request">Dados de registro</param>
+            <param name="cancellationToken">Token de cancelamento</param>
+            <returns>Token JWT, refresh token e dados do usuário criado</returns>
+            <response code="201">Usuário criado com sucesso</response>
+            <response code="400">E-mail já cadastrado ou dados inválidos</response>
+            <remarks>
+            Exemplo de requisição:
+            
+                POST /api/auth/register
+                {
+                    "email": "maria@exemplo.com",
+                    "password": "SenhaSegura123!",
+                    "name": "Maria Silva",
+                    "firmName": "Silva Advocacia",
+                    "phone": "11999999999"
+                }
+            
+            Após o registro:
+            - Um código de verificação de 6 dígitos será enviado para o e-mail
+            - O usuário deve verificar o e-mail usando o endpoint /api/auth/verify-email
+            - O tenant criado terá 30 dias de trial
+            - O usuário criado terá role "Admin"
+            </remarks>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.AuthController.VerifyEmail(JurisNexo.Application.DTOs.Auth.VerifyEmailRequest,System.Threading.CancellationToken)">
+            <summary>
+            Verifica e-mail com código de 6 dígitos
+            </summary>
+            <param name="request">E-mail e código de verificação</param>
+            <param name="cancellationToken">Token de cancelamento</param>
+            <returns>Confirmação de sucesso</returns>
+            <response code="200">E-mail verificado com sucesso</response>
+            <response code="400">Código inválido ou expirado</response>
+            <response code="404">Usuário não encontrado</response>
+            <remarks>
+            O código de verificação é válido por 24 horas.
+            Use o endpoint /api/auth/resend-verification para reenviar o código caso necessário.
+            </remarks>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.AuthController.ResendVerification(JurisNexo.Application.DTOs.Auth.ResendVerificationRequest,System.Threading.CancellationToken)">
+            <summary>
+            Reenvia código de verificação de e-mail
+            </summary>
+            <param name="request">E-mail do usuário</param>
+            <param name="cancellationToken">Token de cancelamento</param>
+            <returns>Confirmação de envio</returns>
+            <response code="200">Código reenviado com sucesso</response>
+            <response code="404">Usuário não encontrado</response>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.AuthController.RefreshToken(JurisNexo.Application.DTOs.Auth.RefreshTokenRequest,System.Threading.CancellationToken)">
+            <summary>
+            Renova token JWT usando refresh token
+            </summary>
+            <param name="request">Refresh token</param>
+            <param name="cancellationToken">Token de cancelamento</param>
+            <returns>Novo token JWT e novo refresh token</returns>
+            <response code="200">Token renovado com sucesso</response>
+            <response code="401">Refresh token inválido ou expirado</response>
+            <remarks>
+            O refresh token é válido por 7 dias.
+            Ao renovar, um novo refresh token é gerado e o anterior é invalidado.
+            </remarks>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.AuthController.ForgotPassword(JurisNexo.Application.DTOs.Auth.ForgotPasswordRequest,System.Threading.CancellationToken)">
+            <summary>
+            Solicita redefinição de senha
+            </summary>
+            <param name="request">E-mail do usuário</param>
+            <param name="cancellationToken">Token de cancelamento</param>
+            <returns>Confirmação de envio</returns>
+            <response code="200">E-mail de redefinição enviado (sempre retorna sucesso por segurança)</response>
+            <remarks>
+            Um link com token será enviado para o e-mail cadastrado.
+            O token é válido por 2 horas.
+            Por segurança, sempre retorna sucesso mesmo se o e-mail não existir.
+            </remarks>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.AuthController.ResetPassword(JurisNexo.Application.DTOs.Auth.ResetPasswordRequest,System.Threading.CancellationToken)">
+            <summary>
+            Redefine senha usando token
+            </summary>
+            <param name="request">Token e nova senha</param>
+            <param name="cancellationToken">Token de cancelamento</param>
+            <returns>Confirmação de sucesso</returns>
+            <response code="200">Senha redefinida com sucesso</response>
+            <response code="400">Token inválido/expirado ou senhas não conferem</response>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.AuthController.GetProfile(System.Threading.CancellationToken)">
+            <summary>
+            Obtém perfil do usuário autenticado
+            </summary>
+            <param name="cancellationToken">Token de cancelamento</param>
+            <returns>Dados do usuário</returns>
+            <response code="200">Perfil retornado com sucesso</response>
+            <response code="401">Token JWT inválido ou ausente</response>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.AuthController.Logout(System.Threading.CancellationToken)">
+            <summary>
+            Realiza logout (invalida refresh token)
+            </summary>
+            <param name="cancellationToken">Token de cancelamento</param>
+            <returns>Sem conteúdo</returns>
+            <response code="204">Logout realizado com sucesso</response>
+            <response code="401">Token JWT inválido ou ausente</response>
+        </member>
+        <member name="T:JurisNexo.API.Controllers.LeadsController">
+            <summary>
+            Endpoints para gestão de leads e oportunidades no funil de vendas
+            </summary>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.LeadsController.GetLeads(System.Nullable{System.Guid},System.Nullable{System.Guid},System.String,System.String,System.Nullable{System.Guid},System.String,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Lista todos os leads com filtros
+            </summary>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.LeadsController.GetLead(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Busca lead por ID
+            </summary>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.LeadsController.CreateLead(JurisNexo.Application.DTOs.Lead.CreateLeadRequest,System.Threading.CancellationToken)">
+            <summary>
+            Cria novo lead
+            </summary>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.LeadsController.UpdateLead(System.Guid,JurisNexo.Application.DTOs.Lead.UpdateLeadRequest,System.Threading.CancellationToken)">
+            <summary>
+            Atualiza lead
+            </summary>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.LeadsController.DeleteLead(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Remove lead
+            </summary>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.LeadsController.MoveLead(System.Guid,JurisNexo.Application.DTOs.Lead.MoveLeadRequest,System.Threading.CancellationToken)">
+            <summary>
+            Move lead para outro estágio (drag and drop)
+            </summary>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.LeadsController.GetLeadActivities(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Lista atividades do lead
+            </summary>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.LeadsController.AddActivity(System.Guid,JurisNexo.Application.DTOs.Lead.CreateLeadActivityRequest,System.Threading.CancellationToken)">
+            <summary>
+            Adiciona atividade ao lead
+            </summary>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.LeadsController.MarkAsWon(System.Guid,JurisNexo.Application.DTOs.Lead.MarkAsWonRequest,System.Threading.CancellationToken)">
+            <summary>
+            Marca lead como ganho
+            </summary>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.LeadsController.MarkAsLost(System.Guid,JurisNexo.Application.DTOs.Lead.MarkAsLostRequest,System.Threading.CancellationToken)">
+            <summary>
+            Marca lead como perdido
+            </summary>
+        </member>
+        <member name="T:JurisNexo.API.Controllers.PipelinesController">
+            <summary>
+            Endpoints para gestão de pipelines e estágios
+            </summary>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.PipelinesController.GetPipelines(System.Threading.CancellationToken)">
+            <summary>
+            Lista todos os pipelines do tenant
+            </summary>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.PipelinesController.GetPipeline(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Busca pipeline por ID com seus estágios
+            </summary>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.PipelinesController.GetPipelineMetrics(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Busca métricas do pipeline
+            </summary>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.PipelinesController.CreatePipeline(JurisNexo.Application.DTOs.Pipeline.CreatePipelineRequest,System.Threading.CancellationToken)">
+            <summary>
+            Cria novo pipeline
+            </summary>
+        </member>
+        <member name="T:JurisNexo.API.Filters.AuthorizeCheckOperationFilter">
+            <summary>
+            Adiciona indicador de autenticação necessária nos endpoints
+            </summary>
+        </member>
+        <member name="T:JurisNexo.API.Filters.EnumSchemaFilter">
+            <summary>
+            Adiciona descrições de enum no Swagger
+            </summary>
+        </member>
+        <member name="T:JurisNexo.API.Filters.SwaggerDefaultValues">
+            <summary>
+            Aplica valores padrão aos parâmetros do Swagger
+            </summary>
+        </member>
+    </members>
+</doc>

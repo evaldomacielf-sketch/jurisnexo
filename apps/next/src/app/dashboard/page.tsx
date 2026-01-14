@@ -1,11 +1,10 @@
-import { cookies } from 'next/headers';
+import { getAccessToken } from '@/lib/auth/cookies';
 import { redirect } from 'next/navigation';
 import { decode } from 'jsonwebtoken';
 import DashboardClient from './DashboardClient';
 
 export default async function DashboardPage() {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('access_token')?.value;
+    const token = await getAccessToken();
 
     if (!token) {
         redirect('/auth/login');
@@ -17,7 +16,7 @@ export default async function DashboardPage() {
 
     if (!payload || !payload.tenant_id) {
         // No tenant context
-        redirect('/tenants/select');
+        // redirect('/tenants/select'); // Temporarily commented out to avoid loop if tenant flow is not ready
     }
 
     return (

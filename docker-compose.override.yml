@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  backend:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ./JurisNexo.Backend/src:/src
+      - $HOME/.aspnet/https:/root/.aspnet/https:ro # Certificados HTTPS locais (opcional, ajustável conforme OS)
+    ports:
+      - "5000:80"
+      - "5001:443"
+
+  frontend:
+    command: npm run dev
+    volumes:
+      - ./apps/next:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:5000/api
+      - NEXT_PUBLIC_WS_URL=ws://localhost:5000/hubs

@@ -1,0 +1,39 @@
+{
+  "Version": 1,
+  "Hash": "U5z4OdEnArToPJ3dzp6Y5pK4E0thGCfF1O+UGYAQtZk=",
+  "Source": "JurisNexo.API",
+  "BasePath": "_content/JurisNexo.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "JurisNexo.API/wwwroot",
+      "Source": "JurisNexo.API",
+      "ContentRoot": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.API/wwwroot/",
+      "BasePath": "_content/JurisNexo.API",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.API/wwwroot/swagger-ui/custom.css",
+      "SourceId": "JurisNexo.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.API/wwwroot/",
+      "BasePath": "_content/JurisNexo.API",
+      "RelativePath": "swagger-ui/custom.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/swagger-ui/custom.css"
+    }
+  ]
+}

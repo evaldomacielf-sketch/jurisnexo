@@ -1,0 +1,25 @@
+{
+  "Files": [
+    {
+      "Id": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.API/wwwroot/swagger-ui/custom.css",
+      "PackagePath": "staticwebassets/swagger-ui/custom.css"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.JurisNexo.API.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.build.JurisNexo.API.props",
+      "PackagePath": "build\\JurisNexo.API.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.JurisNexo.API.props",
+      "PackagePath": "buildMultiTargeting\\JurisNexo.API.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.JurisNexo.API.props",
+      "PackagePath": "buildTransitive\\JurisNexo.API.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

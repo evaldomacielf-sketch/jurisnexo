@@ -1,4 +1,4 @@
-using JurisNexo.Domain.Enums;
+using JurisNexo.Domain.Entities;
 
 namespace JurisNexo.Application.DTOs.Inbox;
 

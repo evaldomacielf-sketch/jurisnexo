@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using JurisNexo.Application.Common.Interfaces;
 using JurisNexo.Application.Common.Settings;
-using JurisNexo.Domain.Enums;
+using JurisNexo.Domain.Entities;
 using JurisNexo.Application.Services;
 
 namespace JurisNexo.Infrastructure.Services;

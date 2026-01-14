@@ -4,7 +4,7 @@ set -e
 # Configuration
 REPO_DIR="/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo"
 TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
-COMMIT_MSG="feat(kanban): Final release with drag-drop, filters, and notifications - $TIMESTAMP"
+COMMIT_MSG="feat(crm): Implement Full Leads & Pipeline Module (Backend/Frontend/DB) - $TIMESTAMP"
 
 echo "============================================"
 echo "🔄 Starting Git Sync..."

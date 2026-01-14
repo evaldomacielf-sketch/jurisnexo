@@ -1,0 +1,78 @@
+name: Database Migrations
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+      migration_type:
+        description: 'Migration type'
+        required: true
+        type: choice
+        options:
+          - update
+          - rollback
+          - create-snapshot
+
+jobs:
+  migrate:
+    name: 🗄️ Database Migration
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: 📦 Install EF Core Tools
+        run: dotnet tool install --global dotnet-ef
+
+      - name: 🗄️ Create Database Snapshot
+        if: github.event.inputs.migration_type == 'create-snapshot' || github.event.inputs.environment == 'production'
+        run: |
+          aws rds create-db-snapshot \
+            --db-instance-identifier jurisnexo-${{ github.event.inputs.environment }} \
+            --db-snapshot-identifier migration-backup-$(date +%Y%m%d%H%M%S)
+
+      - name: ⬆️ Apply Migrations
+        if: github.event.inputs.migration_type == 'update'
+        run: |
+          dotnet ef database update \
+            --project src/JurisNexo.Infrastructure \
+            --startup-project src/JurisNexo.API \
+            --connection "${{ secrets[format('{0}_DB_CONNECTION', github.event.inputs.environment)] }}" \
+            --verbose
+
+      - name: ⬇️ Rollback Migration
+        if: github.event.inputs.migration_type == 'rollback'
+        run: |
+          dotnet ef database update <PreviousMigrationName> \
+            --project src/JurisNexo.Infrastructure \
+            --startup-project src/JurisNexo.API \
+            --connection "${{ secrets[format('{0}_DB_CONNECTION', github.event.inputs.environment)] }}"
+
+      - name: 📊 Generate Migration Report
+        run: |
+          echo "## Migration Report" >> $GITHUB_STEP_SUMMARY
+          echo "Environment: ${{ github.event.inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "Type: ${{ github.event.inputs.migration_type }}" >> $GITHUB_STEP_SUMMARY
+          echo "Timestamp: $(date)" >> $GITHUB_STEP_SUMMARY
+
+      - name: 🔔 Notify Result
+        uses: 8398a7/action-slack@v3
+        if: always()
+        with:
+          status: ${{ job.status }}
+          text: 'Database migration ${{ job.status }} on ${{ github.event.inputs.environment }}'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}

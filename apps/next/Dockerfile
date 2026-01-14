@@ -1,75 +1,69 @@
-# ================================
-# Stage 1: Dependencies
-# ================================
-FROM node:20-alpine AS deps
+FROM node:20-alpine AS base
+
+# 1. Install dependencies only when needed
+FROM base AS deps
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# Install dependencies based on the preferred package manager
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+RUN \
+  if [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
+  elif [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
 
-# Copy workspace configuration
-COPY pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY package.json ./
-COPY turbo.json ./
 
-# Copy package.json files for all workspaces
-COPY apps/next/package.json ./apps/next/
-COPY packages/config/package.json ./packages/config/
-COPY packages/shared/package.json ./packages/shared/
-COPY packages/db/package.json ./packages/db/
-
-# Install dependencies
-RUN pnpm install --frozen-lockfile
-
-# ================================
-# Stage 2: Builder
-# ================================
-FROM node:20-alpine AS builder
-RUN apk add --no-cache libc6-compat
+# 2. Rebuild the source code only when needed
+FROM base AS builder
 WORKDIR /app
-
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
-# Copy deps from previous stage
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/next/node_modules ./apps/next/node_modules
-COPY --from=deps /app/packages/config/node_modules ./packages/config/node_modules
-COPY --from=deps /app/packages/shared/node_modules ./packages/shared/node_modules
-COPY --from=deps /app/packages/db/node_modules ./packages/db/node_modules
-
-# Copy source code
 COPY . .
 
-# Build packages first, then app
-RUN pnpm build --filter=@jurisnexo/next
+# Environment variables must be present at build time
+ARG NEXT_PUBLIC_API_BASE_URL
+ARG NEXT_PUBLIC_WS_URL
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+ENV NEXT_PUBLIC_WS_URL=$NEXT_PUBLIC_WS_URL
 
-# ================================
-# Stage 3: Runner
-# ================================
-FROM node:20-alpine AS runner
+# Build Next.js
+RUN \
+  if [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+  elif [ -f yarn.lock ]; then yarn build; \
+  elif [ -f package-lock.json ]; then npm run build; \
+  else npm run build; \
+  fi
+
+# 3. Production image, copy all the files and run next
+FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
+# Uncomment the following line in case you want to disable telemetry during runtime.
+# ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy built assets
-COPY --from=builder /app/apps/next/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/apps/next/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/next/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+
+# Set the correct permission for prerender cache
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
+
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
 
 EXPOSE 3000
 
 ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
-
-CMD ["node", "server.js"]
+# Server.js is created by next build from the standalone output
+# https://nextjs.org/docs/pages/api-reference/next-config-js/output
+CMD ["node", "apps/next/server.js"]

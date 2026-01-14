@@ -29,4 +29,5 @@ public class User : TenantEntity
     // Navigation properties
     public virtual ICollection<Appointment> CreatedAppointments { get; set; } = new List<Appointment>();
     public virtual ICollection<Case> ResponsibleCases { get; set; } = new List<Case>();
+    public virtual ICollection<Lead> AssignedLeads { get; set; } = new List<Lead>();
 }

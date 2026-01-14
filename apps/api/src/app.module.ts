@@ -11,6 +11,9 @@ import { CommonModule } from './common/common.module';
 import { WorkersModule } from './workers/workers.module';
 
 import { InstagramModule } from './instagram/instagram.module';
+import { ClientsModule } from './clients/clients.module';
+import { CasesModule } from './cases/cases.module';
+import { ScheduleModule } from './schedule/schedule.module';
 
 @Module({
     imports: [

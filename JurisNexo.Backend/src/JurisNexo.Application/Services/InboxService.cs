@@ -4,8 +4,7 @@ using Microsoft.Extensions.Logging;
 using JurisNexo.Application.Services;
 using JurisNexo.Domain.Interfaces;
 using JurisNexo.Domain.Entities;
-using JurisNexo.Domain.Enums;
-using JurisNexo.Infrastructure.Hubs;
+// using JurisNexo.Infrastructure.Hubs;
 using JurisNexo.Application.Common.Interfaces;
 using JurisNexo.Application.Common.Exceptions;
 using JurisNexo.Application.DTOs.Inbox;
@@ -18,7 +17,7 @@ public class InboxService : IInboxService
     private readonly IConversationRepository _conversationRepository;
     private readonly IRepository<Message> _messageRepository;
     private readonly IContactRepository _contactRepository;
-    private readonly IHubContext<InboxHub, IInboxHubClient> _hubContext;
+    // private readonly IHubContext<InboxHub, IInboxHubClient> _hubContext;
     private readonly IWhatsAppService _whatsAppService;
     private readonly IStorageService _storageService;
     private readonly IUnitOfWork _unitOfWork;
@@ -28,7 +27,7 @@ public class InboxService : IInboxService
         IConversationRepository conversationRepository,
         IRepository<Message> messageRepository,
         IContactRepository contactRepository,
-        IHubContext<InboxHub, IInboxHubClient> hubContext,
+        // IHubContext<InboxHub, IInboxHubClient> hubContext,
         IWhatsAppService whatsAppService,
         IStorageService storageService,
         IUnitOfWork unitOfWork,
@@ -37,7 +36,7 @@ public class InboxService : IInboxService
         _conversationRepository = conversationRepository;
         _messageRepository = messageRepository;
         _contactRepository = contactRepository;
-        _hubContext = hubContext;
+        // _hubContext = hubContext;
         _whatsAppService = whatsAppService;
         _storageService = storageService;
         _unitOfWork = unitOfWork;
@@ -161,9 +160,9 @@ public class InboxService : IInboxService
 
         // Notifica via SignalR
         var messageDto = MapToMessageDto(message);
-        await _hubContext.Clients
-            .Group($"tenant:{conversation.TenantId}")
-            .NewMessage(messageDto);
+        // await _hubContext.Clients
+        //     .Group($"tenant:{conversation.TenantId}")
+        //     .NewMessage(messageDto);
 
         return messageDto;
     }
@@ -183,9 +182,9 @@ public class InboxService : IInboxService
         var dto = MapToConversationDto(conversation);
 
         // Notifica via SignalR
-        await _hubContext.Clients
-            .Group($"tenant:{conversation.TenantId}")
-            .ConversationUpdate(dto);
+        // await _hubContext.Clients
+        //     .Group($"tenant:{conversation.TenantId}")
+        //     .ConversationUpdate(dto);
 
         return dto;
     }
@@ -205,9 +204,9 @@ public class InboxService : IInboxService
         var dto = MapToConversationDto(conversation);
 
         // Notifica via SignalR
-        await _hubContext.Clients
-            .Group($"tenant:{conversation.TenantId}")
-            .ConversationUpdate(dto);
+        // await _hubContext.Clients
+        //     .Group($"tenant:{conversation.TenantId}")
+        //     .ConversationUpdate(dto);
 
         return dto;
     }

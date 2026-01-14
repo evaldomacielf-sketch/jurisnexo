@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JurisNexo.Application</name>
+    </assembly>
+    <members>
+        <member name="T:JurisNexo.Application.DTOs.Auth.LoginRequest">
+            <summary>
+            Requisição de login
+            </summary>
+        </member>
+        <member name="P:JurisNexo.Application.DTOs.Auth.LoginRequest.Email">
+            <summary>
+            E-mail do usuário
+            </summary>
+            <example>joao@exemplo.com</example>
+        </member>
+        <member name="P:JurisNexo.Application.DTOs.Auth.LoginRequest.Password">
+            <summary>
+            Senha do usuário
+            </summary>
+            <example>SenhaSegura123!</example>
+        </member>
+        <member name="T:JurisNexo.Application.DTOs.Auth.LoginResponse">
+            <summary>
+            Resposta de login com tokens e dados do usuário
+            </summary>
+        </member>
+        <member name="P:JurisNexo.Application.DTOs.Auth.LoginResponse.Token">
+            <summary>
+            Token JWT para autenticação
+            </summary>
+            <example>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</example>
+        </member>
+        <member name="P:JurisNexo.Application.DTOs.Auth.LoginResponse.RefreshToken">
+            <summary>
+            Refresh token para renovação
+            </summary>
+            <example>a8d7f6e5c4b3a2d1e0f9...</example>
+        </member>
+        <member name="P:JurisNexo.Application.DTOs.Auth.LoginResponse.User">
+            <summary>
+            Dados do usuário autenticado
+            </summary>
+        </member>
+        <member name="P:JurisNexo.Application.DTOs.Auth.LoginResponse.ExpiresIn">
+            <summary>
+            Tempo de expiração do token em segundos
+            </summary>
+            <example>3600</example>
+        </member>
+        <member name="T:JurisNexo.Application.DTOs.Auth.RegisterRequest">
+            <summary>
+            Requisição de registro de novo usuário
+            </summary>
+        </member>
+        <member name="P:JurisNexo.Application.DTOs.Auth.RegisterRequest.Email">
+            <summary>
+            E-mail do usuário
+            </summary>
+            <example>maria@exemplo.com</example>
+        </member>
+        <member name="P:JurisNexo.Application.DTOs.Auth.RegisterRequest.Password">
+            <summary>
+            Senha (mínimo 8 caracteres, deve conter maiúsculas, minúsculas e números)
+            </summary>
+            <example>SenhaSegura123!</example>
+        </member>
+        <member name="P:JurisNexo.Application.DTOs.Auth.RegisterRequest.Name">
+            <summary>
+            Nome completo do usuário
+            </summary>
+            <example>Maria Silva</example>
+        </member>
+        <member name="P:JurisNexo.Application.DTOs.Auth.RegisterRequest.FirmName">
+            <summary>
+            Nome do escritório de advocacia
+            </summary>
+            <example>Silva Advocacia</example>
+        </member>
+        <member name="P:JurisNexo.Application.DTOs.Auth.RegisterRequest.Phone">
+            <summary>
+            Telefone/WhatsApp (opcional)
+            </summary>
+            <example>11999999999</example>
+        </member>
+    </members>
+</doc>

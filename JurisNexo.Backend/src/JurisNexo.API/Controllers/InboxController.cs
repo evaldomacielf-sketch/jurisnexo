@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using JurisNexo.Application.Services;
 using JurisNexo.Application.DTOs.Inbox;
-using JurisNexo.Domain.Enums;
+using JurisNexo.Domain.Entities;
 
 namespace JurisNexo.API.Controllers;
 
