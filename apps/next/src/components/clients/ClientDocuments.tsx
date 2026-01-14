@@ -150,7 +150,7 @@ export function ClientDocuments({ clientId }: ClientDocumentsProps) {
                         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md">
                             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
                                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Enviar Documento</h3>
-                                <button onClick={() => setIsUploadOpen(false)} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                <button onClick={() => setIsUploadOpen(false)} aria-label="Fechar modal" className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                                     <X className="h-5 w-5" />
                                 </button>
                             </div>

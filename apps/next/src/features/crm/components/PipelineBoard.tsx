@@ -159,6 +159,7 @@ export function PipelineBoard() {
                         <select
                             value={selectedPipelineId || ''}
                             onChange={(e) => setSelectedPipelineId(e.target.value)}
+                            title="Selecionar pipeline"
                             className="px-3 py-2 border rounded-md"
                         >
                             {pipelines.map((pipeline) => (

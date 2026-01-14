@@ -36,6 +36,7 @@ export function MessageInput({ conversationId, onTyping }: MessageInputProps) {
             />
             <button
                 disabled={!content.trim()}
+                aria-label="Enviar mensagem"
                 className="p-2 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 disabled:opacity-50"
             >
                 <Send className="w-4 h-4" />

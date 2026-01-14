@@ -56,6 +56,7 @@ export function CaseCard({ card, onCardClick, isDragging = false }: CaseCardProp
                 </span>
                 <button
                     className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+                    aria-label="Mais opções"
                     onClick={(e) => {
                         e.stopPropagation();
                         // TODO: Open context menu

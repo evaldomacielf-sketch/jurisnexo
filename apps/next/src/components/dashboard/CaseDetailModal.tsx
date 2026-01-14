@@ -57,6 +57,7 @@ export function CaseDetailModal() {
                         </div>
                         <button
                             onClick={() => selectCard(null)}
+                            aria-label="Fechar modal"
                             className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                         >
                             <X className="w-5 h-5" />

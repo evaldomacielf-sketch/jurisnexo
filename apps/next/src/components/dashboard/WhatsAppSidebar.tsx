@@ -98,7 +98,7 @@ export function WhatsAppSidebar({ conversations = MOCK_CONVERSATIONS, invitation
                                             </p>
                                         </div>
                                     </div>
-                                    <button className="text-gray-600 dark:text-gray-400 hover:text-red-500 transition-colors p-1">
+                                    <button aria-label="Dispensar convite" className="text-gray-600 dark:text-gray-400 hover:text-red-500 transition-colors p-1">
                                         <X className="w-4 h-4" />
                                     </button>
                                 </div>

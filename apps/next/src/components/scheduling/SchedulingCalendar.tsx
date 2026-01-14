@@ -188,9 +188,9 @@ export function SchedulingCalendar() {
                                                 {/* Participants would go here */}
                                             </div>
                                             <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${appointment.status === AppointmentStatus.CONFIRMED ? 'bg-green-100 text-green-800' :
-                                                    appointment.status === AppointmentStatus.CANCELLED ? 'bg-red-100 text-red-800' :
-                                                        appointment.status === AppointmentStatus.COMPLETED ? 'bg-gray-100 text-gray-800' :
-                                                            'bg-yellow-100 text-yellow-800'
+                                                appointment.status === AppointmentStatus.CANCELLED ? 'bg-red-100 text-red-800' :
+                                                    appointment.status === AppointmentStatus.COMPLETED ? 'bg-gray-100 text-gray-800' :
+                                                        'bg-yellow-100 text-yellow-800'
                                                 }`}>
                                                 {appointment.status === AppointmentStatus.CONFIRMED && 'Confirmado'}
                                                 {appointment.status === AppointmentStatus.SCHEDULED && 'Agendado'}
@@ -222,7 +222,7 @@ export function SchedulingCalendar() {
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl my-8">
                         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Novo Agendamento</h3>
-                            <button onClick={() => setIsCreateOpen(false)} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                            <button onClick={() => setIsCreateOpen(false)} aria-label="Fechar modal" className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                                 <X className="h-5 w-5" />
                             </button>
                         </div>
@@ -246,7 +246,7 @@ export function SchedulingCalendar() {
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md">
                         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate pr-4">{selectedAppointment.title}</h3>
-                            <button onClick={() => setSelectedAppointment(null)} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex-shrink-0">
+                            <button onClick={() => setSelectedAppointment(null)} aria-label="Fechar modal" className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex-shrink-0">
                                 <X className="h-5 w-5" />
                             </button>
                         </div>

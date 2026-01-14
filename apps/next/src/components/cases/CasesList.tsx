@@ -109,6 +109,7 @@ export function CasesList() {
                             <select
                                 value={statusFilter}
                                 onChange={(e) => setStatusFilter(e.target.value as CaseStatus | 'all')}
+                                title="Filtrar por status"
                                 className="w-full pl-10 h-10 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-50 box-border appearance-none"
                             >
                                 <option value="all">Todos os Status</option>

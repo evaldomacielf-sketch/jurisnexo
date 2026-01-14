@@ -38,6 +38,7 @@ export function ClientFilters() {
                 <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value as ClientStatus | '')}
+                    title="Filtrar por status"
                     className="px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-primary/50 focus:border-transparent outline-none"
                 >
                     <option value="">Todos os Status</option>
@@ -51,6 +52,7 @@ export function ClientFilters() {
                 <select
                     value={type}
                     onChange={(e) => setType(e.target.value as ClientType | '')}
+                    title="Filtrar por tipo"
                     className="px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-primary/50 focus:border-transparent outline-none"
                 >
                     <option value="">Todos os Tipos</option>
