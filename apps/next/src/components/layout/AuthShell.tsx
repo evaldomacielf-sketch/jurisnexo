@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 export function AuthShell({ children }: { children: React.ReactNode }) {
     return (
@@ -7,13 +8,16 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
             <div className="flex-1 flex flex-col justify-center items-center px-8 lg:px-20 bg-[#f6f6f8] dark:bg-[#101622]">
                 <div className="w-full max-w-[440px] flex flex-col">
                     {/* Logo & Brand */}
-                    <div className="flex items-center gap-3 text-blue-600 mb-12">
-                        <div className="size-8">
-                            <svg className="text-blue-600" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M6 6H42L36 24L42 42H6L12 24L6 6Z" fill="currentColor"></path>
-                            </svg>
+                    <div className="flex items-center justify-center mb-12">
+                        <div className="relative h-12 w-full max-w-[200px]">
+                            <Image
+                                src="/logo-full.png"
+                                alt="JurisNexo Logo"
+                                fill
+                                className="object-contain"
+                                priority
+                            />
                         </div>
-                        <h2 className="text-white text-2xl font-bold leading-tight tracking-tight font-display">JurisNexo</h2>
                     </div>
 
                     {children}

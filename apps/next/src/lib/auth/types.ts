@@ -21,6 +21,10 @@ export interface AuthUser {
     emailVerified: boolean;
     createdAt: string;
     updatedAt: string;
+    tenant?: {
+        name: string;
+        slug: string;
+    };
 }
 
 /**

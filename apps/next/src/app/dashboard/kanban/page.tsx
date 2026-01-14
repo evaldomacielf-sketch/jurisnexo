@@ -31,7 +31,7 @@ export default function KanbanPage() {
             <div className="flex h-screen overflow-hidden">
                 {/* Main Content */}
                 <main className="flex-1 flex flex-col min-w-0 bg-gray-50 dark:bg-gray-900 overflow-hidden">
-                    <Header showSearch />
+                    <Header showSearch={false} />
 
                     <div className="flex-1 overflow-y-auto p-8">
                         <KanbanFilters />

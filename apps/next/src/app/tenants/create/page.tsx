@@ -63,7 +63,7 @@ export default function CreateTenantPage() {
                         <div className="w-72 h-auto shrink-0">
                             <img
                                 src="/images/jurisnexo-v2.png"
-                                alt="JurisNexo Premium"
+                                alt="JurisNexo"
                                 className="w-full h-full object-contain"
                             />
                         </div>

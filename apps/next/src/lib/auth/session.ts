@@ -1,6 +1,6 @@
 'use server';
 
-import { getAccessToken } from './cookies';
+import { getAccessToken, getRefreshToken } from './cookies';
 import type { AuthUser } from './types';
 
 const API_URL = process.env.API_URL || 'http://localhost:4000';
@@ -35,6 +35,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
     }
 
     const data = await response.json();
+    console.log('[Session] User from API:', JSON.stringify(data.user, null, 2));
     return data.user;
   } catch (error: any) {
     if (error.name === 'AbortError') {

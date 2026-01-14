@@ -12,7 +12,7 @@ interface HeaderProps {
     showSearch?: boolean;
 }
 
-export function Header({ tenantName = 'Silva & Associados', showSearch = true }: HeaderProps) {
+export function Header({ tenantName = 'Seu Escritório', showSearch = true }: HeaderProps) {
     return (
         <header className="h-16 flex items-center justify-between px-8 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shrink-0">
             <div className="flex items-center gap-4 flex-1">

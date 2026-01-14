@@ -38,12 +38,4 @@ export class CrmController {
         // In real scenario, tenantId comes from the webhook config or headers
         return this.crmService.handleInbound(body.tenantId, body.from, body.content, body.providerId);
     }
-    @Get('kanban')
-    @ApiOperation({ summary: 'Get Kanban board data' })
-    async getKanban() {
-        // Mock: just require authentication, ignore tenant for mock
-        // If AuthGuard is fully strict, we neeed a valid user.
-        // Assuming req.user exists from AuthGuard.
-        return this.crmService.getKanbanData();
-    }
 }

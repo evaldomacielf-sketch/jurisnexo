@@ -30,7 +30,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         // Validar se usuário ainda existe e está ativo
         const { data: user, error } = await this.supabase
             .from('users')
-            .select('id, email, name, role, tenant_id, status')
+            .select('id, email, name, role, tenant_id, status, tenants (name, slug)')
             .eq('id', payload.sub)
             .single();
 
@@ -45,6 +45,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             name: user.name,
             role: user.role,
             tenantId: user.tenant_id,
+            tenant: (user as any).tenants,
         };
     }
 }

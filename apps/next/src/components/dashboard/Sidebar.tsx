@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
     LayoutDashboard,
@@ -34,6 +35,11 @@ const MENU_ITEMS = [
         label: 'Dashboard',
         href: '/dashboard',
         icon: LayoutDashboard,
+    },
+    {
+        label: 'Clientes',
+        href: '/dashboard/clients',
+        icon: Users,
     },
     {
         label: 'Kanban',
@@ -97,20 +103,26 @@ export function Sidebar({ user = { id: 'temp', name: 'User', email: 'user@demo.c
                 <div className="p-6 flex items-center gap-3 border-b border-gray-200 dark:border-gray-700">
                     {!collapsed ? (
                         <div className="flex items-center gap-3 flex-1">
-                            {/* Fallback to simple text if image fails or provided path is invalid */}
-                            <div className="size-8 rounded bg-blue-600 flex items-center justify-center text-white font-bold">JN</div>
-                            <div>
-                                <h1 className="text-base font-bold leading-none text-gray-900 dark:text-white">
-                                    JurisNexo
-                                </h1>
-                                <p className="text-gray-600 dark:text-gray-400 text-xs mt-1">
-                                    Gestão Jurídica
-                                </p>
+                            <div className="relative h-16 w-full max-w-[200px]">
+                                <Image
+                                    src="/logo-full.png"
+                                    alt="JurisNexo Logo"
+                                    fill
+                                    className="object-contain object-left"
+                                    priority
+                                />
                             </div>
                         </div>
                     ) : (
                         <div className="flex justify-center w-full">
-                            <div className="size-8 rounded bg-blue-600 flex items-center justify-center text-white font-bold">JN</div>
+                            <div className="relative h-8 w-8">
+                                <Image
+                                    src="/logo-full.png"
+                                    alt="JN"
+                                    fill
+                                    className="object-contain"
+                                />
+                            </div>
                         </div>
                     )}
 

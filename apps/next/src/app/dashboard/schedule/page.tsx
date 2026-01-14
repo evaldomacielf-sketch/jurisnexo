@@ -1,16 +1,16 @@
 import { Header } from '@/components/dashboard/Header';
-import { CasesList } from '@/components/cases/CasesList';
+import { SchedulingCalendar } from '@/components/scheduling/SchedulingCalendar';
 
 export const metadata = {
-    title: 'Processos | JurisNexo',
+    title: 'Agenda | JurisNexo',
 };
 
-export default function CasesPage() {
+export default function SchedulePage() {
     return (
         <>
             <Header tenantName="Silva & Associados" showSearch={false} />
             <div className="p-8">
-                <CasesList />
+                <SchedulingCalendar />
             </div>
         </>
     );

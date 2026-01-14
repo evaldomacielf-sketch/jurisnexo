@@ -17,7 +17,6 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { KanbanColumn } from './KanbanColumn';
 import { CaseCard } from './CaseCard';
-import { KanbanFilters } from './KanbanFilters';
 import { CaseDetailModal } from './CaseDetailModal';
 import { useKanbanStore } from '@/lib/store/kanban-store';
 import type { CaseCard as CaseCardType } from '@/lib/types/kanban';
@@ -112,7 +111,6 @@ export function KanbanBoard() {
 
     return (
         <div className="flex flex-col h-full">
-            <KanbanFilters />
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCorners}
