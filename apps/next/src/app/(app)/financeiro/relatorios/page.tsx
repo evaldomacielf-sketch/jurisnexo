@@ -198,6 +198,7 @@ export default function ReportsPage() {
                                     className="px-3 py-1.5 border rounded-lg text-sm"
                                     value={dreMonth}
                                     onChange={(e) => setDreMonth(Number(e.target.value))}
+                                    aria-label="Selecionar mês"
                                 >
                                     {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
                                         <option key={m} value={m}>{new Date(2000, m - 1).toLocaleString('pt-BR', { month: 'long' })}</option>
@@ -207,6 +208,7 @@ export default function ReportsPage() {
                                     className="px-3 py-1.5 border rounded-lg text-sm"
                                     value={dreYear}
                                     onChange={(e) => setDreYear(Number(e.target.value))}
+                                    aria-label="Selecionar ano"
                                 >
                                     {[2024, 2025, 2026].map(y => (
                                         <option key={y} value={y}>{y}</option>

@@ -66,7 +66,7 @@ export function TransactionModal({ open, onClose }: TransactionModalProps) {
             <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                 <div className="flex items-center justify-between p-6 border-b">
                     <h2 className="text-xl font-semibold">Nova Transação</h2>
-                    <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg">
+                    <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg" aria-label="Fechar modal">
                         <IconX className="w-5 h-5" />
                     </button>
                 </div>

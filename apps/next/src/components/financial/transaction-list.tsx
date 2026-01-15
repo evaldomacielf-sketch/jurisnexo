@@ -55,8 +55,8 @@ export function TransactionList({ filters }: TransactionListProps) {
                     <div className="flex items-center space-x-4">
                         <div
                             className={`w-10 h-10 rounded-full flex items-center justify-center ${transaction.type === TransactionType.INCOME
-                                    ? 'bg-success-light'
-                                    : 'bg-error-light'
+                                ? 'bg-success-light'
+                                : 'bg-error-light'
                                 }`}
                         >
                             {transaction.type === TransactionType.INCOME ? (
@@ -76,8 +76,8 @@ export function TransactionList({ filters }: TransactionListProps) {
                         <div className="text-right">
                             <p
                                 className={`font-semibold ${transaction.type === TransactionType.INCOME
-                                        ? 'text-success'
-                                        : 'text-error'
+                                    ? 'text-success'
+                                    : 'text-error'
                                     }`}
                             >
                                 {transaction.type === TransactionType.INCOME ? '+' : '-'}{' '}
@@ -89,7 +89,7 @@ export function TransactionList({ filters }: TransactionListProps) {
                                 })}
                             </p>
                         </div>
-                        <button className="p-2 hover:bg-gray-100 rounded-lg">
+                        <button className="p-2 hover:bg-gray-100 rounded-lg" aria-label="Opções da transação">
                             <IconDotsVertical className="w-4 h-4 text-gray-500" />
                         </button>
                     </div>

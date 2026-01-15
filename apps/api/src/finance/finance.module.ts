@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from '../database/database.module';
 
 // Controllers
@@ -13,6 +14,7 @@ import { LegalFeesController } from './controllers/legal-fees.controller';
 import { FeeSplitController } from './controllers/fee-split.controller';
 import { CashBookController } from './controllers/cash-book.controller';
 import { PaymentPortalController } from './controllers/payment-portal.controller';
+import { WebhooksController } from './webhooks.controller';
 
 // Services
 import { FinanceService } from './finance.service';
@@ -30,8 +32,15 @@ import { FeeSplitService } from './services/fee-split.service';
 import { CashBookService } from './services/cash-book.service';
 import { PaymentPortalService } from './services/payment-portal.service';
 
+// Payment Integration Services
+import { StripePaymentService } from './services/stripe-payment.service';
+import { AsaasPaymentService } from './services/asaas-payment.service';
+import { EmailService } from './services/email.service';
+import { PaymentGatewayFactory } from './services/payment-gateway.factory';
+import { PaymentReminderCronService } from './services/payment-reminder-cron.service';
+
 @Module({
-    imports: [DatabaseModule],
+    imports: [DatabaseModule, ConfigModule],
     controllers: [
         FinanceController,
         BankAccountController,
@@ -46,6 +55,9 @@ import { PaymentPortalService } from './services/payment-portal.service';
         FeeSplitController,
         CashBookController,
         PaymentPortalController,
+
+        // Webhooks
+        WebhooksController,
     ],
     providers: [
         // Core Services
@@ -67,6 +79,15 @@ import { PaymentPortalService } from './services/payment-portal.service';
         FeeSplitService,
         CashBookService,
         PaymentPortalService,
+
+        // Payment Integration Services
+        StripePaymentService,
+        AsaasPaymentService,
+        EmailService,
+        PaymentGatewayFactory,
+
+        // Scheduled Tasks
+        PaymentReminderCronService,
     ],
     exports: [
         FinanceService,
@@ -79,6 +100,11 @@ import { PaymentPortalService } from './services/payment-portal.service';
         FeeSplitService,
         CashBookService,
         PaymentPortalService,
+        StripePaymentService,
+        AsaasPaymentService,
+        EmailService,
+        PaymentGatewayFactory,
     ],
 })
 export class FinanceModule { }
+

@@ -345,8 +345,9 @@ jobs:
         if: always()
         with:
           status: ${{ job.status }}
-          text: 'Staging deployment ${{ job.status }}'
-          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
   # ==========================================
   # JOB 7: DEPLOY TO PRODUCTION
@@ -442,15 +443,17 @@ jobs:
         if: success()
         with:
           status: custom
+          fields: repo,message,commit,author,action,eventName,ref,workflow
           custom_payload: |
             {
-              text: "🎉 Production deployment successful!",
-              attachments: [{
-                color: 'good',
-                text: `Commit: ${{ github.sha }}\nAuthor: ${{ github.actor }}\nURL: https://app.jurisnexo.com`
+              "text": "🎉 Production deployment successful!",
+              "attachments": [{
+                "color": "good",
+                "text": "Commit: ${{ github.sha }}\nAuthor: ${{ github.actor }}\nURL: https://app.jurisnexo.com"
               }]
             }
-          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
       - name: 🚨 Rollback on Failure
         if: failure()

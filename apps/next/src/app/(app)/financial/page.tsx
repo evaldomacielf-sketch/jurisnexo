@@ -74,6 +74,7 @@ export default function FinancialDashboard() {
                 <button
                     onClick={previousMonth}
                     className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    aria-label="Mês anterior"
                 >
                     <IconArrowLeft className="w-5 h-5" />
                 </button>
@@ -83,6 +84,7 @@ export default function FinancialDashboard() {
                 <button
                     onClick={nextMonth}
                     className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    aria-label="Próximo mês"
                 >
                     <IconArrowRight className="w-5 h-5" />
                 </button>

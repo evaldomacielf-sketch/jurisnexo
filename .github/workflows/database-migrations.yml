@@ -74,5 +74,7 @@ jobs:
         if: always()
         with:
           status: ${{ job.status }}
-          text: 'Database migration ${{ job.status }} on ${{ github.event.inputs.environment }}'
-          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
