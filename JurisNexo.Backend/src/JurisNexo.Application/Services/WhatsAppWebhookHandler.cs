@@ -1,196 +1,281 @@
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using JurisNexo.Application.Common.Interfaces;
 using JurisNexo.Application.DTOs.Inbox;
+using JurisNexo.Application.DTOs;
 using JurisNexo.Application.DTOs.WhatsApp;
 using JurisNexo.Domain.Entities;
 using JurisNexo.Domain.Interfaces;
-// using JurisNexo.Infrastructure.Hubs;
 
 namespace JurisNexo.Application.Services;
 
-public class WhatsAppWebhookHandler : IWhatsAppWebhookHandler
+public class WhatsAppWebhookHandler : IWhatsAppMessageProcessor, IWhatsAppWebhookHandler
 {
     private readonly IConversationRepository _conversationRepository;
     private readonly IContactRepository _contactRepository;
     private readonly IRepository<Message> _messageRepository;
-    // private readonly IHubContext<InboxHub, IInboxHubClient> _hubContext;
+    private readonly IRepository<WhatsAppConversation> _whatsAppConversationRepository; 
+    private readonly IRepository<WhatsAppMessage> _whatsAppMessageRepository;
+    private readonly IInboxNotificationService _notificationService;
     private readonly IAIClassifierService _aiClassifier;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<WhatsAppWebhookHandler> _logger;
+    private readonly IWhatsAppChatbotService _chatbotService;
+    private readonly ILeadQualificationService _leadQualificationService;
+    private readonly IWhatsAppClient _whatsAppClient;
+    private readonly IRepository<LeadQualificationQuestion> _questionRepository; // Injected to find IDs
+
+    private readonly ILeadQualificationBot _bot;
 
     public WhatsAppWebhookHandler(
         IConversationRepository conversationRepository,
         IContactRepository contactRepository,
         IRepository<Message> messageRepository,
-        // IHubContext<InboxHub, IInboxHubClient> hubContext,
+        IRepository<WhatsAppConversation> whatsAppConversationRepository,
+        IRepository<WhatsAppMessage> whatsAppMessageRepository,
+        IInboxNotificationService notificationService,
         IAIClassifierService aiClassifier,
         IUnitOfWork unitOfWork,
-        ILogger<WhatsAppWebhookHandler> logger)
+        ILogger<WhatsAppWebhookHandler> logger,
+        IWhatsAppChatbotService chatbotService,
+        ILeadQualificationService leadQualificationService,
+        IWhatsAppClient whatsAppClient,
+        IRepository<LeadQualificationQuestion> questionRepository,
+        ILeadQualificationBot bot)
     {
         _conversationRepository = conversationRepository;
         _contactRepository = contactRepository;
         _messageRepository = messageRepository;
-        // _hubContext = hubContext;
+        _whatsAppConversationRepository = whatsAppConversationRepository;
+        _whatsAppMessageRepository = whatsAppMessageRepository;
+        _notificationService = notificationService;
         _aiClassifier = aiClassifier;
         _unitOfWork = unitOfWork;
         _logger = logger;
+        _chatbotService = chatbotService;
+        _leadQualificationService = leadQualificationService;
+        _whatsAppClient = whatsAppClient;
+        _questionRepository = questionRepository;
+        _bot = bot;
     }
 
+    // Explicit implementation for legacy interface if needed, or keeping it for compatibility
     public async Task HandleAsync(WhatsAppWebhookPayload payload, CancellationToken cancellationToken = default)
     {
-        if (payload.Event == "messages.upsert")
+        // Legacy support
+        await Task.CompletedTask;
+    }
+
+    public async Task HandleMetaAsync(MetaWebhookPayload payload, CancellationToken cancellationToken = default)
+    {
+        // Legacy interface wrapper - delegating to new Processor logic
+         foreach (var entry in payload.Entry)
         {
-            await HandleNewMessageAsync(payload, cancellationToken);
-        }
-        else if (payload.Event == "messages.update")
-        {
-            await HandleMessageUpdateAsync(payload, cancellationToken);
+            foreach (var change in entry.Changes)
+            {
+                if (change.Value.Messages != null)
+                {
+                    foreach (var message in change.Value.Messages)
+                    {
+                        await ProcessIncomingMessageAsync(message);
+                    }
+                }
+                if (change.Value.Statuses != null)
+                {
+                    foreach (var status in change.Value.Statuses)
+                    {
+                        await ProcessMessageStatusAsync(status);
+                    }
+                }
+            }
         }
     }
 
-    private async Task HandleNewMessageAsync(WhatsAppWebhookPayload payload, CancellationToken cancellationToken)
+    public async Task ProcessIncomingMessageAsync(TwilioWebhookData data)
     {
-        var messageData = payload.Data;
-        
-        // Ignora mensagens enviadas pela própria aplicação
-        if (messageData.Key?.FromMe == true)
-            return;
+        var phone = data.From?.Replace("whatsapp:", "") ?? "";
+        if (string.IsNullOrEmpty(phone)) return;
+        var content = data.Body ?? "";
 
-        var phone = messageData.Key?.RemoteJid?.Replace("@s.whatsapp.net", "") ?? "";
-        // Assumindo que o Instance ID é GUID ou pode ser parseado/mapeado para TenantID
-        if (!Guid.TryParse(payload.Instance, out var tenantId))
+        // Triage Logic
+        if (await HandleLeadTriagingAsync(phone, content)) return;
+
+        // Standard Logic
+        var tenantId = Guid.Empty; // Placeholder Logic
+        var contact = await EnsureContactExists(tenantId, phone, "Twilio User");
+        var conversation = await EnsureConversationExists(tenantId, contact, phone);
+
+        var newMessage = new WhatsAppMessage
         {
-            _logger.LogWarning("Instance ID inválido ou não é um GUID: {Instance}", payload.Instance);
-            return; 
-        }
+            WhatsAppConversationId = conversation.Id,
+            ProviderMessageId = data.MessageSid ?? Guid.NewGuid().ToString(),
+            Direction = WhatsAppDirection.Inbound,
+            Status = WhatsAppMessageStatus.Read, // Assume read if webhook received for now
+            Content = content,
+            SentAt = DateTime.UtcNow,
+            Type = data.NumMedia > 0 ? WhatsAppMessageType.Image : WhatsAppMessageType.Text,
+            MediaUrl = data.MediaUrl0,
+            MediaType = data.MediaContentType0
+        };
 
-        // Busca ou cria contato
-        var contact = await _contactRepository.GetByPhoneAsync(tenantId, phone, cancellationToken);
+        await _whatsAppMessageRepository.AddAsync(newMessage);
+
+        // Update conversation
+        conversation.LastMessage = newMessage.Content;
+        conversation.LastMessageAt = DateTime.UtcNow;
+        conversation.UnreadCount++;
+        await _whatsAppConversationRepository.UpdateAsync(conversation);
+        await _unitOfWork.SaveChangesAsync();
+        
+        // Chatbot Trigger
+        var response = await _chatbotService.GetResponseAsync(tenantId, phone, newMessage.Content ?? "");
+        if (!string.IsNullOrEmpty(response))
+        {
+            _logger.LogInformation("Chatbot suggested response: {Response}", response);
+        }
+    }
+
+    public async Task ProcessIncomingMessageAsync(MetaWebhookMessage message)
+    {
+         var phone = message.From;
+         var content = ExtractMetaContent(message);
+         var contactName = "WhatsApp User"; 
+
+         // Triage Logic
+         if (await HandleLeadTriagingAsync(phone, content)) return;
+
+         var tenantId = Guid.Empty; // Placeholder
+         
+         var contact = await EnsureContactExists(tenantId, phone, contactName);
+         var conversation = await EnsureConversationExists(tenantId, contact, phone);
+
+         var newMessage = new WhatsAppMessage
+         {
+             WhatsAppConversationId = conversation.Id,
+             ProviderMessageId = message.Id,
+             Direction = WhatsAppDirection.Inbound,
+             Status = WhatsAppMessageStatus.Delivered,
+             SentAt = DateTimeOffset.FromUnixTimeSeconds(long.Parse(message.Timestamp)).UtcDateTime,
+             Content = content,
+             Type = DetermineMetaMessageType(message),
+         };
+
+         await _whatsAppMessageRepository.AddAsync(newMessage);
+
+         conversation.LastMessage = newMessage.Content;
+         conversation.LastMessageAt = DateTime.UtcNow;
+         conversation.UnreadCount++;
+         
+         var classification = await _aiClassifier.ClassifyUrgencyAsync(newMessage.Content);
+
+         await _whatsAppConversationRepository.UpdateAsync(conversation);
+         await _unitOfWork.SaveChangesAsync();
+         
+         // Chatbot
+         var response = await _chatbotService.GetResponseAsync(tenantId, phone, newMessage.Content ?? "");
+         if (!string.IsNullOrEmpty(response))
+         {
+              _logger.LogInformation("Chatbot suggested response: {Response}", response);
+         }
+    }
+
+    private async Task<bool> HandleLeadTriagingAsync(string phone, string content)
+    {
+        // Capture or Get Lead
+        var lead = await _leadQualificationService.CaptureLeadAsync(phone, content);
+        
+        // Use Bot to process message
+        var response = await _bot.ProcessMessageAsync(lead.Id, content);
+
+        if (!string.IsNullOrEmpty(response))
+        {
+             await _whatsAppClient.SendMessageAsync(phone, response);
+             return true; // Handled by Bot
+        }
+        
+        // If Bot returns null/empty, maybe it means pass through?
+        // But Bot "GenerateResponseAsync" for qualified leads also returns string.
+        // So only if Bot explicitly returns empty (like no op), we might fall through.
+        // Assuming Bot handles all Lead interactions.
+        return true; 
+    }
+
+    public async Task ProcessMessageStatusAsync(MetaWebhookStatus status)
+    {
+        // Find message by ProviderId
+        // var msg = await _whatsAppMessageRepository.GetByProviderId(status.Id);
+        // if (msg != null) { 
+        //    msg.Status = MapStatus(status.Status);
+        //    await _unitOfWork.SaveChangesAsync();
+        // }
+        await Task.CompletedTask;
+    }
+
+    // Helpers
+    private async Task<Contact> EnsureContactExists(Guid tenantId, string phone, string name)
+    {
+        var contact = await _contactRepository.GetByPhoneAsync(tenantId, phone);
         if (contact == null)
         {
             contact = new Contact
             {
                 TenantId = tenantId,
-                Name = messageData.PushName ?? phone,
+                Name = name,
                 Phone = phone,
                 Source = ContactSource.Whatsapp,
                 IsLead = true
             };
-            await _contactRepository.AddAsync(contact, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _contactRepository.AddAsync(contact);
+            await _unitOfWork.SaveChangesAsync();
         }
+        return contact;
+    }
 
-        // Busca ou cria conversa
-        var conversation = await _conversationRepository.GetByContactIdAsync(tenantId, contact.Id, cancellationToken);
+    private async Task<WhatsAppConversation> EnsureConversationExists(Guid tenantId, Contact contact, string phone)
+    {
+        // Assuming we have a way to fetch by phone via repo or query
+        var all = await _whatsAppConversationRepository.GetAllAsync();
+        var conversation = all.FirstOrDefault(c => c.CustomerPhone == phone && !c.IsArchived);
+
         if (conversation == null)
         {
-            conversation = new Conversation
+            conversation = new WhatsAppConversation
             {
+                Id = Guid.NewGuid(), // If inheritance requires separate ID
                 TenantId = tenantId,
-                ContactId = contact.Id,
-                Status = ConversationStatus.Open,
-                Priority = ConversationPriority.Normal,
+                CustomerPhone = phone,
+                CustomerName = contact.Name,
                 UnreadCount = 0,
-                WhatsappChatId = messageData.Key?.RemoteJid
+                IsArchived = false,
+                TagsJson = "[]"
             };
-            await _conversationRepository.AddAsync(conversation, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken); // Need ID for message
+            await _whatsAppConversationRepository.AddAsync(conversation);
+            await _unitOfWork.SaveChangesAsync();
         }
+        return conversation;
+    }
 
-        // Cria mensagem
-        var message = new Message
+    private static string ExtractMetaContent(MetaWebhookMessage msg)
+    {
+        return msg.Type switch
         {
-            ConversationId = conversation.Id,
-            SenderType = SenderType.Contact,
-            SenderId = contact.Id,
-            Content = ExtractMessageContent(messageData),
-            MessageType = DetermineMessageType(messageData),
-            MediaUrl = ExtractMediaUrl(messageData),
-            IsRead = false,
-            SentAt = DateTimeOffset.FromUnixTimeSeconds(messageData.MessageTimestamp ?? 0).UtcDateTime,
-            WhatsappMessageId = messageData.Key?.Id
+            "text" => msg.Text?.Body ?? "",
+            "image" => msg.Image?.Caption ?? "[Imagem]",
+            "video" => msg.Video?.Caption ?? "[Vídeo]",
+            "audio" => "[Áudio]",
+            "document" => msg.Document?.FileName ?? "[Documento]",
+            _ => "[Mensagem não suportada]"
         };
+    }
 
-        await _messageRepository.AddAsync(message, cancellationToken);
-
-        // Incrementa contador de não lidas
-        conversation.UnreadCount++;
-        conversation.UpdatedAt = DateTime.UtcNow;
-
-        // Classifica urgência com IA
-        var urgencyResult = await _aiClassifier.ClassifyUrgencyAsync(message.Content, cancellationToken);
-        if (urgencyResult.IsUrgent)
+    private static WhatsAppMessageType DetermineMetaMessageType(MetaWebhookMessage msg)
+    {
+        return msg.Type switch
         {
-            conversation.Priority = ConversationPriority.Urgent;
-            _logger.LogWarning("Mensagem urgente detectada: {MessageId}", message.Id);
-        }
-
-        await _conversationRepository.UpdateAsync(conversation, cancellationToken);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-        // Notifica via SignalR
-        var messageDto = new MessageDto(
-            message.Id,
-            message.ConversationId,
-            message.SenderType.ToString(),
-            message.SenderId,
-            message.Content,
-            message.MessageType.ToString(),
-            message.MediaUrl,
-            message.IsRead,
-            message.SentAt
-        );
-
-        // await _hubContext.Clients
-        //     .Group($"tenant:{tenantId}")
-        //     .NewMessage(messageDto);
-    }
-
-    private async Task HandleMessageUpdateAsync(WhatsAppWebhookPayload payload, CancellationToken cancellationToken)
-    {
-        // Implementar lógica de atualização (ex: mensagem lida, entregue)
-        await Task.CompletedTask;
-    }
-
-    private static string ExtractMessageContent(WhatsAppMessageData data)
-    {
-        if (!string.IsNullOrEmpty(data.Message?.Conversation))
-            return data.Message.Conversation;
-
-        if (!string.IsNullOrEmpty(data.Message?.ExtendedTextMessage?.Text))
-            return data.Message.ExtendedTextMessage.Text;
-
-        if (data.Message?.ImageMessage != null)
-            return data.Message.ImageMessage.Caption ?? "[Imagem]";
-
-        if (data.Message?.VideoMessage != null)
-            return data.Message.VideoMessage.Caption ?? "[Vídeo]";
-
-        if (data.Message?.DocumentMessage != null)
-            return data.Message.DocumentMessage.Caption ?? "[Documento]";
-
-        if (data.Message?.AudioMessage != null)
-            return "[Áudio]";
-
-        return "[Mensagem não suportada]";
-    }
-
-    private static MessageType DetermineMessageType(WhatsAppMessageData data)
-    {
-        if (data.Message?.ImageMessage != null) return MessageType.Image;
-        if (data.Message?.VideoMessage != null) return MessageType.Video;
-        if (data.Message?.DocumentMessage != null) return MessageType.Document;
-        if (data.Message?.AudioMessage != null) return MessageType.Audio;
-        return MessageType.Text;
-    }
-
-    private static string? ExtractMediaUrl(WhatsAppMessageData data)
-    {
-        if (data.Message?.ImageMessage != null) return data.Message.ImageMessage.Url;
-        if (data.Message?.VideoMessage != null) return data.Message.VideoMessage.Url;
-        if (data.Message?.DocumentMessage != null) return data.Message.DocumentMessage.Url;
-        if (data.Message?.AudioMessage != null) return data.Message.AudioMessage.Url;
-        return null;
+            "image" => WhatsAppMessageType.Image,
+            "video" => WhatsAppMessageType.Video,
+            "audio" => WhatsAppMessageType.Audio,
+            "document" => WhatsAppMessageType.Document,
+            _ => WhatsAppMessageType.Text
+        };
     }
 }

@@ -146,7 +146,6 @@ jobs:
 
       - name: 📦 Update ECS Service
         run: |
-          ENVIRONMENT=${{ steps.vars.outputs.env_name }}
           aws ecs update-service \
             --cluster jurisnexo-${ENVIRONMENT} \
             --service jurisnexo-api \

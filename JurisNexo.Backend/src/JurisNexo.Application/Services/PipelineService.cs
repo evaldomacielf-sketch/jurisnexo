@@ -151,23 +151,23 @@ public class PipelineService : IPipelineService
             lead.TenantId,
             lead.Title,
             lead.Description,
-            lead.ContactId,
-            new ContactInfoDto(lead.ContactId, lead.Contact?.Name ?? "Unknown", lead.Contact?.Phone ?? "", lead.Contact?.Email), 
-            lead.PipelineId,
+            lead.ContactId ?? Guid.Empty,
+            new ContactInfoDto(lead.Contact?.Id ?? Guid.Empty, lead.Contact?.Name ?? "Unknown", lead.Contact?.Phone ?? "", lead.Contact?.Email), 
+            lead.PipelineId ?? Guid.Empty,
             pipeline.Name,
-            lead.StageId,
+            lead.StageId ?? Guid.Empty,
             new StageInfoDto(stage.Id, stage.Name, stage.Color, stage.Position),
             lead.EstimatedValue,
             "BRL",
             stage.DefaultProbability,
             "Manual",
-            lead.Priority.ToString(),
+            lead.Urgency.ToString(),
             lead.Status.ToString(),
             lead.AssignedToUserId,
             lead.AssignedToUser != null ? new UserInfoDto(lead.AssignedToUser.Id, lead.AssignedToUser.Name, lead.AssignedToUser.Email, null) : null,
             null, null, null, null,
-            lead.Tags ?? new List<string>(),
-            lead.Position,
+            lead.Tags?.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList() ?? new List<string>(),
+            (int)lead.Position,
             lead.CreatedAt,
             lead.UpdatedAt
         );
@@ -254,11 +254,11 @@ public class PipelineService : IPipelineService
             StageId = request.StageId,
             ContactId = request.ContactId,
             AssignedToUserId = request.AssignedToUserId ?? userId,
-            Tags = request.Tags ?? new List<string>(),
-            Priority = request.Priority != null ? Enum.Parse<LeadPriority>(request.Priority) : LeadPriority.Medium
+            Tags = request.Tags != null ? string.Join(",", request.Tags) : string.Empty,
+            Urgency = request.Priority != null ? Enum.Parse<LeadPriority>(request.Priority) : LeadPriority.Medium
         };
 
-        if (lead.Tags == null) lead.Tags = new List<string>();
+        // if (lead.Tags == null) lead.Tags = new List<string>(); // Tags is string, handled above
 
         await _leadRepository.AddAsync(lead, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

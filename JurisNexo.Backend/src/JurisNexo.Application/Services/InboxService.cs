@@ -18,7 +18,7 @@ public class InboxService : IInboxService
     private readonly IRepository<Message> _messageRepository;
     private readonly IContactRepository _contactRepository;
     // private readonly IHubContext<InboxHub, IInboxHubClient> _hubContext;
-    private readonly IWhatsAppService _whatsAppService;
+    private readonly IWhatsAppClient _whatsAppClient;
     private readonly IStorageService _storageService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<InboxService> _logger;
@@ -28,7 +28,7 @@ public class InboxService : IInboxService
         IRepository<Message> messageRepository,
         IContactRepository contactRepository,
         // IHubContext<InboxHub, IInboxHubClient> hubContext,
-        IWhatsAppService whatsAppService,
+        IWhatsAppClient whatsAppClient,
         IStorageService storageService,
         IUnitOfWork unitOfWork,
         ILogger<InboxService> logger)
@@ -37,7 +37,7 @@ public class InboxService : IInboxService
         _messageRepository = messageRepository;
         _contactRepository = contactRepository;
         // _hubContext = hubContext;
-        _whatsAppService = whatsAppService;
+        _whatsAppClient = whatsAppClient;
         _storageService = storageService;
         _unitOfWork = unitOfWork;
         _logger = logger;
@@ -143,7 +143,7 @@ public class InboxService : IInboxService
         // Envia via WhatsApp
         try
         {
-            var whatsappMessageId = await _whatsAppService.SendMessageAsync(
+            var whatsappMessageId = await _whatsAppClient.SendMessageAsync(
                 conversation.Contact.Phone,
                 request.Content,
                 request.MediaUrl,

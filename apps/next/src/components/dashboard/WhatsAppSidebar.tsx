@@ -109,7 +109,7 @@ export function WhatsAppSidebar({ conversations = MOCK_CONVERSATIONS, invitation
 
                 {/* Conversations */}
                 <div>
-                    {conversations.map((conv, index) => (
+                    {conversations.map((conv) => (
                         <div
                             key={conv.id}
                             className={`p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors ${conv.isActive ? 'bg-blue-50/50 dark:bg-blue-900/10 border-l-2 border-l-blue-500' : ''

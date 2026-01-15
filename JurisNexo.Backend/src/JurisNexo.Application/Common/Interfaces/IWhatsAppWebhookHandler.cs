@@ -5,4 +5,5 @@ namespace JurisNexo.Application.Common.Interfaces;
 public interface IWhatsAppWebhookHandler
 {
     Task HandleAsync(WhatsAppWebhookPayload payload, CancellationToken cancellationToken = default);
+    Task HandleMetaAsync(MetaWebhookPayload payload, CancellationToken cancellationToken = default);
 }

@@ -15,4 +15,6 @@ public interface ICaseRepository : ITenantRepository<Case>
         int page,
         int limit,
         CancellationToken cancellationToken = default);
+
+    Task<Case?> GetByCaseNumberAsync(Guid tenantId, string caseNumber, CancellationToken cancellationToken = default);
 }

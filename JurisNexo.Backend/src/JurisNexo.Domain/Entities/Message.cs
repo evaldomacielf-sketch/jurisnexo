@@ -14,7 +14,8 @@ public enum MessageType
     Image,
     Document,
     Audio,
-    Video
+    Video,
+    Template
 }
 
 public class Message : BaseEntity

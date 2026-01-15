@@ -13,6 +13,7 @@ using JurisNexo.Application.Common.Settings;
 using JurisNexo.Domain.Interfaces;
 using JurisNexo.Infrastructure.Hubs;
 using JurisNexo.API.Controllers;
+using JurisNexo.API.BackgroundJobs;
 using JurisNexo.API.Configuration;
 using JurisNexo.API.Startup;
 using JurisNexo.Infrastructure.Monitoring;
@@ -39,13 +40,18 @@ try
         .WriteTo.Console());
 
     // Add Sentry
-    builder.WebHost.UseSentry(options =>
+    // Add Sentry only if DSN is present
+    var sentryDsn = builder.Configuration["Sentry:Dsn"];
+    if (!string.IsNullOrEmpty(sentryDsn))
     {
-        options.Dsn = builder.Configuration["Sentry:Dsn"];
-        options.TracesSampleRate = 1.0;
-        options.Debug = false;
-        options.Environment = builder.Environment.EnvironmentName;
-    });
+        builder.WebHost.UseSentry(options =>
+        {
+            options.Dsn = sentryDsn;
+            options.TracesSampleRate = 1.0;
+            options.Debug = false;
+            options.Environment = builder.Environment.EnvironmentName;
+        });
+    }
 
     // Add X-Ray Tracing
     builder.Services.AddXRayTracing();
@@ -69,7 +75,6 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IContactRepository, ContactRepository>();
 builder.Services.AddScoped<ICaseRepository, CaseRepository>();
 builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
-builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IPipelineRepository, PipelineRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -85,6 +90,32 @@ builder.Services.AddScoped<IPipelineService, PipelineService>();
 builder.Services.AddScoped<ILeadService, LeadService>();
 builder.Services.AddScoped<ILeadRepository, LeadRepository>();
 builder.Services.AddScoped<IPipelineSeeder, PipelineSeeder>();
+builder.Services.AddScoped<ILeadQualificationService, LeadQualificationService>();
+builder.Services.AddScoped<ILeadQualificationBot, LeadQualificationBot>();
+builder.Services.AddScoped<ISettingsService, SettingsService>();
+builder.Services.AddScoped<ILeadScoringService, LeadScoringService>();
+builder.Services.AddScoped<ISmartLeadRoutingService, SmartLeadRoutingService>();
+builder.Services.AddScoped<ILeadAnalyticsService, LeadAnalyticsService>();
+
+// WhatsApp Services
+builder.Services.AddScoped<IWhatsAppWebhookHandler, WhatsAppWebhookHandler>();
+builder.Services.AddScoped<IWhatsAppMessageProcessor, WhatsAppWebhookHandler>(); // Register same class for processor
+builder.Services.AddScoped<IWhatsAppWebhookValidator, WhatsAppWebhookValidator>();
+builder.Services.AddScoped<IWhatsAppChatbotService, WhatsAppChatbotService>();
+builder.Services.AddScoped<IAIClassifierService, AIClassifierService>();
+builder.Services.AddHttpClient<IWhatsAppClient, MetaWhatsAppService>();
+builder.Services.AddScoped<IWhatsAppService, WhatsAppService>();
+builder.Services.AddScoped<IWhatsAppAnalyticsService, WhatsAppAnalyticsService>();
+builder.Services.AddScoped<IStorageService, AzureBlobStorageService>();
+builder.Services.AddScoped<IInboxNotificationService, SignalRInboxNotificationService>();
+
+// Notification Services
+builder.Services.AddScoped<IPushNotificationService, PushNotificationService>();
+builder.Services.AddScoped<ISmsService, SmsService>();
+builder.Services.AddScoped<ILeadNotificationService, LeadNotificationService>();
+
+// Background Workers
+builder.Services.AddHostedService<WhatsAppMessageWorker>();
 
 // Monitoring
 builder.Services.AddAWSService<IAmazonCloudWatch>();
@@ -155,6 +186,22 @@ if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
         var collection = PostmanCollectionGenerator.GenerateCollection(services);
         return Results.Content(collection, "application/json", System.Text.Encoding.UTF8);
     }).ExcludeFromDescription();
+
+    // Auto-migrate in Dev
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        try 
+        {
+            Log.Information("Applying migrations...");
+            db.Database.Migrate(); 
+            Log.Information("Migrations applied successfully.");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Failed to apply migrations.");
+        }
+    }
 }
 
 

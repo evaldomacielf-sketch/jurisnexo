@@ -11,7 +11,7 @@ import {
     DragStartEvent,
     DragEndEvent,
 } from '@dnd-kit/core';
-import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { KanbanColumn } from './KanbanColumn';

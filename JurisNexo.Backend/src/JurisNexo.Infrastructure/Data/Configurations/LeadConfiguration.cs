@@ -28,7 +28,7 @@ public class LeadConfiguration : IEntityTypeConfiguration<Lead>
             .HasConversion<string>()
             .HasMaxLength(50);
 
-        builder.Property(l => l.Priority)
+        builder.Property(l => l.Urgency)
             .HasConversion<string>()
             .HasMaxLength(50);
 
@@ -36,13 +36,9 @@ public class LeadConfiguration : IEntityTypeConfiguration<Lead>
             .HasConversion<string>()
             .HasMaxLength(50);
 
-        // Configure Tags as JSONB
+        // Configure Tags as simple string (comma separated)
         builder.Property(l => l.Tags)
-            .HasConversion(
-                v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null!),
-                v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null!) ?? new List<string>()
-            )
-            .HasColumnType("jsonb");
+            .HasMaxLength(2000);
 
         // Relationships
         builder.HasOne(l => l.Contact)
@@ -70,10 +66,7 @@ public class LeadConfiguration : IEntityTypeConfiguration<Lead>
             .HasForeignKey(a => a.LeadId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(l => l.Notes)
-            .WithOne(n => n.Lead)
-            .HasForeignKey(n => n.LeadId)
-            .OnDelete(DeleteBehavior.Cascade);
+        // Notes removed or handled via Activities check
 
         builder.HasIndex(l => new { l.TenantId, l.PipelineId, l.StageId, l.Position });
     }

@@ -53,7 +53,7 @@ public class LeadRepository : Repository<Lead>, ILeadRepository
 
         if (priority.HasValue)
         {
-            query = query.Where(l => l.Priority == priority.Value);
+            query = query.Where(l => l.Urgency == priority.Value);
         }
 
         if (assignedToUserId.HasValue)

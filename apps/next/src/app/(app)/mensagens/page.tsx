@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import {
     MessageSquare,
     Send,
-    Paperclip,
     Search,
     MoreVertical,
     Phone,
@@ -16,11 +15,9 @@ import {
     CheckCheck,
     Loader2,
     Plus,
-    Image as ImageIcon,
-    File,
-    X,
 } from 'lucide-react';
 import { chatApi, Chat, ChatMessage, ChatType, MessageType, SendMessageDto } from '@/services/api/chat.service';
+import { WhatsAppDashboard } from '@/components/whatsapp/WhatsAppDashboard';
 import { formatDistanceToNow, format, isToday, isYesterday } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -40,6 +37,7 @@ export default function MensagensPage() {
     const [messageText, setMessageText] = useState('');
     const [sending, setSending] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [view, setView] = useState<'internal' | 'whatsapp'>('internal');
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -132,6 +130,14 @@ export default function MensagensPage() {
         return 'Chat';
     };
 
+    if (view === 'whatsapp') {
+        return (
+            <div className="h-screen bg-transparent p-4">
+                <WhatsAppDashboard />
+            </div>
+        );
+    }
+
     return (
         <div className="h-screen flex bg-gray-100">
             {/* Sidebar - Chat List */}
@@ -149,7 +155,7 @@ export default function MensagensPage() {
                     </div>
 
                     {/* Search */}
-                    <div className="relative">
+                    <div className="relative mb-4">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <input
                             type="text"
@@ -159,62 +165,80 @@ export default function MensagensPage() {
                             className="w-full pl-9 pr-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
                     </div>
+
+                    {/* View Toggle */}
+                    <div className="flex gap-2 p-1 bg-gray-100 rounded-lg">
+                        <button
+                            onClick={() => setView('internal')}
+                            className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-colors ${view === 'internal' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
+                        >
+                            Interno
+                        </button>
+                        <button
+                            onClick={() => setView('whatsapp')}
+                            className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-colors ${view === 'whatsapp' ? 'bg-white shadow-sm text-[#25D366]' : 'text-gray-500 hover:text-gray-700'}`}
+                        >
+                            WhatsApp
+                        </button>
+                    </div>
                 </div>
 
                 {/* Chat List */}
-                <div className="flex-1 overflow-y-auto">
-                    {loading ? (
-                        <div className="flex items-center justify-center py-8">
-                            <Loader2 className="w-6 h-6 animate-spin text-indigo-600" />
-                        </div>
-                    ) : filteredChats.length === 0 ? (
-                        <div className="text-center py-8 text-gray-500">
-                            <MessageSquare className="w-10 h-10 mx-auto mb-2 text-gray-300" />
-                            <p>Nenhuma conversa</p>
-                        </div>
-                    ) : (
-                        filteredChats.map((chat) => {
-                            const ChatIcon = CHAT_TYPE_ICONS[chat.type];
-                            const isSelected = selectedChat?.id === chat.id;
+                {view === 'internal' ? (
+                    <div className="flex-1 overflow-y-auto">
+                        {loading ? (
+                            <div className="flex items-center justify-center py-8">
+                                <Loader2 className="w-6 h-6 animate-spin text-indigo-600" />
+                            </div>
+                        ) : filteredChats.length === 0 ? (
+                            <div className="text-center py-8 text-gray-500">
+                                <MessageSquare className="w-10 h-10 mx-auto mb-2 text-gray-300" />
+                                <p>Nenhuma conversa</p>
+                            </div>
+                        ) : (
+                            filteredChats.map((chat) => {
+                                const ChatIcon = CHAT_TYPE_ICONS[chat.type];
+                                const isSelected = selectedChat?.id === chat.id;
 
-                            return (
-                                <button
-                                    key={chat.id}
-                                    onClick={() => setSelectedChat(chat)}
-                                    className={`w-full p-4 flex items-start gap-3 hover:bg-gray-50 border-b text-left ${isSelected ? 'bg-indigo-50' : ''
-                                        }`}
-                                >
-                                    <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <ChatIcon className="w-5 h-5 text-indigo-600" />
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center justify-between">
-                                            <span className="font-medium text-gray-900 truncate">
-                                                {getChatName(chat)}
-                                            </span>
-                                            {chat.lastMessage && (
-                                                <span className="text-xs text-gray-400">
-                                                    {formatDistanceToNow(new Date(chat.lastMessage.createdAt), {
-                                                        addSuffix: false,
-                                                        locale: ptBR,
-                                                    })}
+                                return (
+                                    <button
+                                        key={chat.id}
+                                        onClick={() => setSelectedChat(chat)}
+                                        className={`w-full p-4 flex items-start gap-3 hover:bg-gray-50 border-b text-left ${isSelected ? 'bg-indigo-50' : ''
+                                            }`}
+                                    >
+                                        <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <ChatIcon className="w-5 h-5 text-indigo-600" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center justify-between">
+                                                <span className="font-medium text-gray-900 truncate">
+                                                    {getChatName(chat)}
                                                 </span>
+                                                {chat.lastMessage && (
+                                                    <span className="text-xs text-gray-400">
+                                                        {formatDistanceToNow(new Date(chat.lastMessage.createdAt), {
+                                                            addSuffix: false,
+                                                            locale: ptBR,
+                                                        })}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            {chat.lastMessage && (
+                                                <p className="text-sm text-gray-500 truncate">{chat.lastMessage.content}</p>
                                             )}
                                         </div>
-                                        {chat.lastMessage && (
-                                            <p className="text-sm text-gray-500 truncate">{chat.lastMessage.content}</p>
+                                        {chat.unreadCount > 0 && (
+                                            <span className="bg-indigo-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                                                {chat.unreadCount}
+                                            </span>
                                         )}
-                                    </div>
-                                    {chat.unreadCount > 0 && (
-                                        <span className="bg-indigo-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                                            {chat.unreadCount}
-                                        </span>
-                                    )}
-                                </button>
-                            );
-                        })
-                    )}
-                </div>
+                                    </button>
+                                );
+                            })
+                        )}
+                    </div>
+                ) : null}
             </div>
 
             {/* Main Chat Area */}
@@ -238,13 +262,13 @@ export default function MensagensPage() {
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
-                                <button className="p-2 hover:bg-gray-100 rounded-lg" aria-label="Chamada de vídeo">
+                                <button className="p-2 hover:bg-gray-100 rounded-lg" title="Chamada de vídeo">
                                     <Video className="w-5 h-5 text-gray-600" />
                                 </button>
-                                <button className="p-2 hover:bg-gray-100 rounded-lg" aria-label="Chamada de voz">
+                                <button className="p-2 hover:bg-gray-100 rounded-lg" title="Chamada de voz">
                                     <Phone className="w-5 h-5 text-gray-600" />
                                 </button>
-                                <button className="p-2 hover:bg-gray-100 rounded-lg" aria-label="Mais opções">
+                                <button className="p-2 hover:bg-gray-100 rounded-lg" title="Mais opções">
                                     <MoreVertical className="w-5 h-5 text-gray-600" />
                                 </button>
                             </div>
@@ -265,8 +289,8 @@ export default function MensagensPage() {
                                     </div>
                                 </div>
                             ) : (
-                                messages.map((msg, idx) => {
-                                    const isOwnMessage = msg.senderId === 'current-user-id'; // Replace with actual user ID
+                                messages.map((msg) => {
+                                    const isOwnMessage = msg.senderId === 'current-user-id';
                                     return (
                                         <div
                                             key={msg.id}
@@ -274,8 +298,8 @@ export default function MensagensPage() {
                                         >
                                             <div
                                                 className={`max-w-[70%] rounded-2xl px-4 py-2 ${isOwnMessage
-                                                        ? 'bg-indigo-600 text-white rounded-br-none'
-                                                        : 'bg-white border rounded-bl-none'
+                                                    ? 'bg-indigo-600 text-white rounded-br-none'
+                                                    : 'bg-white border rounded-bl-none'
                                                     }`}
                                             >
                                                 {!isOwnMessage && (
@@ -308,8 +332,8 @@ export default function MensagensPage() {
                         {/* Message Input */}
                         <div className="bg-white border-t p-4">
                             <div className="flex items-end gap-3">
-                                <button className="p-2 hover:bg-gray-100 rounded-lg text-gray-600" aria-label="Anexar arquivo">
-                                    <Paperclip className="w-5 h-5" />
+                                <button className="p-2 hover:bg-gray-100 rounded-lg text-gray-600" title="Anexar arquivo">
+                                    <Search className="w-5 h-5" />
                                 </button>
                                 <div className="flex-1 relative">
                                     <textarea
@@ -318,14 +342,14 @@ export default function MensagensPage() {
                                         onKeyDown={handleKeyPress}
                                         placeholder="Digite sua mensagem..."
                                         rows={1}
-                                        className="w-full resize-none border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        className="w-full resize-none border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black shadow-sm"
                                     />
                                 </div>
                                 <button
                                     onClick={handleSendMessage}
                                     disabled={!messageText.trim() || sending}
                                     className="p-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    aria-label="Enviar mensagem"
+                                    title="Enviar mensagem"
                                 >
                                     {sending ? (
                                         <Loader2 className="w-5 h-5 animate-spin" />
@@ -337,7 +361,6 @@ export default function MensagensPage() {
                         </div>
                     </>
                 ) : (
-                    /* Empty state */
                     <div className="flex-1 flex items-center justify-center bg-gray-50">
                         <div className="text-center">
                             <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">

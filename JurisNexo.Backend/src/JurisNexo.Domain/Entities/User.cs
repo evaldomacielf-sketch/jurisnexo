@@ -26,6 +26,17 @@ public class User : TenantEntity
     public string? RefreshToken { get; set; }
     public DateTime? RefreshTokenExpiresAt { get; set; }
     
+    // Routing & Metrics
+    public string SpecializationsJson { get; set; } = "[]"; // e.g. ["Trabalhista", "Civil"]
+    public double ConversionRate { get; set; } // 0.0 to 1.0
+    public double AvgResponseTimeMinutes { get; set; } // in minutes
+    
+    [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+    public List<string> Specializations => 
+        string.IsNullOrEmpty(SpecializationsJson) 
+            ? new List<string>() 
+            : System.Text.Json.JsonSerializer.Deserialize<List<string>>(SpecializationsJson) ?? new List<string>();
+
     // Navigation properties
     public virtual ICollection<Appointment> CreatedAppointments { get; set; } = new List<Appointment>();
     public virtual ICollection<Case> ResponsibleCases { get; set; } = new List<Case>();

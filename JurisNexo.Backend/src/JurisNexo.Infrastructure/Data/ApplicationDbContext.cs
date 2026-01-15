@@ -33,6 +33,21 @@ public class ApplicationDbContext : DbContext
     public DbSet<Lead> Leads => Set<Lead>();
     public DbSet<LeadActivity> LeadActivities => Set<LeadActivity>();
     public DbSet<LeadNote> LeadNotes => Set<LeadNote>();
+    public DbSet<WhatsAppConversation> WhatsAppConversations => Set<WhatsAppConversation>();
+    public DbSet<WhatsAppMessage> WhatsAppMessages => Set<WhatsAppMessage>();
+    public DbSet<WhatsAppTemplate> WhatsAppTemplates => Set<WhatsAppTemplate>();
+    public DbSet<WhatsAppWebhookLog> WhatsAppWebhookLogs => Set<WhatsAppWebhookLog>();
+    public DbSet<WhatsAppContact> WhatsAppContacts => Set<WhatsAppContact>();
+    public DbSet<WhatsAppMedia> WhatsAppMedia => Set<WhatsAppMedia>();
+    
+    // Lead Triaging System
+    public DbSet<LeadQualificationQuestion> LeadQualificationQuestions => Set<LeadQualificationQuestion>();
+    public DbSet<LeadQualificationAnswer> LeadQualificationAnswers => Set<LeadQualificationAnswer>();
+    public DbSet<LeadScore> LeadScores => Set<LeadScore>();
+    public DbSet<LeadRoutingRule> LeadRoutingRules => Set<LeadRoutingRule>();
+    public DbSet<LeadAssignment> LeadAssignments => Set<LeadAssignment>();
+    public DbSet<LeadConversionFunnel> LeadConversionFunnels => Set<LeadConversionFunnel>();
+    public DbSet<LeadFollowUpTask> LeadFollowUpTasks => Set<LeadFollowUpTask>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -50,6 +65,11 @@ public class ApplicationDbContext : DbContext
         {
             modelBuilder.Entity<TenantEntity>().HasQueryFilter(e => e.TenantId == tenantId.Value);
         }
+
+        // Apply Encryption to WhatsAppMessage Content
+        modelBuilder.Entity<WhatsAppMessage>()
+            .Property(e => e.Content)
+            .HasConversion(new JurisNexo.Infrastructure.Data.Converters.EncryptionValueConverter());
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

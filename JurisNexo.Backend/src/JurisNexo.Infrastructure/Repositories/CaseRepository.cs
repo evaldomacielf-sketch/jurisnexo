@@ -78,4 +78,12 @@ public class CaseRepository : Repository<Case>, ICaseRepository
 
         return (items, total);
     }
+
+    public async Task<Case?> GetByCaseNumberAsync(Guid tenantId, string caseNumber, CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<Case>()
+            .Include(c => c.Client)
+            .Include(c => c.ResponsibleLawyer)
+            .FirstOrDefaultAsync(c => c.TenantId == tenantId && c.CaseNumber == caseNumber, cancellationToken);
+    }
 }

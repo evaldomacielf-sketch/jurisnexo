@@ -119,12 +119,12 @@ public class LeadService : ILeadService
             Currency = request.Currency,
             Probability = request.Probability,
             Source = Enum.Parse<LeadSource>(request.Source, true),
-            Priority = Enum.Parse<LeadPriority>(request.Priority, true),
+            Urgency = Enum.Parse<LeadPriority>(request.Priority, true),
             Status = LeadStatus.New,
             AssignedToUserId = request.AssignedToUserId,
             ExpectedCloseDate = request.ExpectedCloseDate,
             NextFollowUpDate = request.NextFollowUpDate,
-            Tags = request.Tags ?? new List<string>(),
+            Tags = request.Tags != null ? string.Join(",", request.Tags) : string.Empty,
             Position = maxPosition + 1
         };
 
@@ -159,11 +159,11 @@ public class LeadService : ILeadService
         if (request.Description != null) lead.Description = request.Description;
         if (request.EstimatedValue.HasValue) lead.EstimatedValue = request.EstimatedValue.Value;
         if (request.Probability.HasValue) lead.Probability = request.Probability.Value;
-        if (request.Priority != null) lead.Priority = Enum.Parse<LeadPriority>(request.Priority, true);
+        if (request.Priority != null) lead.Urgency = Enum.Parse<LeadPriority>(request.Priority, true);
         if (request.AssignedToUserId.HasValue) lead.AssignedToUserId = request.AssignedToUserId.Value;
         if (request.ExpectedCloseDate.HasValue) lead.ExpectedCloseDate = request.ExpectedCloseDate.Value;
         if (request.NextFollowUpDate.HasValue) lead.NextFollowUpDate = request.NextFollowUpDate.Value;
-        if (request.Tags != null) lead.Tags = request.Tags;
+        if (request.Tags != null) lead.Tags = string.Join(",", request.Tags);
 
         await _leadRepository.UpdateAsync(lead, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -187,7 +187,7 @@ public class LeadService : ILeadService
             ?? throw new NotFoundException("Lead não encontrado");
 
         var oldStageId = lead.StageId;
-        var oldStage = await _stageRepository.GetByIdAsync(oldStageId, cancellationToken);
+        var oldStage = await _stageRepository.GetByIdAsync(oldStageId ?? Guid.Empty, cancellationToken);
         var newStage = await _stageRepository.GetByIdAsync(request.TargetStageId, cancellationToken)
             ?? throw new NotFoundException("Estágio de destino não encontrado");
 
@@ -270,7 +270,7 @@ public class LeadService : ILeadService
         var lead = await _leadRepository.GetByIdAsync(leadId, cancellationToken)
             ?? throw new NotFoundException("Lead não encontrado");
 
-        var pipeline = await _pipelineRepository.GetWithStagesAsync(lead.PipelineId, cancellationToken);
+        var pipeline = await _pipelineRepository.GetWithStagesAsync(lead.PipelineId ?? Guid.Empty, cancellationToken);
         var wonStage = pipeline?.Stages.FirstOrDefault(s => s.IsWonStage)
             ?? throw new NotFoundException("Estágio 'Ganho' não encontrado");
 
@@ -306,7 +306,7 @@ public class LeadService : ILeadService
         var lead = await _leadRepository.GetByIdAsync(leadId, cancellationToken)
             ?? throw new NotFoundException("Lead não encontrado");
 
-        var pipeline = await _pipelineRepository.GetWithStagesAsync(lead.PipelineId, cancellationToken);
+        var pipeline = await _pipelineRepository.GetWithStagesAsync(lead.PipelineId ?? Guid.Empty, cancellationToken);
         var lostStage = pipeline?.Stages.FirstOrDefault(s => s.IsLostStage)
             ?? throw new NotFoundException("Estágio 'Perdido' não encontrado");
 
@@ -341,16 +341,16 @@ public class LeadService : ILeadService
             lead.TenantId,
             lead.Title,
             lead.Description,
-            lead.ContactId,
+            lead.ContactId ?? Guid.Empty,
             new ContactInfoDto(
                 lead.Contact?.Id ?? Guid.Empty,
                 lead.Contact?.Name ?? "Unknown",
                 lead.Contact?.Phone ?? "",
                 lead.Contact?.Email
             ),
-            lead.PipelineId,
+            lead.PipelineId ?? Guid.Empty,
             lead.Pipeline?.Name ?? "Unknown",
-            lead.StageId,
+            lead.StageId ?? Guid.Empty,
             new StageInfoDto(
                 lead.Stage?.Id ?? Guid.Empty,
                 lead.Stage?.Name ?? "Unknown",
@@ -359,9 +359,9 @@ public class LeadService : ILeadService
             ),
             lead.EstimatedValue,
             lead.Currency,
-            lead.Probability,
+            (int)(lead.Probability ?? 0),
             lead.Source.ToString(),
-            lead.Priority.ToString(),
+            lead.Urgency.ToString(),
             lead.Status.ToString(),
             lead.AssignedToUserId,
             lead.AssignedToUser != null ? new UserInfoDto(
@@ -374,8 +374,8 @@ public class LeadService : ILeadService
             lead.ActualCloseDate,
             lead.LastContactDate,
             lead.NextFollowUpDate,
-            lead.Tags,
-            lead.Position,
+            lead.Tags?.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList() ?? new List<string>(),
+            (int)lead.Position,
             lead.CreatedAt,
             lead.UpdatedAt
         );

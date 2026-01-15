@@ -177,3 +177,8 @@
 /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.API/obj/Debug/net8.0/JurisNexo.API.genruntimeconfig.cache
 /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.API/obj/Debug/net8.0/ref/JurisNexo.API.dll
 /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.API/bin/Debug/net8.0/Newtonsoft.Json.dll
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.API/bin/Debug/net8.0/Azure.Core.dll
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.API/bin/Debug/net8.0/Azure.Storage.Blobs.dll
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.API/bin/Debug/net8.0/Azure.Storage.Common.dll
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.API/bin/Debug/net8.0/System.IO.Hashing.dll
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.API/bin/Debug/net8.0/System.Memory.Data.dll

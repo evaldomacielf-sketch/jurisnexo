@@ -111,6 +111,35 @@ Responda APENAS com um JSON no formato:
         }
     }
 
+    public async Task<string> GenerateResponseAsync(string systemContext, string userMessage, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var requestBody = new
+            {
+                model = "gpt-4o-mini",
+                messages = new[]
+                {
+                    new { role = "system", content = systemContext },
+                    new { role = "user", content = userMessage }
+                },
+                temperature = 0.5,
+                max_tokens = 300
+            };
+
+            var response = await _httpClient.PostAsJsonAsync("chat/completions", requestBody, cancellationToken);
+            response.EnsureSuccessStatusCode();
+
+            var result = await response.Content.ReadFromJsonAsync<OpenAIResponse>(cancellationToken);
+            return result?.Choices?.FirstOrDefault()?.Message?.Content ?? "Desculpe, não consegui processar sua solicitação no momento.";
+        }
+        catch (Exception ex)
+        {
+            _openAiLogger.LogError(ex, "Erro ao gerar resposta com OpenAI");
+            return "Desculpe, estamos enfrentando uma instabilidade momentânea. Por favor, tente novamente em alguns instantes ou aguarde o atendimento humano.";
+        }
+    }
+
     private record OpenAIResponse(
         [property: JsonPropertyName("choices")] List<OpenAIChoice>? Choices
     );
