@@ -6,7 +6,6 @@ import {
     User,
     Phone,
     Mail,
-    MapPin,
     Calendar,
     Edit,
     Trash2,
@@ -34,7 +33,7 @@ export function ClientDetails({ clientId }: { clientId: string }) {
 
     const loadClient = async () => {
         try {
-            const data = await clientsApi.getById(clientId);
+            const data = await clientsApi.getClientById(clientId);
             setClient(data);
         } catch (error) {
             toast.error('Erro ao carregar dados do cliente');
@@ -45,7 +44,7 @@ export function ClientDetails({ clientId }: { clientId: string }) {
 
     const handleDelete = async () => {
         try {
-            await clientsApi.delete(clientId);
+            await clientsApi.deleteClient(clientId);
             toast.success('Cliente removido com sucesso');
             router.push('/dashboard/clients');
         } catch (error) {
@@ -206,8 +205,8 @@ export function ClientDetails({ clientId }: { clientId: string }) {
                     <button
                         onClick={() => setActiveTab('interactions')}
                         className={`py-2 text-sm font-medium rounded-md transition-all ${activeTab === 'interactions'
-                                ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                            ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                             }`}
                     >
                         Interações
@@ -215,8 +214,8 @@ export function ClientDetails({ clientId }: { clientId: string }) {
                     <button
                         onClick={() => setActiveTab('cases')}
                         className={`py-2 text-sm font-medium rounded-md transition-all ${activeTab === 'cases'
-                                ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                            ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                             }`}
                     >
                         Casos
@@ -224,8 +223,8 @@ export function ClientDetails({ clientId }: { clientId: string }) {
                     <button
                         onClick={() => setActiveTab('documents')}
                         className={`py-2 text-sm font-medium rounded-md transition-all ${activeTab === 'documents'
-                                ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                            ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                             }`}
                     >
                         Documentos

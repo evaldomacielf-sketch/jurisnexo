@@ -12,12 +12,11 @@ import {
     FileText,
     Clock,
     ArrowLeft,
-    X
 } from 'lucide-react';
 import { casesApi } from '@/lib/api/cases';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
-import type { Case, CaseStatus } from '@/lib/types/cases';
+import type { Case } from '@/lib/types/cases';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
 interface CaseDetailsProps {
@@ -206,9 +205,9 @@ export function CaseDetails({ caseId }: CaseDetailsProps) {
                                 </p>
                                 <div
                                     className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
-                                    onClick={() => router.push(`/dashboard/clients/${caseData.client.id}`)}
+                                    onClick={() => caseData.client?.id && router.push(`/dashboard/clients/${caseData.client.id}`)}
                                 >
-                                    <p className="font-medium text-gray-900 dark:text-white">{caseData.client.name}</p>
+                                    <p className="font-medium text-gray-900 dark:text-white">{caseData.client?.name || 'Cliente não identificado'}</p>
                                     {/* Assuming client object might have phone if enriched, otherwise just name */}
                                 </div>
                             </div>
@@ -236,8 +235,8 @@ export function CaseDetails({ caseId }: CaseDetailsProps) {
                         <button
                             onClick={() => setActiveTab('timeline')}
                             className={`${activeTab === 'timeline'
-                                    ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                                 } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2`}
                         >
                             <Clock className="h-4 w-4" />
@@ -246,8 +245,8 @@ export function CaseDetails({ caseId }: CaseDetailsProps) {
                         <button
                             onClick={() => setActiveTab('documents')}
                             className={`${activeTab === 'documents'
-                                    ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                                 } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2`}
                         >
                             <FileText className="h-4 w-4" />
@@ -285,7 +284,7 @@ export function CaseDetails({ caseId }: CaseDetailsProps) {
                             Remover processo
                         </h3>
                         <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-                            Tem certeza que deseja remover o processo "{caseData.title}"? Esta ação não pode ser desfeita.
+                            Tem certeza que deseja remover o processo &quot;{caseData.title}&quot;? Esta ação não pode ser desfeita.
                         </p>
                         <div className="flex justify-end gap-2">
                             <button

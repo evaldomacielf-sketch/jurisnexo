@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
     Calendar as CalendarIcon,
     Plus,
@@ -29,11 +29,9 @@ export function SchedulingCalendar() {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        loadAppointments();
-    }, [currentMonth]);
 
-    const loadAppointments = async () => {
+
+    const loadAppointments = useCallback(async () => {
         try {
             setLoading(true);
             const start = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
@@ -47,7 +45,11 @@ export function SchedulingCalendar() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [currentMonth]);
+
+    useEffect(() => {
+        loadAppointments();
+    }, [loadAppointments]);
 
     const dailyAppointments = appointments.filter((apt) => {
         const aptDate = new Date(apt.start_time);
@@ -208,7 +210,7 @@ export function SchedulingCalendar() {
                                     Nenhum compromisso para esta data
                                 </p>
                                 <p className="text-sm">
-                                    Clique em "Novo Agendamento" para criar um
+                                    Clique em &quot;Novo Agendamento&quot; para criar um
                                 </p>
                             </div>
                         )}

@@ -6,14 +6,12 @@ import {
     Phone,
     Mail,
     Calendar,
-    Plus,
-    User,
-    ChevronDown
+    Plus
 } from 'lucide-react';
 import { clientsApi } from '@/lib/api/clients';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
-import type { ClientInteraction, InteractionType } from '@/lib/types/client';
+import type { ClientInteraction } from '@/lib/types/client';
 import { InteractionType as InteractionTypeEnum, INTERACTION_TYPE_CONFIG } from '@/lib/types/client';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
@@ -53,12 +51,10 @@ export function ClientInteractions({ clientId }: ClientInteractionsProps) {
 
         setSaving(true);
         try {
-            await clientsApi.createInteraction({
-                clientId,
+            await clientsApi.addInteraction(clientId, {
                 type: InteractionTypeEnum.NOTE,
                 description: newNote,
-                created_at: new Date().toISOString(), // Optional, backend handles it usually but DTO might accept it
-            } as any); // Casting as CreateInteractionDTO might differ slightly from API expectation or types need update, but let's stick to DTO
+            });
 
             toast.success('Nota adicionada com sucesso');
             setNewNote('');

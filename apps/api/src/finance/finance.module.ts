@@ -9,6 +9,10 @@ import { RecurringTransactionController } from './controllers/recurring-transact
 import { BudgetController } from './controllers/budget.controller';
 import { ReportsController } from './controllers/reports.controller';
 import { CategoryController } from './controllers/category.controller';
+import { LegalFeesController } from './controllers/legal-fees.controller';
+import { FeeSplitController } from './controllers/fee-split.controller';
+import { CashBookController } from './controllers/cash-book.controller';
+import { PaymentPortalController } from './controllers/payment-portal.controller';
 
 // Services
 import { FinanceService } from './finance.service';
@@ -21,6 +25,10 @@ import { RecurringTransactionService } from './services/recurring-transaction.se
 import { BudgetService } from './services/budget.service';
 import { FinanceCronService } from './services/finance-cron.service';
 import { CategoryService } from './services/category.service';
+import { LegalFeesService } from './legal-fees.service'; // Keep in root as observed
+import { FeeSplitService } from './services/fee-split.service';
+import { CashBookService } from './services/cash-book.service';
+import { PaymentPortalService } from './services/payment-portal.service';
 
 @Module({
     imports: [DatabaseModule],
@@ -32,6 +40,12 @@ import { CategoryService } from './services/category.service';
         BudgetController,
         ReportsController,
         CategoryController,
+
+        // Advanced Modules
+        LegalFeesController,
+        FeeSplitController,
+        CashBookController,
+        PaymentPortalController,
     ],
     providers: [
         // Core Services
@@ -40,12 +54,19 @@ import { CategoryService } from './services/category.service';
         PayablesService,
         ReportsService,
         FinanceCronService,
+
         // New Services
         BankAccountService,
         TransactionService,
         RecurringTransactionService,
         BudgetService,
         CategoryService,
+
+        // Advanced Modules Services
+        LegalFeesService,
+        FeeSplitService,
+        CashBookService,
+        PaymentPortalService,
     ],
     exports: [
         FinanceService,
@@ -54,6 +75,10 @@ import { CategoryService } from './services/category.service';
         RecurringTransactionService,
         BudgetService,
         CategoryService,
+        LegalFeesService,
+        FeeSplitService,
+        CashBookService,
+        PaymentPortalService,
     ],
 })
 export class FinanceModule { }

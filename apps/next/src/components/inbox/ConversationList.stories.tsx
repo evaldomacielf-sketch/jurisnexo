@@ -1,3 +1,4 @@
+// eslint-disable-next-line storybook/no-renderer-packages
 import type { Meta, StoryObj } from '@storybook/react';
 import { ConversationList } from './ConversationList';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

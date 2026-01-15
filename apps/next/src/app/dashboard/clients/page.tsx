@@ -3,6 +3,8 @@ import { ClientsList } from '@/components/clients/ClientsList';
 import { ClientFilters } from '@/components/clients/ClientFilters';
 import { Suspense } from 'react';
 
+import Link from 'next/link';
+
 export const metadata = {
     title: 'Clientes | JurisNexo',
     description: 'Gestão de clientes',
@@ -23,13 +25,13 @@ export default function ClientsPage() {
                             Gerencie seus clientes e leads
                         </p>
                     </div>
-                    <a
+                    <Link
                         href="/dashboard/clients/new"
                         className="px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-opacity-90 transition flex items-center gap-2"
                     >
                         <span>+</span>
                         Novo Cliente
-                    </a>
+                    </Link>
                 </div>
 
                 <Suspense fallback={<ClientsListSkeleton />}>

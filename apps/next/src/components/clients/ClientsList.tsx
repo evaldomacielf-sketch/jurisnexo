@@ -7,6 +7,7 @@ import { clientsApi } from '@/lib/api/clients';
 import { CLIENT_STATUS_CONFIG, CLIENT_PRIORITY_CONFIG } from '@/lib/types/client';
 import type { Client } from '@/lib/types/client';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 export function ClientsList() {
     const router = useRouter();
@@ -19,7 +20,7 @@ export function ClientsList() {
 
     const loadClients = async () => {
         try {
-            const data = await clientsApi.getAll();
+            const data = await clientsApi.getClients();
             setClients(data);
         } catch (error) {
             toast.error('Erro ao carregar clientes');
@@ -32,7 +33,7 @@ export function ClientsList() {
         if (!confirm('Tem certeza que deseja excluir este cliente?')) return;
 
         try {
-            await clientsApi.delete(id);
+            await clientsApi.deleteClient(id);
             setClients(clients.filter(c => c.id !== id));
             toast.success('Cliente excluído com sucesso');
         } catch (error) {
@@ -56,12 +57,12 @@ export function ClientsList() {
                 <p className="text-gray-600 dark:text-gray-400 mb-6">
                     Comece adicionando seu primeiro cliente
                 </p>
-                <a
+                <Link
                     href="/dashboard/clients/new"
                     className="inline-block px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-opacity-90 transition"
                 >
                     Adicionar Cliente
-                </a>
+                </Link>
             </div>
         );
     }

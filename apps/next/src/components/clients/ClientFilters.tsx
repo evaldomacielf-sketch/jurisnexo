@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Filter, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { ClientStatus, ClientType } from '@/lib/types/client';
 
 export function ClientFilters() {

@@ -42,8 +42,8 @@ export class RecurringTransactionController {
     @ApiQuery({ name: 'isActive', required: false, type: Boolean })
     @ApiResponse({ status: 200, description: 'Lista de recorrências', type: [RecurringTransactionResponseDto] })
     async findAll(
-        @Query('isActive') isActive?: string,
-        @Req() req: AuthenticatedRequest
+        @Req() req: AuthenticatedRequest,
+        @Query('isActive') isActive?: string
     ): Promise<RecurringTransactionResponseDto[]> {
         const activeFilter = isActive === undefined ? undefined : isActive === 'true';
         return this.service.findAll(req.user.tenantId, activeFilter);

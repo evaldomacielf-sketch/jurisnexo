@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import {
     Plus,
     Search,
-    Filter,
     DollarSign,
     Calendar,
     CheckCircle2,
@@ -20,7 +19,6 @@ import type {
     CreateReceivableDTO,
     RecordPaymentDTO,
     PaymentStatus,
-    PaymentMethod,
     FinanceQuery
 } from '@/lib/types/finance';
 
@@ -277,7 +275,6 @@ export default function ReceivablesPage() {
             {/* Payment Modal */}
             {showPaymentModal && (
                 <RecordPaymentModal
-                    receivableId={showPaymentModal}
                     onClose={() => setShowPaymentModal(null)}
                     onSubmit={(data) => handleRecordPayment(showPaymentModal, data)}
                 />
@@ -387,11 +384,9 @@ function CreateReceivableModal({
 
 // Record Payment Modal
 function RecordPaymentModal({
-    receivableId,
     onClose,
     onSubmit
 }: {
-    receivableId: string;
     onClose: () => void;
     onSubmit: (data: RecordPaymentDTO) => void;
 }) {

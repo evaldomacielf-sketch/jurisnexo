@@ -81,6 +81,11 @@ export class UpdateTransactionDto {
     @IsOptional()
     description?: string;
 
+    @ApiPropertyOptional({ description: 'Tipo da transação', enum: TransactionType })
+    @IsEnum(TransactionType)
+    @IsOptional()
+    type?: TransactionType;
+
     @ApiPropertyOptional({ description: 'Valor da transação' })
     @IsNumber()
     @Min(0.01)

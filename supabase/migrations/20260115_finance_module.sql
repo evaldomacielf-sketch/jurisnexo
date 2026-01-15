@@ -230,31 +230,31 @@ ALTER TABLE finance_invoices ENABLE ROW LEVEL SECURITY;
 ALTER TABLE finance_audit_log ENABLE ROW LEVEL SECURITY;
 -- RLS Policies for finance_categories
 CREATE POLICY "Tenant isolation for finance_categories" ON finance_categories FOR ALL USING (
-    tenant_id = current_setting('app.current_tenant_id')::UUID
+    tenant_id = (auth.jwt()->>'tenant_id')::UUID
 );
 -- RLS Policies for finance_accounts
 CREATE POLICY "Tenant isolation for finance_accounts" ON finance_accounts FOR ALL USING (
-    tenant_id = current_setting('app.current_tenant_id')::UUID
+    tenant_id = (auth.jwt()->>'tenant_id')::UUID
 );
 -- RLS Policies for finance_transactions
 CREATE POLICY "Tenant isolation for finance_transactions" ON finance_transactions FOR ALL USING (
-    tenant_id = current_setting('app.current_tenant_id')::UUID
+    tenant_id = (auth.jwt()->>'tenant_id')::UUID
 );
 -- RLS Policies for finance_receivables
 CREATE POLICY "Tenant isolation for finance_receivables" ON finance_receivables FOR ALL USING (
-    tenant_id = current_setting('app.current_tenant_id')::UUID
+    tenant_id = (auth.jwt()->>'tenant_id')::UUID
 );
 -- RLS Policies for finance_payables
 CREATE POLICY "Tenant isolation for finance_payables" ON finance_payables FOR ALL USING (
-    tenant_id = current_setting('app.current_tenant_id')::UUID
+    tenant_id = (auth.jwt()->>'tenant_id')::UUID
 );
 -- RLS Policies for finance_invoices
 CREATE POLICY "Tenant isolation for finance_invoices" ON finance_invoices FOR ALL USING (
-    tenant_id = current_setting('app.current_tenant_id')::UUID
+    tenant_id = (auth.jwt()->>'tenant_id')::UUID
 );
 -- RLS Policies for finance_audit_log
 CREATE POLICY "Tenant isolation for finance_audit_log" ON finance_audit_log FOR ALL USING (
-    tenant_id = current_setting('app.current_tenant_id')::UUID
+    tenant_id = (auth.jwt()->>'tenant_id')::UUID
 );
 -- ============================================
 -- TRIGGERS FOR updated_at

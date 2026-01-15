@@ -31,7 +31,7 @@ const MOCK_CONVERSATIONS = [
 ] as any[];
 
 export default function CrmInboxPage() {
-    const [conversations, setConversations] = useState<any[]>(MOCK_CONVERSATIONS);
+    const [conversations] = useState<any[]>(MOCK_CONVERSATIONS);
     const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
     const [messages, setMessages] = useState<any[]>([]);
 

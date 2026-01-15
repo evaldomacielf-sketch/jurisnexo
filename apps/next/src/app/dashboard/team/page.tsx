@@ -23,7 +23,6 @@ interface Invite {
 export default function TeamPage() {
     const [members, setMembers] = useState<Member[]>([]);
     const [invites, setInvites] = useState<Invite[]>([]);
-    const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [activeTab, setActiveTab] = useState<'active' | 'pending' | 'inactive'>('active');
 
@@ -46,8 +45,6 @@ export default function TeamPage() {
             if (invRes.ok) setInvites(await invRes.json());
         } catch (e) {
             console.error(e);
-        } finally {
-            setLoading(false);
         }
     };
 

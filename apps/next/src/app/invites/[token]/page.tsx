@@ -56,7 +56,7 @@ export default function InvitePage() {
             });
 
             if (res.ok) {
-                const data = await res.json();
+                await res.json();
                 router.push('/dashboard'); // Or switch tenant context?
             } else {
                 if (res.status === 401) {

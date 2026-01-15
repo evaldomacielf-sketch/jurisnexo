@@ -1,4 +1,4 @@
-```typescript
+
 import { apiClient, handleApiError } from './client';
 import type {
     LoginCredentials,

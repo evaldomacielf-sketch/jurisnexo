@@ -29,7 +29,7 @@ export default function ReportsPage() {
     // --- QUERIES ---
 
     // 1. Dashboard KPIs (used for Overview)
-    const { data: kpis, isLoading: kpisLoading } = useQuery({
+    const { data: kpis } = useQuery({
         queryKey: ['finance', 'reports', 'kpis'],
         queryFn: () => financeApi.getDashboardKPIs(),
         staleTime: 60000,
