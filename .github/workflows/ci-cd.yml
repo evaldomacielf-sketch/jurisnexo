@@ -144,29 +144,6 @@ jobs:
           name: frontend-build
           path: apps/next/.next/standalone
 
-  # ... (Code Quality Job) ...
-
-  # ==========================================
-  # JOB 5: BUILD DOCKER IMAGES
-  # ==========================================
-  build-docker:
-    # ...
-    steps:
-      # ...
-      - name: 🏗️ Build and push Frontend Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./apps/next
-          file: ./apps/next/Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}-frontend
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          build-args: |
-             NEXT_PUBLIC_API_BASE_URL=${{ secrets.API_BASE_URL }}
-             NEXT_PUBLIC_WS_URL=${{ secrets.WS_URL }}
-
   # ==========================================
   # JOB 3: CODE QUALITY ANALYSIS
   # ==========================================

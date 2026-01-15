@@ -317,6 +317,7 @@ export default function PayablesPage() {
                                 onClick={() => setPagination(p => ({ ...p, page: p.page - 1 }))}
                                 disabled={pagination.page <= 1}
                                 className="px-3 py-1.5 border rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                aria-label="Página anterior"
                             >
                                 <ChevronLeft className="w-4 h-4" />
                             </button>
@@ -324,6 +325,7 @@ export default function PayablesPage() {
                                 onClick={() => setPagination(p => ({ ...p, page: p.page + 1 }))}
                                 disabled={pagination.page >= pagination.totalPages}
                                 className="px-3 py-1.5 border rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                aria-label="Próxima página"
                             >
                                 <ChevronRight className="w-4 h-4" />
                             </button>
@@ -368,7 +370,7 @@ function CreatePayableModal({
             <div className="bg-white rounded-xl w-full max-w-lg p-6">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-lg font-semibold">Nova Conta a Pagar</h2>
-                    <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg">
+                    <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg" aria-label="Fechar modal">
                         <X className="w-5 h-5" />
                     </button>
                 </div>
@@ -414,6 +416,7 @@ function CreatePayableModal({
                                 value={formData.amount}
                                 onChange={(e) => setFormData({ ...formData, amount: parseFloat(e.target.value) })}
                                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                                placeholder="0.00"
                                 required
                             />
                         </div>
@@ -424,6 +427,7 @@ function CreatePayableModal({
                                 value={formData.due_date}
                                 onChange={(e) => setFormData({ ...formData, due_date: e.target.value })}
                                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                                placeholder="DD/MM/AAAA"
                                 required
                             />
                         </div>
@@ -435,6 +439,7 @@ function CreatePayableModal({
                             onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                             className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                             rows={3}
+                            placeholder="Observações adicionais..."
                         />
                     </div>
                     <div className="flex justify-end gap-3 pt-4">
