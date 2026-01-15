@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
+import { QueryProvider } from '@/components/providers/QueryProvider';
 import { TenantProvider } from '@/providers/TenantProvider';
 import './globals.css';
 
@@ -23,11 +24,14 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <TenantProvider>
-                        {children}
-                    </TenantProvider>
+                    <QueryProvider>
+                        <TenantProvider>
+                            {children}
+                        </TenantProvider>
+                    </QueryProvider>
                 </ThemeProvider>
             </body>
         </html>
     );
 }
+

@@ -17,6 +17,7 @@ import {
     Gavel,
     Plus,
     Instagram,
+    Wallet,
 } from 'lucide-react';
 import { logoutAction } from '@/actions/auth';
 import type { AuthUser } from '@/lib/auth/types';
@@ -60,6 +61,11 @@ const MENU_ITEMS = [
         label: 'Agendamentos',
         href: '/dashboard/schedule',
         icon: Calendar,
+    },
+    {
+        label: 'Financeiro',
+        href: '/financeiro',
+        icon: Wallet,
     },
     {
         label: 'Equipe',

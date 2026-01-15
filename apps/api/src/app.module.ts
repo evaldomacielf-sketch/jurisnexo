@@ -14,6 +14,7 @@ import { InstagramModule } from './instagram/instagram.module';
 import { ClientsModule } from './clients/clients.module';
 import { CasesModule } from './cases/cases.module';
 import { ScheduleModule } from './schedule/schedule.module';
+import { FinanceModule } from './finance/finance.module';
 
 @Module({
     imports: [
@@ -32,6 +33,7 @@ import { ScheduleModule } from './schedule/schedule.module';
         ClientsModule,
         CasesModule,
         ScheduleModule,
+        FinanceModule,
     ],
     controllers: [HealthController],
     providers: [],

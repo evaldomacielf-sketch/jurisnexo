@@ -1,5 +1,5 @@
 import { plainToInstance } from 'class-transformer';
-import { IsString, IsNumber, validateSync } from 'class-validator';
+import { IsString, IsNumber, IsOptional, validateSync } from 'class-validator';
 
 export class EnvironmentVariables {
     @IsString()
@@ -20,12 +20,13 @@ export class EnvironmentVariables {
     @IsNumber()
     JWT_REFRESH_EXPIRATION: number = 604800; // 7 dias
 
+    @IsOptional()
     @IsString()
-    @IsString()
-    REDIS_HOST!: string;
+    REDIS_HOST?: string;
 
+    @IsOptional()
     @IsNumber()
-    REDIS_PORT: number = 6379;
+    REDIS_PORT?: number = 6379;
 
     @IsString()
     @IsString()
