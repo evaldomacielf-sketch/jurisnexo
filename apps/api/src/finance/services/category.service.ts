@@ -174,19 +174,23 @@ export class CategoryService {
      */
     async seedDefaultCategories(tenantId: string, userId: string): Promise<void> {
         const defaultCategories = [
-            { name: 'Honorários Advocatícios', type: 'INCOME', color: '#10B981', icon: 'IconScale' },
-            { name: 'Consultoria Jurídica', type: 'INCOME', color: '#3B82F6', icon: 'IconBriefcase' },
-            { name: 'Custas Processuais', type: 'EXPENSE', color: '#EF4444', icon: 'IconReceipt' },
-            { name: 'Salários', type: 'EXPENSE', color: '#F59E0B', icon: 'IconUsers' },
-            { name: 'Aluguel', type: 'EXPENSE', color: '#8B5CF6', icon: 'IconHome' },
-            { name: 'Material de Escritório', type: 'EXPENSE', color: '#EC4899', icon: 'IconPencil' },
-            { name: 'Tecnologia e Software', type: 'EXPENSE', color: '#6366F1', icon: 'IconDeviceLaptop' },
-            { name: 'Marketing', type: 'EXPENSE', color: '#14B8A6', icon: 'IconSpeakerphone' },
-            { name: 'Transporte', type: 'EXPENSE', color: '#F97316', icon: 'IconCar' },
-            { name: 'Alimentação', type: 'EXPENSE', color: '#84CC16', icon: 'IconToolsKitchen' },
-            { name: 'Impostos e Taxas', type: 'EXPENSE', color: '#DC2626', icon: 'IconFileInvoice' },
-            { name: 'Outros Receitas', type: 'INCOME', color: '#22C55E', icon: 'IconCash' },
-            { name: 'Outros Despesas', type: 'EXPENSE', color: '#EF4444', icon: 'IconReceipt2' },
+            // Income
+            { name: 'Honorários Advocatícios', type: 'INCOME', color: '#10B981', icon: 'IconScale', description: 'Valores recebidos por serviços advocatícios' },
+            { name: 'Consultoria Jurídica', type: 'INCOME', color: '#3B82F6', icon: 'IconBriefcase', description: 'Receitas de consultoria e assessoria jurídica' },
+            { name: 'Custas Processuais Reembolsadas', type: 'INCOME', color: '#8B5CF6', icon: 'IconReceipt', description: 'Reembolso de custas pagas pelo cliente' },
+
+            // Expense
+            { name: 'Custas Processuais', type: 'EXPENSE', color: '#EF4444', icon: 'IconReceipt', description: 'Custas judiciais e cartorárias' },
+            { name: 'Salários e Encargos', type: 'EXPENSE', color: '#F59E0B', icon: 'IconUsers', description: 'Folha de pagamento e encargos trabalhistas' },
+            { name: 'Aluguel', type: 'EXPENSE', color: '#8B5CF6', icon: 'IconHome', description: 'Aluguel do escritório' },
+            { name: 'Água, Luz e Telefone', type: 'EXPENSE', color: '#06B6D4', icon: 'IconBolt', description: 'Contas de utilidades' },
+            { name: 'Material de Escritório', type: 'EXPENSE', color: '#EC4899', icon: 'IconPencil', description: 'Materiais de consumo' },
+            { name: 'Tecnologia e Software', type: 'EXPENSE', color: '#6366F1', icon: 'IconDeviceLaptop', description: 'Sistemas, softwares e equipamentos de TI' },
+            { name: 'Marketing e Publicidade', type: 'EXPENSE', color: '#14B8A6', icon: 'IconSpeakerphone', description: 'Despesas com marketing digital e publicidade' },
+            { name: 'Impostos e Tributos', type: 'EXPENSE', color: '#DC2626', icon: 'IconBuildingBank', description: 'Impostos federais, estaduais e municipais' },
+            { name: 'Honorários Terceiros', type: 'EXPENSE', color: '#F97316', icon: 'IconUsers', description: 'Pagamento a correspondentes e peritos' },
+            { name: 'Deslocamento', type: 'EXPENSE', color: '#EAB308', icon: 'IconCar', description: 'Despesas com transporte e viagens' },
+            { name: 'Capacitação', type: 'EXPENSE', color: '#A855F7', icon: 'IconBook', description: 'Cursos, treinamentos e eventos' }
         ];
 
         const { error } = await this.db.client.from('finance_categories').insert(

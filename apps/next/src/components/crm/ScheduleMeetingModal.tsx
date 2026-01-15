@@ -6,26 +6,26 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { Label } from '@/components/ui/label';
 
 interface ScheduleMeetingModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    conversationId: string;
-    onSchedule: (data: any) => Promise<void>;
+  isOpen: boolean;
+  onClose: () => void;
+  conversationId: string;
+  onSchedule: (data: any) => Promise<void>;
 }
 
 export function ScheduleMeetingModal({ isOpen, onClose, conversationId, onSchedule }: ScheduleMeetingModalProps) {
-    const [title, setTitle] = useState('Reunião de Alinhamento');
-    const [date, setDate] = useState('');
-    const [time, setTime] = useState('');
-    const [duration, setDuration] = useState('60');
-    const [mode, setMode] = useState<'REMOTE' | 'PRESENCIAL'>('REMOTE');
-    const [loading, setLoading] = useState(false);
+  const [title, setTitle] = useState('Reunião de Alinhamento');
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
+  const [duration, setDuration] = useState('60');
+  const [mode, setMode] = useState<'REMOTE' | 'PRESENCIAL'>('REMOTE');
+  const [loading, setLoading] = useState(false);
 
-    const handleConfirm = async () => {
-        if (!date || !time) return;
+  const handleConfirm = async () => {
+    if (!date || !time) return;
 
-        setLoading(true);
-        try {
-            const startTime = new Date(\`\${date}T\${time}\`).toISOString();
+    setLoading(true);
+    try {
+      const startTime = new Date(`${date}T${time}`).toISOString();
       const endTime = new Date(new Date(startTime).getTime() + parseInt(duration) * 60000).toISOString();
 
       await onSchedule({
@@ -79,7 +79,7 @@ export function ScheduleMeetingModal({ isOpen, onClose, conversationId, onSchedu
             </div>
             <div className="grid gap-2">
               <Label>Modo</Label>
-              <Select value={mode} onValueChange={(v: 'REMOTE'|'PRESENCIAL') => setMode(v)}>
+              <Select value={mode} onValueChange={(v: 'REMOTE' | 'PRESENCIAL') => setMode(v)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="REMOTE">Remoto (Google Meet)</SelectItem>
@@ -90,8 +90,8 @@ export function ScheduleMeetingModal({ isOpen, onClose, conversationId, onSchedu
           </div>
         </div>
         <DialogFooter>
-            <Button variant="outline" onClick={onClose}>Cancelar</Button>
-            <Button onClick={handleConfirm} disabled={loading}>{loading ? 'Agendando...' : 'Confirmar'}</Button>
+          <Button variant="outline" onClick={onClose}>Cancelar</Button>
+          <Button onClick={handleConfirm} disabled={loading}>{loading ? 'Agendando...' : 'Confirmar'}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

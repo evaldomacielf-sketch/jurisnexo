@@ -92,6 +92,24 @@ Copie `.env.example` para `.env`:
 
 ```bash
 cp .env.example .env
+
+### Exemplo de Configuração
+
+**Backend (apps/api/.env)**
+```env
+SUPABASE_URL=your_url
+SUPABASE_SERVICE_KEY=your_key
+JWT_SECRET=your_secret
+```
+
+**Frontend (apps/next/.env.local)**
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
+
 ```
 
 ## 📋 Scripts Disponíveis

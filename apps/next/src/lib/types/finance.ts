@@ -33,6 +33,140 @@ export interface FinanceCategory {
     id: string;
     name: string;
     color: string;
+    type: 'INCOME' | 'EXPENSE' | 'BOTH';
+    icon?: string;
+    description?: string;
+}
+
+export interface CreateCategoryDTO {
+    name: string;
+    type: 'INCOME' | 'EXPENSE' | 'BOTH';
+    color?: string;
+    icon?: string;
+    description?: string;
+}
+
+export interface UpdateCategoryDTO extends Partial<CreateCategoryDTO> { }
+
+// Bank Account
+export enum BankAccountType {
+    CHECKING = 'CHECKING',
+    SAVINGS = 'SAVINGS',
+    INVESTMENT = 'INVESTMENT',
+    CREDIT_CARD = 'CREDIT_CARD',
+    CASH = 'CASH',
+}
+
+export interface BankAccount {
+    id: string;
+    tenant_id: string;
+    name: string;
+    type: BankAccountType;
+    balance: number;
+    currency: string;
+    institution?: string;
+    account_number?: string;
+    agency?: string;
+    color?: string;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface CreateBankAccountDTO {
+    name: string;
+    type: BankAccountType;
+    initial_balance?: number;
+    currency?: string;
+    institution?: string;
+    account_number?: string;
+    agency?: string;
+    color?: string;
+}
+
+export interface UpdateBankAccountDTO extends Partial<CreateBankAccountDTO> {
+    is_active?: boolean;
+}
+
+// Recurring Transaction
+export enum RecurrenceFrequency {
+    DAILY = 'DAILY',
+    WEEKLY = 'WEEKLY',
+    MONTHLY = 'MONTHLY',
+    QUARTERLY = 'QUARTERLY',
+    YEARLY = 'YEARLY',
+}
+
+export interface RecurringTransaction {
+    id: string;
+    tenant_id: string;
+    description: string;
+    amount: number;
+    type: 'INCOME' | 'EXPENSE';
+    frequency: RecurrenceFrequency;
+    start_date: string;
+    end_date?: string;
+    day_of_month?: number;
+    category_id: string;
+    category?: FinanceCategory;
+    account_id: string;
+    account?: BankAccount;
+    payment_method: PaymentMethod;
+    is_active: boolean;
+    last_generated_date?: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface CreateRecurringTransactionDTO {
+    description: string;
+    amount: number;
+    type: 'INCOME' | 'EXPENSE';
+    frequency: RecurrenceFrequency;
+    start_date: string;
+    end_date?: string;
+    day_of_month?: number;
+    category_id: string;
+    account_id: string;
+    payment_method: PaymentMethod;
+}
+
+export interface UpdateRecurringTransactionDTO extends Partial<CreateRecurringTransactionDTO> {
+    is_active?: boolean;
+}
+
+// Budget Planning
+export interface Budget {
+    id: string;
+    tenant_id: string;
+    category_id: string;
+    category?: FinanceCategory;
+    year: number;
+    month: number;
+    planned_amount: number;
+    actual_amount?: number; // Calculated field
+    notes?: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface CreateBudgetDTO {
+    category_id: string;
+    year: number;
+    month: number;
+    planned_amount: number;
+    notes?: string;
+}
+
+export interface UpdateBudgetDTO {
+    planned_amount?: number;
+    notes?: string;
+}
+
+export interface BudgetSummary {
+    total_planned: number;
+    total_actual: number;
+    categories: Array<Budget & { category_name: string; category_color: string }>;
 }
 
 // Receivable (Conta a Receber)

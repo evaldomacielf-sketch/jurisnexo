@@ -19,14 +19,7 @@ import {
 } from '@/components/finance';
 
 // Month navigation helper
-function getMonthName(month: number): string {
-    const months = [
-        'Janeiro', 'Fevereiro', 'Março', 'Abril',
-        'Maio', 'Junho', 'Julho', 'Agosto',
-        'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-    ];
-    return months[month - 1];
-}
+
 
 export default function FinanceDashboard() {
     const queryClient = useQueryClient();
@@ -37,18 +30,23 @@ export default function FinanceDashboard() {
     const [currentMonth, setCurrentMonth] = useState(now.getMonth() + 1);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [page, setPage] = useState(1);
-    const [filters, setFilters] = useState({
+    const [filters, setFilters] = useState<{
+        search: string;
+        type: 'ALL' | 'INCOME' | 'EXPENSE';
+        status: 'ALL' | 'PAID' | 'PENDING' | 'OVERDUE';
+        category_id: string;
+        account_id: string;
+        date_from: string;
+        date_to: string;
+    }>({
         search: '',
-        type: 'ALL' as const,
-        status: 'ALL' as const,
+        type: 'ALL',
+        status: 'ALL',
         category_id: '',
         account_id: '',
         date_from: '',
         date_to: '',
     });
-
-    // Filters are passed to FilterBar and stored for API calls
-    console.debug('Current filters:', filters);
 
     // Navigate months
     const navigateMonth = (direction: -1 | 1) => {
@@ -67,21 +65,30 @@ export default function FinanceDashboard() {
         setCurrentYear(newYear);
     };
 
-    // React Query - Dashboard KPIs
+    // Calculate start/end dates for the selected month (for generic filtering)
+    // Note: The Monthly Summary endpoint handles this internally, but transaction list needs date filters
+    const startDate = `${currentYear}-${String(currentMonth).padStart(2, '0')}-01`;
+    const endDate = new Date(currentYear, currentMonth, 0).toISOString().split('T')[0];
+
+    // --- QUERIES ---
+
+    // 1. Dashboard KPIs (Global or Monthly?) 
+    // The backend endpoint /finance/reports/dashboard currently returns ALL TIME stats or generic KPIs. 
+    // We might want to use the Monthly Summary for the cards mostly.
     const { data: kpis, isLoading: kpisLoading } = useQuery({
-        queryKey: ['finance', 'kpis', currentYear, currentMonth],
+        queryKey: ['finance', 'kpis'],
         queryFn: () => financeApi.getDashboardKPIs(),
-        staleTime: 30000,
+        staleTime: 60000,
     });
 
-    // React Query - Monthly Summary
+    // 2. Monthly Summary (Materialized View)
     const { data: monthlySummary, isLoading: summaryLoading } = useQuery({
         queryKey: ['finance', 'monthly', currentYear, currentMonth],
         queryFn: () => financeApi.getMonthlySummary(currentYear, currentMonth),
-        staleTime: 30000,
+        staleTime: 60000,
     });
 
-    // React Query - Previous month for comparison
+    // 3. Previous Month for Comparison
     const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1;
     const prevYear = currentMonth === 1 ? currentYear - 1 : currentYear;
 
@@ -91,51 +98,78 @@ export default function FinanceDashboard() {
         staleTime: 60000,
     });
 
-    // Mock data for components (replace with real API when ready)
-    const transactions = useMemo(() => {
-        // Sample transactions for demo
-        return [
-            { id: '1', type: 'INCOME' as const, description: 'Honorários - Cliente Silva', amount: 5000, date: '2026-01-10', status: 'PAID' as const, category: 'Honorários', categoryColor: '#22C55E' },
-            { id: '2', type: 'EXPENSE' as const, description: 'Aluguel escritório', amount: 3000, date: '2026-01-05', status: 'PAID' as const, category: 'Aluguel', categoryColor: '#EF4444' },
-            { id: '3', type: 'INCOME' as const, description: 'Consultoria jurídica', amount: 2500, date: '2026-01-15', status: 'PENDING' as const, category: 'Consultorias', categoryColor: '#3B82F6' },
-            { id: '4', type: 'EXPENSE' as const, description: 'Software jurídico', amount: 500, date: '2026-01-20', status: 'OVERDUE' as const, category: 'Software', categoryColor: '#8B5CF6' },
-        ];
-    }, []);
+    // 4. Categories
+    const { data: categories = [] } = useQuery({
+        queryKey: ['finance', 'categories'],
+        queryFn: () => financeApi.getCategories(),
+        staleTime: 300000, // 5 minutes
+    });
 
-    const bankAccounts = useMemo(() => [
-        { id: '1', name: 'Conta Principal', type: 'CHECKING' as const, balance: 45000, color: '#3B82F6' },
-        { id: '2', name: 'Reserva', type: 'SAVINGS' as const, balance: 25000, color: '#22C55E' },
-        { id: '3', name: 'Investimentos', type: 'INVESTMENT' as const, balance: 100000, color: '#8B5CF6' },
-    ], []);
+    // 5. Bank Accounts
+    const { data: bankAccounts = [] } = useQuery({
+        queryKey: ['finance', 'accounts'],
+        queryFn: () => financeApi.getBankAccounts(),
+        staleTime: 60000,
+    });
 
-    const categories = useMemo(() => [
-        { id: '1', name: 'Honorários', color: '#22C55E' },
-        { id: '2', name: 'Consultorias', color: '#3B82F6' },
-        { id: '3', name: 'Aluguel', color: '#EF4444' },
-        { id: '4', name: 'Software', color: '#8B5CF6' },
-    ], []);
+    // 6. Transactions (Unified List)
+    const { data: transactionsData, isLoading: txLoading } = useQuery({
+        queryKey: ['finance', 'transactions', page, filters, currentYear, currentMonth],
+        queryFn: () => {
+            const apiFilters: any = { ...filters };
+            if (apiFilters.status === 'ALL') delete apiFilters.status;
+            if (apiFilters.type === 'ALL') delete apiFilters.type;
 
-    const chartData = useMemo(() => [
-        { category: 'Honorários', income: 15000, expense: 0 },
-        { category: 'Consultorias', income: 8000, expense: 0 },
-        { category: 'Aluguel', income: 0, expense: 3000 },
-        { category: 'Salários', income: 0, expense: 12000 },
-        { category: 'Software', income: 0, expense: 1500 },
-    ], []);
+            return financeApi.getTransactions({
+                page,
+                limit: 10,
+                ...apiFilters,
+                // Force filtering by the current view's month if no specific date range is selected
+                due_date_from: filters.date_from || startDate,
+                due_date_to: filters.date_to || endDate,
+            });
+        },
+        placeholderData: (previousData) => previousData,
+    });
+
+    // 7. Category Stats (for Chart)
+    const { data: categoryStats = [], isLoading: chartLoading } = useQuery({
+        queryKey: ['finance', 'stats', 'categories', currentYear, currentMonth],
+        queryFn: () => financeApi.getCategoryStats(startDate, endDate),
+        staleTime: 60000,
+    });
+
+    // Transform Category Stats for Chart
+    const chartData = useMemo(() => {
+        return categoryStats.map((stat: any) => ({
+            category: stat.category?.name || 'Sem Categoria',
+            income: stat.type === 'INCOME' ? Number(stat.total) : 0,
+            expense: stat.type === 'EXPENSE' ? Number(stat.total) : 0,
+        }));
+    }, [categoryStats]);
 
     // Handle create transaction
     const handleCreateTransaction = async (data: any) => {
-        console.log('Creating transaction:', data);
-        // API call would go here
-        queryClient.invalidateQueries({ queryKey: ['finance'] });
+        try {
+            if (data.type === 'INCOME') {
+                await financeApi.createReceivable(data);
+            } else {
+                await financeApi.createPayable(data);
+            }
+            queryClient.invalidateQueries({ queryKey: ['finance'] });
+            setShowCreateModal(false);
+        } catch (error) {
+            console.error('Error creating transaction:', error);
+            alert('Erro ao criar transação');
+        }
     };
 
-    const isLoading = kpisLoading || summaryLoading;
+    const isLoading = kpisLoading || summaryLoading || txLoading || chartLoading;
 
     return (
         <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
             {/* Header with Month Navigation */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Dashboard Financeiro</h1>
                     <p className="text-gray-500 mt-1">Gerencie as finanças do escritório</p>
@@ -151,8 +185,8 @@ export default function FinanceDashboard() {
                         >
                             <ChevronLeft className="w-5 h-5 text-gray-600" />
                         </button>
-                        <span className="font-semibold text-gray-900 min-w-[160px] text-center">
-                            {getMonthName(currentMonth)} {currentYear}
+                        <span className="font-semibold text-gray-900 min-w-[140px] text-center capitalize">
+                            {androidMonthName(currentMonth)} {currentYear}
                         </span>
                         <button
                             onClick={() => navigateMonth(1)}
@@ -184,9 +218,9 @@ export default function FinanceDashboard() {
 
             {/* Summary Cards */}
             <FinancialSummaryCards
-                totalIncome={monthlySummary?.revenue || kpis?.total_received || 0}
-                totalExpense={monthlySummary?.expenses || kpis?.total_paid || 0}
-                balance={monthlySummary?.profit || kpis?.cash_flow_balance || 0}
+                totalIncome={monthlySummary?.revenue || 0}
+                totalExpense={monthlySummary?.expenses || 0}
+                balance={monthlySummary?.profit || 0}
                 overdueAmount={kpis?.total_overdue || 0}
                 previousIncome={prevMonthlySummary?.revenue}
                 previousExpense={prevMonthlySummary?.expenses}
@@ -199,7 +233,9 @@ export default function FinanceDashboard() {
                 {/* Left Column - Chart & Table */}
                 <div className="lg:col-span-3 space-y-6">
                     {/* Revenue vs Expense Chart */}
-                    <RevenueExpenseChart data={chartData} isLoading={isLoading} />
+                    <div className="bg-white rounded-2xl shadow-sm border p-6">
+                        <RevenueExpenseChart data={chartData} isLoading={chartLoading} />
+                    </div>
 
                     {/* Filter Bar */}
                     <FilterBar
@@ -210,10 +246,10 @@ export default function FinanceDashboard() {
 
                     {/* Transactions Table */}
                     <TransactionTable
-                        transactions={transactions}
-                        isLoading={isLoading}
+                        transactions={transactionsData?.data || []}
+                        isLoading={txLoading}
                         page={page}
-                        totalPages={5}
+                        totalPages={transactionsData?.pagination?.totalPages || 1}
                         onPageChange={setPage}
                         onRowClick={(tx) => console.log('Clicked:', tx)}
                     />
@@ -224,7 +260,7 @@ export default function FinanceDashboard() {
                     <BankAccountsPanel
                         accounts={bankAccounts}
                         isLoading={isLoading}
-                        onAddAccount={() => console.log('Add account')}
+                        onAddAccount={() => console.log('Add account')} // Implement modal later
                         onViewAccount={(id) => console.log('View account:', id)}
                     />
                 </div>
@@ -240,4 +276,14 @@ export default function FinanceDashboard() {
             />
         </div>
     );
+}
+
+// Helper to avoid name collision error if logic stays same
+function androidMonthName(month: number): string {
+    const months = [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril',
+        'Maio', 'Junho', 'Julho', 'Agosto',
+        'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
+    return months[month - 1] || 'Mês Inválido';
 }

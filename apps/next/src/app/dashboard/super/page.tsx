@@ -11,17 +11,17 @@ import { Input } from '@/components/ui/input';
 import { useAuth } from '@/hooks/useAuth';
 
 export default function SuperadminPage() {
-    const { token } = useAuth();
-    const [tenants, setTenants] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [disableModalOpen, setDisableModalOpen] = useState(false);
-    const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null);
-    const [disableReason, setDisableReason] = useState('');
+  const { token } = useAuth();
+  const [tenants, setTenants] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [disableModalOpen, setDisableModalOpen] = useState(false);
+  const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null);
+  const [disableReason, setDisableReason] = useState('');
 
-    const fetchTenants = async () => {
-        try {
-            const res = await fetch('http://localhost:3000/super/tenants', {
-                headers: { Authorization: \`Bearer \${token}\` }
+  const fetchTenants = async () => {
+    try {
+      const res = await fetch('http://localhost:3000/super/tenants', {
+        headers: { Authorization: `Bearer ${token}` }
       });
       if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
@@ -40,11 +40,11 @@ export default function SuperadminPage() {
   const handleDisable = async () => {
     if (!selectedTenantId) return;
     try {
-      await fetch(\`http://localhost:3000/super/tenants/\${selectedTenantId}/disable\`, {
+      await fetch(`http://localhost:3000/super/tenants/${selectedTenantId}/disable`, {
         method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json',
-            Authorization: \`Bearer \${token}\` 
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({ reason: disableReason })
       });
@@ -60,7 +60,7 @@ export default function SuperadminPage() {
     <div className="p-8 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-slate-900">Superadmin Dashboard</h1>
-        <Button variant="outline" onClick={() => window.location.href='/dashboard/super/audit'}>Ver Logs de Auditoria</Button>
+        <Button variant="outline" onClick={() => window.location.href = '/dashboard/super/audit'}>Ver Logs de Auditoria</Button>
       </div>
 
       <Card>
@@ -95,10 +95,10 @@ export default function SuperadminPage() {
                     </TableCell>
                     <TableCell>
                       {tenant.status !== 'DISABLED' && (
-                        <Button 
-                            variant="destructive" 
-                            size="sm"
-                            onClick={() => { setSelectedTenantId(tenant.id); setDisableModalOpen(true); }}
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => { setSelectedTenantId(tenant.id); setDisableModalOpen(true); }}
                         >
                           Desabilitar
                         </Button>
@@ -114,17 +114,17 @@ export default function SuperadminPage() {
 
       <Dialog open={disableModalOpen} onOpenChange={setDisableModalOpen}>
         <DialogContent>
-            <DialogHeader>
-                <DialogTitle>Desabilitar Tenant</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-                <Label>Motivo do Bloqueio</Label>
-                <Input value={disableReason} onChange={(e) => setDisableReason(e.target.value)} placeholder="Ex: Falta de pagamento" />
-            </div>
-            <DialogFooter>
-                <Button variant="outline" onClick={() => setDisableModalOpen(false)}>Cancelar</Button>
-                <Button variant="destructive" onClick={handleDisable}>Confirmar Bloqueio</Button>
-            </DialogFooter>
+          <DialogHeader>
+            <DialogTitle>Desabilitar Tenant</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <Label>Motivo do Bloqueio</Label>
+            <Input value={disableReason} onChange={(e) => setDisableReason(e.target.value)} placeholder="Ex: Falta de pagamento" />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDisableModalOpen(false)}>Cancelar</Button>
+            <Button variant="destructive" onClick={handleDisable}>Confirmar Bloqueio</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

@@ -15,6 +15,7 @@ import { ClientsModule } from './clients/clients.module';
 import { CasesModule } from './cases/cases.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { FinanceModule } from './finance/finance.module';
+import { ScheduleModule as NestScheduleModule } from '@nestjs/schedule';
 
 @Module({
     imports: [
@@ -33,6 +34,7 @@ import { FinanceModule } from './finance/finance.module';
         ClientsModule,
         CasesModule,
         ScheduleModule,
+        NestScheduleModule.forRoot(),
         FinanceModule,
     ],
     controllers: [HealthController],

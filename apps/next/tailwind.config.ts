@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
+    darkMode: ['class'],
     content: [
         './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
         './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -9,31 +10,52 @@ const config: Config = {
     theme: {
         extend: {
             colors: {
-                primary: '#1152d4',
+                border: 'hsl(var(--border))',
+                input: 'hsl(var(--input))',
+                ring: 'hsl(var(--ring))',
+                background: 'hsl(var(--background))',
+                foreground: 'hsl(var(--foreground))',
+                primary: {
+                    DEFAULT: 'hsl(var(--primary))',
+                    foreground: 'hsl(var(--primary-foreground))',
+                },
+                secondary: {
+                    DEFAULT: 'hsl(var(--secondary))',
+                    foreground: 'hsl(var(--secondary-foreground))',
+                },
+                destructive: {
+                    DEFAULT: '0 84.2% 60.2%',
+                    foreground: 'hsl(var(--destructive-foreground))',
+                },
+                muted: {
+                    DEFAULT: 'hsl(var(--muted))',
+                    foreground: 'hsl(var(--muted-foreground))',
+                },
+                accent: {
+                    DEFAULT: 'hsl(var(--accent))',
+                    foreground: 'hsl(var(--accent-foreground))',
+                },
+                success: {
+                    DEFAULT: '#10B981',
+                    light: '#D1FAE5',
+                },
+                warning: {
+                    DEFAULT: '#F59E0B',
+                    light: '#FEF3C7',
+                },
+                error: {
+                    DEFAULT: '#EF4444',
+                    light: '#FEE2E2',
+                },
             },
-            keyframes: {
-                'in': {
-                    '0%': { opacity: '0' },
-                    '100%': { opacity: '1' },
-                },
-                'slide-in-from-top-5': {
-                    '0%': { transform: 'translateY(-20px)', opacity: '0' },
-                    '100%': { transform: 'translateY(0)', opacity: '1' },
-                },
-                'zoom-in-95': {
-                    '0%': { transform: 'scale(0.95)', opacity: '0' },
-                    '100%': { transform: 'scale(1)', opacity: '1' },
-                },
-            },
-            animation: {
-                'in': 'in 200ms ease-out',
-                'slide-in-from-top-5': 'slide-in-from-top-5 200ms ease-out',
-                'zoom-in-95': 'zoom-in-95 200ms ease-out',
+            borderRadius: {
+                lg: 'var(--radius)',
+                md: 'calc(var(--radius) - 2px)',
+                sm: 'calc(var(--radius) - 4px)',
             },
         },
     },
-    plugins: [],
-    darkMode: 'class',
+    plugins: [require('tailwindcss-animate')],
 };
 
 export default config;

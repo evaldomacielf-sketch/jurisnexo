@@ -7,6 +7,8 @@ Sistema completo de gestão financeira para escritórios de advocacia, incluindo
 - **Contas Bancárias** - Gestão de contas e saldos
 - **Transações** - Receitas e despesas com categorização
 - **Categorias** - Classificação personalizada
+- **Recorrência** - Transações recorrentes automáticas
+- **Orçamentos** - Planejamento mensal por categoria
 - **Relatórios** - Dashboard, fluxo de caixa, análises
 
 ## 🚀 Quick Start
@@ -48,10 +50,16 @@ apps/api/src/finance/
 ├── controllers/
 │   ├── bank-account.controller.ts    # /finance/accounts
 │   ├── transaction.controller.ts     # /finance/transactions
+│   ├── recurring-transaction.controller.ts # /finance/recurring
+│   ├── budget.controller.ts          # /finance/budgets
+│   ├── reports.controller.ts         # /finance/reports
 │   └── category.controller.ts        # /finance/categories
 ├── services/
 │   ├── bank-account.service.ts
 │   ├── transaction.service.ts
+│   ├── recurring-transaction.service.ts
+│   ├── budget.service.ts
+│   ├── reports.service.ts
 │   ├── category.service.ts
 │   ├── receivables.service.ts
 │   ├── payables.service.ts
@@ -59,6 +67,8 @@ apps/api/src/finance/
 ├── dto/
 │   ├── bank-account.dto.ts
 │   ├── transaction.dto.ts
+│   ├── recurring-transaction.dto.ts
+│   ├── budget.dto.ts
 │   ├── category.dto.ts
 │   └── finance.dto.ts
 ├── __tests__/
@@ -106,6 +116,32 @@ apps/api/src/finance/
 | GET | `/finance/categories/:id` | Buscar por ID |
 | PUT | `/finance/categories/:id` | Atualizar |
 | DELETE | `/finance/categories/:id` | Excluir |
+
+### Transações Recorrentes
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/finance/recurring` | Criar recorrência |
+| GET | `/finance/recurring` | Listar recorrências |
+| GET | `/finance/recurring/:id` | Buscar por ID |
+| PUT | `/finance/recurring/:id` | Atualizar |
+| DELETE | `/finance/recurring/:id` | Excluir |
+
+### Orçamentos (Budgets)
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/finance/budgets` | Criar orçamento |
+| GET | `/finance/budgets` | Listar (year/month) |
+| GET | `/finance/budgets/:id` | Buscar por ID |
+| PUT | `/finance/budgets/:id` | Atualizar |
+| DELETE | `/finance/budgets/:id` | Excluir |
+
+### Relatórios
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/finance/reports/summary` | Resumo mensal (Income/Expense) |
 
 ## 🔐 Autenticação
 

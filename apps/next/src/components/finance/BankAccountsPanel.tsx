@@ -1,14 +1,7 @@
 'use client';
 
+import { BankAccount, BankAccountType } from '@/lib/types/finance';
 import { Wallet, Plus, Eye, PiggyBank, CreditCard } from 'lucide-react';
-
-interface BankAccount {
-    id: string;
-    name: string;
-    type: 'CHECKING' | 'SAVINGS' | 'INVESTMENT' | 'CASH';
-    balance: number;
-    color?: string;
-}
 
 interface BankAccountsPanelProps {
     accounts: BankAccount[];
@@ -27,17 +20,19 @@ function formatCurrency(value: number): string {
 
 // Account type icons
 const ACCOUNT_ICONS = {
-    CHECKING: Wallet,
-    SAVINGS: PiggyBank,
-    INVESTMENT: CreditCard,
-    CASH: Wallet,
+    [BankAccountType.CHECKING]: Wallet,
+    [BankAccountType.SAVINGS]: PiggyBank,
+    [BankAccountType.INVESTMENT]: CreditCard,
+    [BankAccountType.CASH]: Wallet,
+    [BankAccountType.CREDIT_CARD]: CreditCard,
 };
 
 const ACCOUNT_LABELS = {
-    CHECKING: 'Conta Corrente',
-    SAVINGS: 'Poupança',
-    INVESTMENT: 'Investimento',
-    CASH: 'Dinheiro',
+    [BankAccountType.CHECKING]: 'Conta Corrente',
+    [BankAccountType.SAVINGS]: 'Poupança',
+    [BankAccountType.INVESTMENT]: 'Investimento',
+    [BankAccountType.CASH]: 'Dinheiro',
+    [BankAccountType.CREDIT_CARD]: 'Cartão de Crédito',
 };
 
 export function BankAccountsPanel({

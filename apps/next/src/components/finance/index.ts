@@ -5,3 +5,6 @@ export { TransactionTable } from './TransactionTable';
 export { BankAccountsPanel } from './BankAccountsPanel';
 export { CreateTransactionModal } from './CreateTransactionModal';
 export { FilterBar } from './FilterBar';
+export { CashFlowChart } from './CashFlowChart';
+export { DRETable } from './DRETable';
+export { AgingReport } from './AgingReport';
