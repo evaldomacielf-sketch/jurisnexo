@@ -15,6 +15,10 @@ import { ClientsModule } from './clients/clients.module';
 import { CasesModule } from './cases/cases.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { FinanceModule } from './finance/finance.module';
+import { AiModule } from './ai/ai.module';
+import { WorkflowsModule } from './workflows/workflows.module';
+import { CalendarModule } from './calendar/calendar.module';
+import { ChatModule } from './chat/chat.module';
 import { ScheduleModule as NestScheduleModule } from '@nestjs/schedule';
 
 @Module({
@@ -36,6 +40,10 @@ import { ScheduleModule as NestScheduleModule } from '@nestjs/schedule';
         ScheduleModule,
         NestScheduleModule.forRoot(),
         FinanceModule,
+        AiModule,
+        WorkflowsModule,
+        CalendarModule,
+        ChatModule,
     ],
     controllers: [HealthController],
     providers: [],
