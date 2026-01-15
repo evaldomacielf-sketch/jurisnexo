@@ -15,20 +15,20 @@ export class LegalFeesController {
 
     @Post()
     @ApiOperation({ summary: 'Creates a new legal fee contract' })
-    async createFee(@User() user: UserEntity, @Body() dto: CreateLegalFeeDto) {
+    async createFee(@CurrentUser() user: UserEntity, @Body() dto: CreateLegalFeeDto) {
         return this.service.create(user.app_metadata.tenant_id, user.id, dto);
     }
 
     @Get(':id')
     @ApiOperation({ summary: 'Gets a specific fee contract' })
-    async getFee(@User() user: UserEntity, @Param('id') id: string) {
+    async getFee(@CurrentUser() user: UserEntity, @Param('id') id: string) {
         return this.service.findOne(user.app_metadata.tenant_id, id);
     }
 
     @Get()
     @ApiOperation({ summary: 'Lists fees with filters' })
     async listFees(
-        @User() user: UserEntity,
+        @CurrentUser() user: UserEntity,
         @Query('caseId') caseId?: string,
         @Query('clientId') clientId?: string,
         @Query('status') status?: string
@@ -38,7 +38,7 @@ export class LegalFeesController {
 
     @Post('payments')
     @ApiOperation({ summary: 'Records a payment for a fee' })
-    async recordPayment(@User() user: UserEntity, @Body() dto: RecordFeePaymentDto) {
+    async recordPayment(@CurrentUser() user: UserEntity, @Body() dto: RecordFeePaymentDto) {
         // Warning: service.recordPayment parameters are different in service definition vs C# example
         // Service: tenantId, userId, feeId, dto
         // C# Example DTO likely contains feeId?

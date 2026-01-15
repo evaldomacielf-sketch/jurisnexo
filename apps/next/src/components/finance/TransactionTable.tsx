@@ -1,18 +1,19 @@
 'use client';
 
 import { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
 import {
-    ChevronUp,
-    ChevronDown,
+    ArrowUpRight,
+    ArrowDownRight,
+    Calendar,
     ChevronLeft,
     ChevronRight,
-    Calendar,
+    ChevronUp,
+    ChevronDown,
     CheckCircle2,
     Clock,
     AlertTriangle,
     X,
-    ArrowUpRight,
-    ArrowDownRight
 } from 'lucide-react';
 
 type SortDirection = 'asc' | 'desc';
@@ -195,15 +196,18 @@ export function TransactionTable({
                                         </td>
                                         <td className="px-6 py-4">
                                             {tx.category && (
-                                                <span
-                                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                                                    style={{
-                                                        backgroundColor: `${tx.categoryColor}20`,
-                                                        color: tx.categoryColor || '#6B7280',
-                                                    }}
+                                                <Badge
+                                                    variant="secondary"
+                                                    className="category-badge"
                                                 >
                                                     {tx.category}
-                                                </span>
+                                                    <style jsx>{`
+                                                        :global(.category-badge) {
+                                                            background-color: ${tx.categoryColor}20 !important;
+                                                            color: ${tx.categoryColor || '#6B7280'} !important;
+                                                        }
+                                                    `}</style>
+                                                </Badge>
                                             )}
                                         </td>
                                         <td className="px-6 py-4">
@@ -226,31 +230,33 @@ export function TransactionTable({
             </div>
 
             {/* Pagination */}
-            {totalPages > 1 && (
-                <div className="flex items-center justify-between px-6 py-4 border-t bg-gray-50">
-                    <p className="text-sm text-gray-500">
-                        Página {page} de {totalPages}
-                    </p>
-                    <div className="flex gap-2">
-                        <button
-                            onClick={() => onPageChange(page - 1)}
-                            disabled={page <= 1}
-                            className="px-3 py-1.5 border rounded-lg bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                            aria-label="Página anterior"
-                        >
-                            <ChevronLeft className="w-4 h-4" />
-                        </button>
-                        <button
-                            onClick={() => onPageChange(page + 1)}
-                            disabled={page >= totalPages}
-                            className="px-3 py-1.5 border rounded-lg bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                            aria-label="Próxima página"
-                        >
-                            <ChevronRight className="w-4 h-4" />
-                        </button>
+            {
+                totalPages > 1 && (
+                    <div className="flex items-center justify-between px-6 py-4 border-t bg-gray-50">
+                        <p className="text-sm text-gray-500">
+                            Página {page} de {totalPages}
+                        </p>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => onPageChange(page - 1)}
+                                disabled={page <= 1}
+                                className="px-3 py-1.5 border rounded-lg bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                aria-label="Página anterior"
+                            >
+                                <ChevronLeft className="w-4 h-4" />
+                            </button>
+                            <button
+                                onClick={() => onPageChange(page + 1)}
+                                disabled={page >= totalPages}
+                                className="px-3 py-1.5 border rounded-lg bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                aria-label="Próxima página"
+                            >
+                                <ChevronRight className="w-4 h-4" />
+                            </button>
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 }

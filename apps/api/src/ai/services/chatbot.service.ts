@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
-import { SupabaseService } from '../../database/supabase.service';
+import { DatabaseService } from '../../database/database.service';
 import { ChatMessageDto, ChatResponseDto, MessageResponseDto } from '../dto/ai.dto';
 import { legalFunctions, executeLegalFunction } from '../functions/legal-functions';
 
@@ -43,7 +43,7 @@ export class ChatbotService {
 
     constructor(
         private readonly configService: ConfigService,
-        private readonly supabase: SupabaseService,
+        private readonly database: DatabaseService,
     ) {
         this.openai = new OpenAI({
             apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -150,7 +150,7 @@ export class ChatbotService {
                     totalCost: cost,
                 },
             };
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(`Chat error: ${error.message}`, error.stack);
             throw error;
         }
@@ -165,7 +165,7 @@ export class ChatbotService {
             ? firstMessage.substring(0, 50) + '...'
             : firstMessage;
 
-        const { data, error } = await this.supabase.client
+        const { data, error } = await this.database.client
             .from('ai_conversations')
             .insert({
                 tenant_id: tenantId,
@@ -183,7 +183,7 @@ export class ChatbotService {
      * Get conversation history
      */
     private async getConversationHistory(conversationId: string): Promise<ConversationMessage[]> {
-        const { data, error } = await this.supabase.client
+        const { data, error } = await this.database.client
             .from('ai_messages')
             .select('role, content')
             .eq('conversation_id', conversationId)
@@ -191,7 +191,10 @@ export class ChatbotService {
             .limit(20); // Keep last 20 messages for context
 
         if (error) throw error;
-        return data || [];
+        return (data || []).map((m: any) => ({
+            role: m.role as 'user' | 'assistant' | 'system',
+            content: m.content
+        }));
     }
 
     /**
@@ -203,7 +206,7 @@ export class ChatbotService {
         content: string,
         tokensUsed?: number,
     ): Promise<any> {
-        const { data, error } = await this.supabase.client
+        const { data, error } = await this.database.client
             .from('ai_messages')
             .insert({
                 conversation_id: conversationId,
@@ -228,8 +231,10 @@ export class ChatbotService {
         const results = [];
 
         for (const toolCall of toolCalls) {
-            const functionName = toolCall.function.name;
-            const args = JSON.parse(toolCall.function.arguments);
+            // @ts-ignore
+            const functionName = toolCall.function?.name;
+            // @ts-ignore
+            const args = JSON.parse(toolCall.function?.arguments || '{}');
 
             this.logger.log(`Executing function: ${functionName} with args: ${JSON.stringify(args)}`);
 
@@ -237,7 +242,7 @@ export class ChatbotService {
                 functionName,
                 args,
                 tenantId,
-                this.supabase,
+                this.database,
             );
 
             results.push({
@@ -311,7 +316,7 @@ export class ChatbotService {
         outputTokens: number,
         cost: number,
     ): Promise<void> {
-        await this.supabase.client
+        await this.database.client
             .from('ai_usage')
             .insert({
                 tenant_id: tenantId,
@@ -328,7 +333,7 @@ export class ChatbotService {
     async getConversations(tenantId: string, userId: string, page = 1, limit = 20) {
         const offset = (page - 1) * limit;
 
-        const { data, error, count } = await this.supabase.client
+        const { data, error, count } = await this.database.client
             .from('ai_conversations')
             .select('*, ai_messages(count)', { count: 'exact' })
             .eq('tenant_id', tenantId)
@@ -350,7 +355,7 @@ export class ChatbotService {
      * Get conversation with messages
      */
     async getConversation(conversationId: string) {
-        const { data: conversation, error: convError } = await this.supabase.client
+        const { data: conversation, error: convError } = await this.database.client
             .from('ai_conversations')
             .select('*')
             .eq('id', conversationId)
@@ -358,7 +363,7 @@ export class ChatbotService {
 
         if (convError) throw convError;
 
-        const { data: messages, error: msgError } = await this.supabase.client
+        const { data: messages, error: msgError } = await this.database.client
             .from('ai_messages')
             .select('*')
             .eq('conversation_id', conversationId)
@@ -377,13 +382,13 @@ export class ChatbotService {
      */
     async deleteConversation(conversationId: string): Promise<void> {
         // Delete messages first
-        await this.supabase.client
+        await this.database.client
             .from('ai_messages')
             .delete()
             .eq('conversation_id', conversationId);
 
         // Delete conversation
-        await this.supabase.client
+        await this.database.client
             .from('ai_conversations')
             .delete()
             .eq('id', conversationId);

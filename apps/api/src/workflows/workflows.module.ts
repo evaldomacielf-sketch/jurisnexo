@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { BullModule } from '@nestjs/bull';
+import { DatabaseModule } from '../database/database.module';
 import { WorkflowService } from './services/workflow.service';
 import { WorkflowExecutorService } from './services/workflow-executor.service';
 import { WorkflowController } from './controllers/workflow.controller';
-import { SupabaseModule } from '../database/supabase.module';
 
 // Action executors
 import { EmailActionExecutor } from './executors/email-action.executor';
@@ -14,8 +13,7 @@ import { NotificationActionExecutor } from './executors/notification-action.exec
 
 @Module({
     imports: [
-        ConfigModule,
-        SupabaseModule,
+        DatabaseModule,
         BullModule.registerQueue({
             name: 'workflows',
         }),

@@ -2,7 +2,8 @@ import { Controller, Get, Post, Put, Body, Param, Query, UseGuards, Res } from '
 import { CreateCashBookEntryDto, UpdateCashBookEntryDto } from '../dto/cash-book.dto';
 import { CashBookService } from '../services/cash-book.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { User } from '../../common/decorators/user.decorator';
+import { CurrentUser } from '../../auth/decorators/current-user.decorator';
+import { CurrentTenant } from '../../auth/decorators/current-tenant.decorator';
 import { User as UserEntity } from '@supabase/supabase-js';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -15,54 +16,54 @@ export class CashBookController {
 
     @Post()
     @ApiOperation({ summary: 'Creates a new entry in the Digital Cash Book' })
-    async createEntry(@User() user: UserEntity, @Body() dto: CreateCashBookEntryDto) {
-        return this.service.createEntry(user.app_metadata.tenant_id, user.id, dto);
+    async createEntry(@CurrentUser() user: UserEntity, @CurrentTenant() tenantId: string, @Body() dto: CreateCashBookEntryDto) {
+        return this.service.createEntry(tenantId, user.id, dto);
     }
 
     @Get(':id')
     @ApiOperation({ summary: 'Gets a specific entry' })
-    async getEntry(@User() user: UserEntity, @Param('id') id: string) {
-        return this.service.getEntry(user.app_metadata.tenant_id, id);
+    async getEntry(@CurrentUser() user: UserEntity, @CurrentTenant() tenantId: string, @Param('id') id: string) {
+        return this.service.getEntry(tenantId, id);
     }
 
     @Get()
     @ApiOperation({ summary: 'Lists entries with filters' })
     async listEntries(
-        @User() user: UserEntity,
+        @CurrentUser() user: UserEntity, @CurrentTenant() tenantId: string,
         @Query('year') year: number,
         @Query('month') month?: number,
         @Query('fiscalCategory') fiscalCategory?: string,
         @Query('isDeductible') isDeductible?: string // Query params are strings
     ) {
         const isDeductibleBool = isDeductible === 'true' ? true : isDeductible === 'false' ? false : undefined;
-        return this.service.listEntries(user.app_metadata.tenant_id, year, month, fiscalCategory, isDeductibleBool);
+        return this.service.listEntries(tenantId, year, month, fiscalCategory, isDeductibleBool);
     }
 
     @Put(':id')
     @ApiOperation({ summary: 'Updates an entry' })
     async updateEntry(
-        @User() user: UserEntity,
+        @CurrentUser() user: UserEntity, @CurrentTenant() tenantId: string,
         @Param('id') id: string,
         @Body() dto: UpdateCashBookEntryDto
     ) {
-        return this.service.updateEntry(user.app_metadata.tenant_id, user.id, id, dto);
+        return this.service.updateEntry(tenantId, user.id, id, dto);
     }
 
     @Get('report/:year')
     @ApiOperation({ summary: 'Generates full fiscal report for the year' })
-    async generateAnnualReport(@User() user: UserEntity, @Param('year') year: number) {
-        return this.service.generateAnnualReport(user.app_metadata.tenant_id, year);
+    async generateAnnualReport(@CurrentUser() user: UserEntity, @CurrentTenant() tenantId: string, @Param('year') year: number) {
+        return this.service.generateAnnualReport(tenantId, year);
     }
 
     @Get('export/:year')
     @ApiOperation({ summary: 'Exports data to Excel (accountant format)' })
     async exportToExcel(
-        @User() user: UserEntity,
+        @CurrentUser() user: UserEntity, @CurrentTenant() tenantId: string,
         @Param('year') year: number,
         @Query('format') format: 'xlsx' | 'csv' = 'xlsx',
         @Res() res: Response
     ) {
-        const fileBuffer = await this.service.exportToExcel(user.app_metadata.tenant_id, year, format);
+        const fileBuffer = await this.service.exportToExcel(tenantId, year, format);
 
         res.set({
             'Content-Type': format === 'csv' ? 'text/csv' : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

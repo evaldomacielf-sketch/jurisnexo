@@ -1,14 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { SupabaseService } from '../../database/supabase.service';
+import { DatabaseService } from '../../database/database.service';
 import { EmbeddingsService } from './embeddings.service';
 import { SemanticSearchDto, SearchResponseDto, SearchResultDto, IndexDocumentDto, IndexResponseDto } from '../dto/ai.dto';
 
 @Injectable()
-export class SemanticSearchService {
-    private readonly logger = new Logger(SemanticSearchService.name);
+export class SearchService {
+    private readonly logger = new Logger(SearchService.name);
 
     constructor(
-        private readonly supabase: SupabaseService,
+        private readonly database: DatabaseService,
         private readonly embeddingsService: EmbeddingsService,
     ) { }
 
@@ -46,7 +46,7 @@ export class SemanticSearchService {
         const limit = dto.limit || 10;
 
         // Use pgvector's <=> operator for cosine distance
-        const { data, error } = await this.supabase.client.rpc('search_embeddings', {
+        const { data, error } = await this.database.client.rpc('search_embeddings', {
             query_embedding: queryEmbedding,
             filter_clause: filterClause,
             match_threshold: 0.3,
@@ -127,7 +127,7 @@ export class SemanticSearchService {
         const startTime = Date.now();
 
         // Use PostgreSQL full-text search
-        const { data, error } = await this.supabase.client
+        const { data, error } = await this.database.client
             .from('ai_document_embeddings')
             .select('*')
             .eq('tenant_id', tenantId)
@@ -182,7 +182,7 @@ export class SemanticSearchService {
             metadata: dto.metadata,
         }));
 
-        const { error } = await this.supabase.client
+        const { error } = await this.database.client
             .from('ai_document_embeddings')
             .insert(records);
 
@@ -203,7 +203,7 @@ export class SemanticSearchService {
      * Delete embeddings for a document
      */
     async deleteDocumentEmbeddings(sourceId: string): Promise<void> {
-        await this.supabase.client
+        await this.database.client
             .from('ai_document_embeddings')
             .delete()
             .eq('source_id', sourceId);

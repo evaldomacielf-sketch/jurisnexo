@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { SupabaseClient } from '@supabase/supabase-js';
+import { DatabaseService } from '../database/database.service';
 import { CreateLegalFeeDto, RecordFeePaymentDto, UpdateLegalFeeDto } from './dto/legal-fees.dto';
 
 @Injectable()
@@ -7,11 +7,11 @@ export class LegalFeesService {
     private readonly logger = new Logger(LegalFeesService.name);
 
     constructor(
-        private readonly supabase: SupabaseClient,
+        private readonly database: DatabaseService,
     ) { }
 
     async create(tenantId: string, userId: string, dto: CreateLegalFeeDto) {
-        const { data, error } = await this.supabase
+        const { data, error } = await this.database.client
             .from('finance_legal_fees')
             .insert({
                 tenant_id: tenantId,
@@ -36,7 +36,7 @@ export class LegalFeesService {
     }
 
     async findAll(tenantId: string, filters?: any) {
-        let query = this.supabase
+        let query = this.database.client
             .from('finance_legal_fees')
             .select('*, client:client_id(name), case:case_id(title)')
             .eq('tenant_id', tenantId);
@@ -55,7 +55,7 @@ export class LegalFeesService {
     }
 
     async findOne(tenantId: string, id: string) {
-        const { data, error } = await this.supabase
+        const { data, error } = await this.database.client
             .from('finance_legal_fees')
             .select('*, payments:finance_fee_payments(*)')
             .eq('tenant_id', tenantId)
@@ -74,7 +74,7 @@ export class LegalFeesService {
         const fee = await this.findOne(tenantId, feeId);
 
         // 2. Record payment
-        const { data: payment, error: paymentError } = await this.supabase
+        const { data: payment, error: paymentError } = await this.database.client
             .from('finance_fee_payments')
             .insert({
                 tenant_id: tenantId,
@@ -100,7 +100,7 @@ export class LegalFeesService {
         else if (newPaidAmount === 0) status = 'pending';
 
         // Update fee
-        await this.supabase
+        await this.database.client
             .from('finance_legal_fees')
             .update({
                 paid_amount: newPaidAmount,
@@ -114,7 +114,7 @@ export class LegalFeesService {
         return payment;
     }
     async update(tenantId: string, userId: string, id: string, dto: UpdateLegalFeeDto) {
-        const { data, error } = await this.supabase
+        const { data, error } = await this.database.client
             .from('finance_legal_fees')
             .update({
                 ...dto,
@@ -134,7 +134,7 @@ export class LegalFeesService {
         // In a real implementation, this would likely be a complex query or RPC function
         // For now, we'll implement a basic calculation based on fetched fees
 
-        let query = this.supabase
+        let query = this.database.client
             .from('finance_legal_fees')
             .select('*, client:client_id(name)')
             .eq('tenant_id', tenantId);
@@ -182,7 +182,7 @@ export class LegalFeesService {
 
     async getDashboard(tenantId: string) {
         // Call RPC for performance
-        const { data, error } = await this.supabase.rpc('get_finance_legal_fees_dashboard', { p_tenant_id: tenantId });
+        const { data, error } = await this.database.client.rpc('get_finance_legal_fees_dashboard', { p_tenant_id: tenantId });
 
         if (error) {
             // Fallback mock

@@ -3,10 +3,10 @@ import { ConfigModule } from '@nestjs/config';
 import { CalendarService } from './services/calendar.service';
 import { GoogleCalendarService } from './services/google-calendar.service';
 import { CalendarController } from './controllers/calendar.controller';
-import { SupabaseModule } from '../database/supabase.module';
+import { DatabaseModule } from '../database/database.module';
 
 @Module({
-    imports: [ConfigModule, SupabaseModule],
+    imports: [ConfigModule, DatabaseModule],
     controllers: [CalendarController],
     providers: [CalendarService, GoogleCalendarService],
     exports: [CalendarService, GoogleCalendarService],

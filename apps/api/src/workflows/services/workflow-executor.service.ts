@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
-import { SupabaseService } from '../../database/supabase.service';
+import { DatabaseService } from '../../database/database.service';
 import {
     TriggerType,
     ActionType,
@@ -28,7 +28,7 @@ export class WorkflowExecutorService {
 
     constructor(
         @InjectQueue('workflows') private readonly workflowQueue: Queue,
-        private readonly supabase: SupabaseService,
+        private readonly database: DatabaseService,
         private readonly workflowService: WorkflowService,
         private readonly emailExecutor: EmailActionExecutor,
         private readonly webhookExecutor: WebhookActionExecutor,
@@ -57,7 +57,7 @@ export class WorkflowExecutorService {
      */
     async queueExecution(tenantId: string, workflowId: string, triggerData: Record<string, any>): Promise<string> {
         // Create execution record
-        const { data: execution, error } = await this.supabase.client
+        const { data: execution, error } = await this.database.client
             .from('workflow_executions')
             .insert({
                 workflow_id: workflowId,
@@ -289,7 +289,7 @@ export class WorkflowExecutorService {
     private async updateRecord(tenantId: string, config: any): Promise<any> {
         const { table, id, updates } = config;
 
-        const { data, error } = await this.supabase.client
+        const { data, error } = await this.database.client
             .from(table)
             .update(updates)
             .eq('id', id)
@@ -312,7 +312,7 @@ export class WorkflowExecutorService {
      * Update execution status
      */
     private async updateExecutionStatus(executionId: string, status: ExecutionStatus): Promise<void> {
-        await this.supabase.client
+        await this.database.client
             .from('workflow_executions')
             .update({ status, started_at: new Date() })
             .eq('id', executionId);
@@ -322,7 +322,7 @@ export class WorkflowExecutorService {
      * Complete execution
      */
     private async completeExecution(executionId: string, stepResults: any[], durationMs: number): Promise<void> {
-        await this.supabase.client
+        await this.database.client
             .from('workflow_executions')
             .update({
                 status: ExecutionStatus.COMPLETED,
@@ -337,7 +337,7 @@ export class WorkflowExecutorService {
      * Fail execution
      */
     private async failExecution(executionId: string, error: string): Promise<void> {
-        await this.supabase.client
+        await this.database.client
             .from('workflow_executions')
             .update({
                 status: ExecutionStatus.FAILED,

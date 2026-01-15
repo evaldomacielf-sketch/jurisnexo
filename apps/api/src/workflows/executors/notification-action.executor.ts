@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { SupabaseService } from '../../database/supabase.service';
+import { DatabaseService } from '../../database/database.service';
 
 interface NotificationConfig {
     userId?: string;
@@ -15,7 +15,7 @@ interface NotificationConfig {
 export class NotificationActionExecutor {
     private readonly logger = new Logger(NotificationActionExecutor.name);
 
-    constructor(private readonly supabase: SupabaseService) { }
+    constructor(private readonly database: DatabaseService) { }
 
     async execute(tenantId: string, config: NotificationConfig): Promise<any> {
         const userIds = config.userIds || (config.userId ? [config.userId] : []);
@@ -38,7 +38,7 @@ export class NotificationActionExecutor {
             source: 'workflow',
         }));
 
-        const { data, error } = await this.supabase.client
+        const { data, error } = await this.database.client
             .from('notifications')
             .insert(notifications)
             .select();

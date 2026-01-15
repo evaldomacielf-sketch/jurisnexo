@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { SupabaseService } from '../../database/supabase.service';
+import { DatabaseService } from '../../database/database.service';
 
 interface TaskConfig {
     title: string;
@@ -15,12 +15,12 @@ interface TaskConfig {
 export class TaskActionExecutor {
     private readonly logger = new Logger(TaskActionExecutor.name);
 
-    constructor(private readonly supabase: SupabaseService) { }
+    constructor(private readonly database: DatabaseService) { }
 
     async execute(tenantId: string, config: TaskConfig): Promise<any> {
         this.logger.log(`Creating task: ${config.title}`);
 
-        const { data, error } = await this.supabase.client
+        const { data, error } = await this.database.client
             .from('tasks')
             .insert({
                 tenant_id: tenantId,

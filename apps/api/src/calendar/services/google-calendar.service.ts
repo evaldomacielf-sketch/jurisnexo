@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { SupabaseService } from '../../database/supabase.service';
+import { DatabaseService } from '../../database/database.service';
 
 interface GoogleTokens {
     access_token: string;
@@ -17,7 +17,7 @@ export class GoogleCalendarService {
 
     constructor(
         private readonly configService: ConfigService,
-        private readonly supabase: SupabaseService,
+        private readonly database: DatabaseService,
     ) {
         this.clientId = this.configService.get('GOOGLE_CLIENT_ID') || '';
         this.clientSecret = this.configService.get('GOOGLE_CLIENT_SECRET') || '';
@@ -70,7 +70,7 @@ export class GoogleCalendarService {
             const tokens = await response.json();
 
             // Store tokens
-            await this.supabase.client
+            await this.database.client
                 .from('user_integrations')
                 .upsert({
                     user_id: userId,
@@ -183,7 +183,7 @@ export class GoogleCalendarService {
      * Check if user is connected
      */
     async isConnected(userId: string): Promise<boolean> {
-        const { data } = await this.supabase.client
+        const { data } = await this.database.client
             .from('user_integrations')
             .select('id')
             .eq('user_id', userId)
@@ -197,7 +197,7 @@ export class GoogleCalendarService {
      * Disconnect Google Calendar
      */
     async disconnect(userId: string): Promise<void> {
-        await this.supabase.client
+        await this.database.client
             .from('user_integrations')
             .delete()
             .eq('user_id', userId)
@@ -210,7 +210,7 @@ export class GoogleCalendarService {
      * Get valid tokens (refresh if needed)
      */
     private async getValidTokens(userId: string): Promise<GoogleTokens | null> {
-        const { data } = await this.supabase.client
+        const { data } = await this.database.client
             .from('user_integrations')
             .select('*')
             .eq('user_id', userId)
@@ -251,7 +251,7 @@ export class GoogleCalendarService {
 
             const tokens = await response.json();
 
-            await this.supabase.client
+            await this.database.client
                 .from('user_integrations')
                 .update({
                     access_token: tokens.access_token,

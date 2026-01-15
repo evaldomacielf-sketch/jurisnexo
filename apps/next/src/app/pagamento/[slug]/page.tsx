@@ -73,17 +73,26 @@ export default function PublicCheckoutPage() {
                 <div className="text-center">
                     {/* Logo placeholder */}
                     <div
-                        className="h-16 w-16 mx-auto rounded-xl flex items-center justify-center text-white text-2xl font-bold mb-4 shadow-lg"
-                        style={{ backgroundColor: primaryColor }}
+                        className="h-16 w-16 mx-auto rounded-xl flex items-center justify-center text-white text-2xl font-bold mb-4 shadow-lg branding-logo"
                     >
                         {branding?.firm_name?.charAt(0) || 'J'}
                     </div>
+                    <style jsx>{`
+                        .branding-logo {
+                            background-color: ${primaryColor};
+                        }
+                    `}</style>
                     <h2 className="text-3xl font-extrabold text-slate-900 dark:text-slate-100">
                         {branding?.firm_name || 'Portal de Pagamento'}
                     </h2>
                 </div>
 
-                <Card className="shadow-xl border-t-4" style={{ borderTopColor: primaryColor }}>
+                <Card className="shadow-xl border-t-4 branding-card">
+                    <style jsx>{`
+                        :global(.branding-card) {
+                            border-top-color: ${primaryColor} !important;
+                        }
+                    `}</style>
                     <CardHeader className="text-center border-b pb-6">
                         <CardDescription className="uppercase tracking-wide text-xs font-semibold mb-2">
                             Total a Pagar
@@ -106,9 +115,14 @@ export default function PublicCheckoutPage() {
                             </p>
                         </div>
 
-                        <Button className="w-full h-12 text-lg" style={{ backgroundColor: primaryColor }}>
+                        <Button className="w-full h-12 text-lg branding-button">
                             Pagar com Cartão ou PIX
                         </Button>
+                        <style jsx>{`
+                            :global(.branding-button) {
+                                background-color: ${primaryColor} !important;
+                            }
+                        `}</style>
                     </CardContent>
                     <CardFooter className="bg-slate-50 dark:bg-slate-800/50 p-4 text-center rounded-b-lg">
                         <p className="text-xs text-muted-foreground w-full flex items-center justify-center gap-1">

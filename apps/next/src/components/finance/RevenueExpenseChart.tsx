@@ -23,18 +23,6 @@ function formatCurrency(value: number): string {
     }).format(value);
 }
 
-// Colors for categories
-const CATEGORY_COLORS = [
-    '#3B82F6', // blue
-    '#22C55E', // green
-    '#EF4444', // red
-    '#F59E0B', // amber
-    '#8B5CF6', // violet
-    '#EC4899', // pink
-    '#06B6D4', // cyan
-    '#F97316', // orange
-];
-
 export function RevenueExpenseChart({ data, isLoading = false }: RevenueExpenseChartProps) {
     const { maxValue, totalIncome, totalExpense } = useMemo(() => {
         const allValues = data.flatMap(d => [d.income, d.expense]);
@@ -82,10 +70,11 @@ export function RevenueExpenseChart({ data, isLoading = false }: RevenueExpenseC
                 </div>
             ) : (
                 <div className="space-y-4">
-                    {data.map((item, index) => {
+                    {data.map((item) => {
                         const incomeWidth = (item.income / maxValue) * 100;
                         const expenseWidth = (item.expense / maxValue) * 100;
-                        const color = item.color || CATEGORY_COLORS[index % CATEGORY_COLORS.length];
+                        const incomeMinWidth = item.income > 0 ? '4px' : '0';
+                        const expenseMinWidth = item.expense > 0 ? '4px' : '0';
 
                         return (
                             <div key={item.category} className="group">
@@ -100,20 +89,24 @@ export function RevenueExpenseChart({ data, isLoading = false }: RevenueExpenseC
                                 <div className="flex gap-1 h-8">
                                     {/* Income bar */}
                                     <div
-                                        className="h-full bg-green-500 rounded-l transition-all duration-500 ease-out group-hover:opacity-80"
-                                        style={{
-                                            width: `${incomeWidth}%`,
-                                            minWidth: item.income > 0 ? '4px' : '0',
-                                        }}
+                                        className="h-full bg-green-500 rounded-l transition-all duration-500 ease-out group-hover:opacity-80 income-bar"
                                     />
+                                    <style jsx>{`
+                                        .income-bar {
+                                            width: ${incomeWidth}%;
+                                            min-width: ${incomeMinWidth};
+                                        }
+                                    `}</style>
                                     {/* Expense bar */}
                                     <div
-                                        className="h-full bg-red-500 rounded-r transition-all duration-500 ease-out group-hover:opacity-80"
-                                        style={{
-                                            width: `${expenseWidth}%`,
-                                            minWidth: item.expense > 0 ? '4px' : '0',
-                                        }}
+                                        className="h-full bg-red-500 rounded-r transition-all duration-500 ease-out group-hover:opacity-80 expense-bar"
                                     />
+                                    <style jsx>{`
+                                        .expense-bar {
+                                            width: ${expenseWidth}%;
+                                            min-width: ${expenseMinWidth};
+                                        }
+                                    `}</style>
                                 </div>
                             </div>
                         );

@@ -8,7 +8,6 @@ on:
         required: true
         type: choice
         options:
-          - development
           - staging
           - production
       migration_type:
@@ -17,8 +16,7 @@ on:
         type: choice
         options:
           - update
-          - rollback
-          - create-snapshot
+          - status
 
 jobs:
   migrate:
@@ -30,37 +28,31 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
 
-      - name: 🔧 Setup .NET
-        uses: actions/setup-dotnet@v4
+      - uses: pnpm/action-setup@v4
         with:
-          dotnet-version: '8.0.x'
+          version: 9
+          
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
 
-      - name: 📦 Install EF Core Tools
-        run: dotnet tool install --global dotnet-ef
-
-      - name: 🗄️ Create Database Snapshot
-        if: github.event.inputs.migration_type == 'create-snapshot' || github.event.inputs.environment == 'production'
-        run: |
-          aws rds create-db-snapshot \
-            --db-instance-identifier jurisnexo-${{ github.event.inputs.environment }} \
-            --db-snapshot-identifier migration-backup-$(date +%Y%m%d%H%M%S)
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: ⬆️ Apply Migrations
         if: github.event.inputs.migration_type == 'update'
         run: |
-          dotnet ef database update \
-            --project src/JurisNexo.Infrastructure \
-            --startup-project src/JurisNexo.API \
-            --connection "${{ secrets[format('{0}_DB_CONNECTION', github.event.inputs.environment)] }}" \
-            --verbose
+          pnpm --filter @jurisnexo/db migrate --db-url "${{ secrets[format('{0}_DB_CONNECTION', github.event.inputs.environment)] }}"
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
-      - name: ⬇️ Rollback Migration
-        if: github.event.inputs.migration_type == 'rollback'
+      - name: 📊 Migration Status
+        if: github.event.inputs.migration_type == 'status'
         run: |
-          dotnet ef database update <PreviousMigrationName> \
-            --project src/JurisNexo.Infrastructure \
-            --startup-project src/JurisNexo.API \
-            --connection "${{ secrets[format('{0}_DB_CONNECTION', github.event.inputs.environment)] }}"
+          pnpm --filter @jurisnexo/db migrate:status --db-url "${{ secrets[format('{0}_DB_CONNECTION', github.event.inputs.environment)] }}"
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: 📊 Generate Migration Report
         run: |
@@ -77,4 +69,3 @@ jobs:
           fields: repo,message,commit,author,action,eventName,ref,workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-

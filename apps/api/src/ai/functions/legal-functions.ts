@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { SupabaseService } from '../../database/supabase.service';
+import { DatabaseService } from '../../database/database.service';
 import { addBusinessDays, differenceInBusinessDays, format, parse, isWeekend, addDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -179,20 +179,20 @@ export async function executeLegalFunction(
     functionName: string,
     args: any,
     tenantId: string,
-    supabase: SupabaseService,
+    database: DatabaseService,
 ): Promise<any> {
     switch (functionName) {
         case 'calcular_prazo':
             return calcularPrazo(args.data_inicial, args.dias_prazo, args.tipo_prazo);
 
         case 'buscar_processo':
-            return buscarProcesso(args.numero_processo, tenantId, supabase);
+            return buscarProcesso(args.numero_processo, tenantId, database);
 
         case 'buscar_cliente':
-            return buscarCliente(args.termo, tenantId, supabase);
+            return buscarCliente(args.termo, tenantId, database);
 
         case 'listar_prazos_proximos':
-            return listarPrazosProximos(args.dias, tenantId, supabase);
+            return listarPrazosProximos(args.dias, tenantId, database);
 
         case 'calcular_juros_correcao':
             return calcularJurosCorrecao(args);
@@ -243,11 +243,11 @@ function calcularPrazo(dataInicial: string, diasPrazo: number, tipoPrazo: 'uteis
     }
 }
 
-async function buscarProcesso(numeroProcesso: string, tenantId: string, supabase: SupabaseService) {
+async function buscarProcesso(numeroProcesso: string, tenantId: string, database: DatabaseService) {
     // Remove formatting
     const numeroLimpo = numeroProcesso.replace(/[^\d]/g, '');
 
-    const { data, error } = await supabase.client
+    const { data, error } = await database.client
         .from('cases')
         .select(`
             *,
@@ -272,7 +272,7 @@ async function buscarProcesso(numeroProcesso: string, tenantId: string, supabase
     return {
         encontrado: true,
         quantidade: data.length,
-        processos: data.map(p => ({
+        processos: data.map((p: any) => ({
             id: p.id,
             numero: p.number,
             titulo: p.title,
@@ -286,10 +286,10 @@ async function buscarProcesso(numeroProcesso: string, tenantId: string, supabase
     };
 }
 
-async function buscarCliente(termo: string, tenantId: string, supabase: SupabaseService) {
+async function buscarCliente(termo: string, tenantId: string, database: DatabaseService) {
     const termoLimpo = termo.replace(/[^\d\w\s]/g, '');
 
-    const { data, error } = await supabase.client
+    const { data, error } = await database.client
         .from('clients')
         .select('*')
         .eq('tenant_id', tenantId)
@@ -310,7 +310,7 @@ async function buscarCliente(termo: string, tenantId: string, supabase: Supabase
     return {
         encontrado: true,
         quantidade: data.length,
-        clientes: data.map(c => ({
+        clientes: data.map((c: any) => ({
             id: c.id,
             nome: c.name,
             documento: c.document_number,
@@ -321,11 +321,11 @@ async function buscarCliente(termo: string, tenantId: string, supabase: Supabase
     };
 }
 
-async function listarPrazosProximos(dias: number, tenantId: string, supabase: SupabaseService) {
+async function listarPrazosProximos(dias: number, tenantId: string, database: DatabaseService) {
     const hoje = new Date();
     const dataLimite = addDays(hoje, dias);
 
-    const { data, error } = await supabase.client
+    const { data, error } = await database.client
         .from('case_deadlines')
         .select(`
             *,
@@ -350,7 +350,7 @@ async function listarPrazosProximos(dias: number, tenantId: string, supabase: Su
 
     return {
         quantidade: data.length,
-        prazos: data.map(p => ({
+        prazos: data.map((p: any) => ({
             id: p.id,
             tipo: p.type,
             descricao: p.description,

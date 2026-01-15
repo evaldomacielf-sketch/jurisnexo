@@ -17,6 +17,7 @@ import {
     Loader2,
     Video,
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { calendarApi, CalendarEvent, EventType, CreateEventDto } from '@/services/api/calendar.service';
 import {
     format,
@@ -53,6 +54,20 @@ const EVENT_LABELS: Record<EventType, string> = {
     [EventType.PERICIA]: 'Perícia',
     [EventType.MEDIACAO]: 'Mediação',
     [EventType.OUTRO]: 'Outro',
+};
+
+const getEventColorClass = (type: EventType) => {
+    const classes: Record<EventType, string> = {
+        [EventType.AUDIENCIA]: 'bg-red-500',
+        [EventType.REUNIAO]: 'bg-blue-500',
+        [EventType.PRAZO]: 'bg-amber-500',
+        [EventType.CONSULTA]: 'bg-emerald-500',
+        [EventType.DEPOIMENTO]: 'bg-violet-500',
+        [EventType.PERICIA]: 'bg-pink-500',
+        [EventType.MEDIACAO]: 'bg-indigo-500',
+        [EventType.OUTRO]: 'bg-gray-500',
+    };
+    return classes[type] || classes[EventType.OUTRO];
 };
 
 export default function CalendarioPage() {
@@ -222,10 +237,10 @@ export default function CalendarioPage() {
                                     >
                                         <div
                                             className={`text-sm font-medium mb-1 w-7 h-7 flex items-center justify-center rounded-full ${isToday
-                                                    ? 'bg-indigo-600 text-white'
-                                                    : isCurrentMonth
-                                                        ? 'text-gray-900'
-                                                        : 'text-gray-400'
+                                                ? 'bg-indigo-600 text-white'
+                                                : isCurrentMonth
+                                                    ? 'text-gray-900'
+                                                    : 'text-gray-400'
                                                 }`}
                                         >
                                             {format(day, 'd')}
@@ -235,8 +250,10 @@ export default function CalendarioPage() {
                                                 <button
                                                     key={event.id}
                                                     onClick={() => setSelectedEvent(event)}
-                                                    className="w-full text-left text-xs p-1 rounded truncate text-white"
-                                                    style={{ backgroundColor: EVENT_COLORS[event.type] }}
+                                                    className={cn(
+                                                        "w-full text-left text-xs p-1 rounded truncate text-white",
+                                                        getEventColorClass(event.type)
+                                                    )}
                                                 >
                                                     {event.title}
                                                 </button>
@@ -257,8 +274,7 @@ export default function CalendarioPage() {
                     {Object.entries(EVENT_LABELS).map(([type, label]) => (
                         <div key={type} className="flex items-center gap-2">
                             <div
-                                className="w-3 h-3 rounded-full"
-                                style={{ backgroundColor: EVENT_COLORS[type as EventType] }}
+                                className={cn("w-3 h-3 rounded-full", getEventColorClass(type as EventType))}
                             />
                             <span className="text-sm text-gray-600">{label}</span>
                         </div>
@@ -271,8 +287,7 @@ export default function CalendarioPage() {
                         <div className="bg-white rounded-2xl max-w-md w-full mx-4 p-6">
                             <div className="flex items-start justify-between mb-4">
                                 <div
-                                    className="px-3 py-1 rounded-full text-white text-sm font-medium"
-                                    style={{ backgroundColor: EVENT_COLORS[selectedEvent.type] }}
+                                    className={cn("px-3 py-1 rounded-full text-white text-sm font-medium", getEventColorClass(selectedEvent.type))}
                                 >
                                     {EVENT_LABELS[selectedEvent.type]}
                                 </div>

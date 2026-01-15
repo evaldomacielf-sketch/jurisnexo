@@ -9,7 +9,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { formatCurrency } from '@/utils/format';
-import { ChevronDown, ChevronRight, Minus, Plus } from 'lucide-react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -49,10 +49,14 @@ function DRERowItem({ row, defaultExpanded = true }: { row: DRERow; defaultExpan
             )}>
                 <TableCell className="py-3">
                     <div
-                        className="flex items-center gap-2 cursor-pointer select-none"
-                        style={{ paddingLeft: `${(row.level - 1) * 1.5}rem` }}
+                        className="flex items-center gap-2 cursor-pointer select-none row-padding"
                         onClick={() => hasChildren && setIsExpanded(!isExpanded)}
                     >
+                        <style jsx>{`
+                            .row-padding {
+                                padding-left: ${(row.level - 1) * 1.5}rem;
+                            }
+                        `}</style>
                         {hasChildren ? (
                             isExpanded ? <ChevronDown className="w-4 h-4 text-gray-400" /> : <ChevronRight className="w-4 h-4 text-gray-400" />
                         ) : (

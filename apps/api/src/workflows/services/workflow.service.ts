@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { SupabaseService } from '../../database/supabase.service';
+import { DatabaseService } from '../../database/database.service';
 import {
     CreateWorkflowDto,
     UpdateWorkflowDto,
@@ -11,13 +11,13 @@ import {
 export class WorkflowService {
     private readonly logger = new Logger(WorkflowService.name);
 
-    constructor(private readonly supabase: SupabaseService) { }
+    constructor(private readonly database: DatabaseService) { }
 
     /**
      * Create a new workflow
      */
     async create(tenantId: string, userId: string, dto: CreateWorkflowDto): Promise<WorkflowResponseDto> {
-        const { data, error } = await this.supabase.client
+        const { data, error } = await this.database.client
             .from('workflows')
             .insert({
                 tenant_id: tenantId,
@@ -42,7 +42,7 @@ export class WorkflowService {
      * Get all workflows for tenant
      */
     async findAll(tenantId: string, options?: { isActive?: boolean; triggerType?: TriggerType }): Promise<WorkflowResponseDto[]> {
-        let query = this.supabase.client
+        let query = this.database.client
             .from('workflows')
             .select('*')
             .eq('tenant_id', tenantId)
@@ -66,7 +66,7 @@ export class WorkflowService {
      * Get workflow by ID
      */
     async findById(id: string): Promise<WorkflowResponseDto> {
-        const { data, error } = await this.supabase.client
+        const { data, error } = await this.database.client
             .from('workflows')
             .select('*')
             .eq('id', id)
@@ -91,7 +91,7 @@ export class WorkflowService {
         if (dto.steps) updateData.steps = dto.steps;
         if (dto.isActive !== undefined) updateData.is_active = dto.isActive;
 
-        const { data, error } = await this.supabase.client
+        const { data, error } = await this.database.client
             .from('workflows')
             .update(updateData)
             .eq('id', id)
@@ -106,7 +106,7 @@ export class WorkflowService {
      * Delete workflow
      */
     async delete(id: string): Promise<void> {
-        await this.supabase.client
+        await this.database.client
             .from('workflows')
             .delete()
             .eq('id', id);
@@ -118,7 +118,7 @@ export class WorkflowService {
     async toggleActive(id: string): Promise<WorkflowResponseDto> {
         const workflow = await this.findById(id);
 
-        const { data, error } = await this.supabase.client
+        const { data, error } = await this.database.client
             .from('workflows')
             .update({ is_active: !workflow.isActive })
             .eq('id', id)
@@ -133,7 +133,7 @@ export class WorkflowService {
      * Get workflows by trigger type
      */
     async findByTrigger(tenantId: string, triggerType: TriggerType): Promise<WorkflowResponseDto[]> {
-        const { data, error } = await this.supabase.client
+        const { data, error } = await this.database.client
             .from('workflows')
             .select('*')
             .eq('tenant_id', tenantId)
@@ -165,7 +165,7 @@ export class WorkflowService {
     async getExecutions(workflowId: string, page = 1, limit = 20) {
         const offset = (page - 1) * limit;
 
-        const { data, error, count } = await this.supabase.client
+        const { data, error, count } = await this.database.client
             .from('workflow_executions')
             .select('*', { count: 'exact' })
             .eq('workflow_id', workflowId)
@@ -186,12 +186,12 @@ export class WorkflowService {
      * Get workflow statistics
      */
     async getStats(tenantId: string) {
-        const { data: workflows } = await this.supabase.client
+        const { data: workflows } = await this.database.client
             .from('workflows')
             .select('id, is_active')
             .eq('tenant_id', tenantId);
 
-        const { data: executions } = await this.supabase.client
+        const { data: executions } = await this.database.client
             .from('workflow_executions')
             .select('status')
             .in('workflow_id', (workflows || []).map(w => w.id));

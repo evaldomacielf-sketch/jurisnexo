@@ -3,10 +3,10 @@ import { ConfigModule } from '@nestjs/config';
 import { ChatService } from './services/chat.service';
 import { ChatGateway } from './gateways/chat.gateway';
 import { ChatController } from './controllers/chat.controller';
-import { SupabaseModule } from '../database/supabase.module';
+import { DatabaseModule } from '../database/database.module';
 
 @Module({
-    imports: [ConfigModule, SupabaseModule],
+    imports: [ConfigModule, DatabaseModule],
     controllers: [ChatController],
     providers: [ChatService, ChatGateway],
     exports: [ChatService, ChatGateway],

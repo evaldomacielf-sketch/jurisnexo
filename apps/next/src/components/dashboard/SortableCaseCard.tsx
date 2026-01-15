@@ -24,15 +24,15 @@ export function SortableCaseCard({ card, onCardClick }: SortableCaseCardProps) {
         isDragging,
     } = useSortable({ id: card.id });
 
-    // Styles must remain inline for dnd-kit transform and transition dynamics
-    const style = {
-        transform: CSS.Transform.toString(transform),
-        transition,
-        opacity: isDragging ? 0.5 : 1,
-    };
-
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+        <div ref={setNodeRef} className="sortable-card" {...attributes} {...listeners}>
+            <style jsx>{`
+                .sortable-card {
+                    transform: ${CSS.Transform.toString(transform)};
+                    transition: ${transition};
+                    opacity: ${isDragging ? 0.5 : 1};
+                }
+            `}</style>
             <CaseCard card={card} onCardClick={onCardClick} isDragging={isDragging} />
         </div>
     );

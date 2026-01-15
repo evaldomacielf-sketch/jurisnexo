@@ -2,12 +2,12 @@
 
 Sistema de gestão para escritórios de advocacia com integração WhatsApp, gestão de casos, financeiro e painel administrativo.
 
-## � Pré-requisitos
+## Pré-requisitos
 
 - Node.js >= 20.0.0
 - pnpm >= 9.0.0 (instale com `npm install -g pnpm` ou `corepack enable`)
 
-## �🚀 Quick Start
+## 🚀 Quick Start
 
 ```bash
 # Instalar pnpm (se ainda não tiver)
@@ -95,21 +95,19 @@ cp .env.example .env
 
 ### Exemplo de Configuração
 
-**Backend (apps/api/.env)**
+### Backend (apps/api/.env)
 ```env
 SUPABASE_URL=your_url
 SUPABASE_SERVICE_KEY=your_key
 JWT_SECRET=your_secret
 ```
 
-**Frontend (apps/next/.env.local)**
+### Frontend (apps/next/.env.local)
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
 NEXT_PUBLIC_API_URL=http://localhost:3001
-```
-
 ```
 
 ## 📋 Scripts Disponíveis
@@ -125,7 +123,7 @@ pnpm db:migrate   # Aplicar migrations
 pnpm db:generate  # Gerar tipos Supabase
 ```
 
-## � Documentação
+## Documentação
 
 - [Plano de Execução](./docs/implementation_plan.md)
 - [Definition of Done](./docs/implementation_plan.md#definition-of-done)

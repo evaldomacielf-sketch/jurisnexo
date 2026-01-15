@@ -405,7 +405,7 @@ function RecordPaymentModal({
             <div className="bg-white rounded-xl w-full max-w-md p-6">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-lg font-semibold">Registrar Pagamento</h2>
-                    <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg">
+                    <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg" aria-label="Fechar modal">
                         <X className="w-5 h-5" />
                     </button>
                 </div>

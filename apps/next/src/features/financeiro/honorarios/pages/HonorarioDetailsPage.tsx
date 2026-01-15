@@ -149,7 +149,7 @@ export default function HonorarioDetailsPage() {
         cancelado: { color: 'bg-gray-100 text-gray-800', icon: <FileText className="w-4 h-4" />, label: 'Cancelado' },
     };
 
-    const currentStatus = statusConfig[honorario.status] || statusConfig.pendente;
+    const currentStatus = statusConfig[honorario.status as keyof typeof statusConfig] || statusConfig.pendente;
 
     const paymentColumns = [
         { key: 'payment_date', header: 'Data', render: (row: any) => formatDate(row.payment_date) },
@@ -242,9 +242,13 @@ export default function HonorarioDetailsPage() {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                     <div
-                        className="bg-blue-600 h-3 rounded-full transition-all duration-500"
-                        style={{ width: `${percentPago}%` }}
+                        className="bg-blue-600 h-3 rounded-full transition-all duration-500 progress-bar"
                     ></div>
+                    <style jsx>{`
+                            .progress-bar {
+                                width: ${percentPago}%;
+                            }
+                        `}</style>
                 </div>
             </Card>
 
@@ -341,7 +345,7 @@ export default function HonorarioDetailsPage() {
                         name="valor"
                         type="number"
                         register={form.register}
-                        error={form.formState.errors.valor?.message}
+                        errors={form.formState.errors}
                         required
                     />
                     <FormField
@@ -349,7 +353,7 @@ export default function HonorarioDetailsPage() {
                         name="data_pagamento"
                         type="date"
                         register={form.register}
-                        error={form.formState.errors.data_pagamento?.message}
+                        errors={form.formState.errors}
                         required
                     />
                     <FormField
@@ -357,7 +361,7 @@ export default function HonorarioDetailsPage() {
                         name="forma_pagamento"
                         type="select"
                         register={form.register}
-                        error={form.formState.errors.forma_pagamento?.message}
+                        errors={form.formState.errors}
                         options={[
                             { value: '', label: 'Selecione...' },
                             { value: 'pix', label: 'PIX' },
@@ -373,6 +377,7 @@ export default function HonorarioDetailsPage() {
                         name="observacoes"
                         type="textarea"
                         register={form.register}
+                        errors={form.formState.errors}
                     />
                     <div className="flex justify-end gap-3 pt-4">
                         <button

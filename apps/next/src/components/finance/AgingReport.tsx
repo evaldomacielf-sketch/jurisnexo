@@ -55,9 +55,18 @@ export function AgingReport({ data, type, isLoading }: AgingReportProps) {
                         <p className="text-xl font-bold text-gray-900">{formatCurrency(item.amount)}</p>
                         <div className="w-full bg-gray-100 h-1.5 rounded-full mt-3 overflow-hidden">
                             <div
-                                className={`h-full ${item.color.split(' ')[0].replace('bg-', 'bg-')}`}
-                                style={{ width: `${totalAmount > 0 ? (item.amount / totalAmount) * 100 : 0}%` }}
+                                className={`h-full bucket-width ${item.color.split(' ')[0].replace('bg-', 'bg-')}`}
                             />
+                            <style jsx>{`
+                                .bucket-width {
+                                    width: ${totalAmount > 0 ? (item.amount / totalAmount) * 100 : 0}%;
+                                }
+                            `}</style>
+                            <style jsx>{`
+                                div {
+                                    --bucket-width: ${totalAmount > 0 ? (item.amount / totalAmount) * 100 : 0}%;
+                                }
+                            `}</style>
                         </div>
                     </div>
                 ))}

@@ -102,14 +102,14 @@ export function BankAccountsPanel({
                                 onClick={() => onViewAccount?.(account.id)}
                             >
                                 <div className="flex items-center gap-3">
-                                    <div
-                                        className="p-2 rounded-lg"
-                                        style={{ backgroundColor: `${account.color || '#3B82F6'}20` }}
-                                    >
-                                        <Icon
-                                            className="w-5 h-5"
-                                            style={{ color: account.color || '#3B82F6' }}
-                                        />
+                                    <div className="p-2 rounded-lg account-icon">
+                                        <Icon className="w-5 h-5" />
+                                        <style jsx>{`
+                                            .account-icon {
+                                                background-color: ${account.color || '#3B82F6'}20;
+                                                color: ${account.color || '#3B82F6'};
+                                            }
+                                        `}</style>
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <p className="font-medium text-gray-900 truncate">{account.name}</p>

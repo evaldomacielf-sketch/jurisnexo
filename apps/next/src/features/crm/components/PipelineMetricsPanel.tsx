@@ -156,11 +156,13 @@ export function PipelineMetricsPanel({ pipelineId }: PipelineMetricsPanelProps) 
                                     {/* Progress bar */}
                                     <div className="relative h-8 bg-gray-100 rounded-md overflow-hidden">
                                         <div
-                                            className="absolute h-full bg-primary transition-all"
-                                            style={{
-                                                width: `${metrics.total_leads > 0 ? (stage.lead_count / metrics.total_leads) * 100 : 0}%`,
-                                            }}
+                                            className="absolute h-full bg-primary transition-all stage-progress"
                                         />
+                                        <style jsx>{`
+                                            .stage-progress {
+                                                width: ${metrics.total_leads > 0 ? (stage.lead_count / metrics.total_leads) * 100 : 0}%;
+                                            }
+                                        `}</style>
                                         <div className="absolute inset-0 flex items-center justify-between px-3 text-xs font-medium">
                                             <span>
                                                 {metrics.total_leads > 0 ? ((stage.lead_count / metrics.total_leads) * 100).toFixed(1) : 0}% do total

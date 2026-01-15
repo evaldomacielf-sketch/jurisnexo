@@ -33,7 +33,7 @@ export class StripePaymentService extends IPaymentService {
             this.stripe = null as any;
         } else {
             this.stripe = new Stripe(apiKey, {
-                apiVersion: '2024-12-18.acacia',
+                apiVersion: '2025-12-15.clover' as any,
             });
         }
     }

@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { SemanticSearchService } from '../services/semantic-search.service';
+import { SearchService } from '../services/semantic-search.service';
 import { SemanticSearchDto, SearchResponseDto, IndexDocumentDto, IndexResponseDto } from '../dto/ai.dto';
 
 @ApiTags('AI Search')
@@ -21,7 +21,7 @@ import { SemanticSearchDto, SearchResponseDto, IndexDocumentDto, IndexResponseDt
 @UseGuards(JwtAuthGuard)
 @Controller('ai/search')
 export class SearchController {
-    constructor(private readonly searchService: SemanticSearchService) { }
+    constructor(private readonly searchService: SearchService) { }
 
     @Post()
     @HttpCode(HttpStatus.OK)

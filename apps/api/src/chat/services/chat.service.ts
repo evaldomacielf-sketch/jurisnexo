@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { SupabaseService } from '../../database/supabase.service';
+import { DatabaseService } from '../../database/database.service';
 import {
     CreateChatDto,
     UpdateChatDto,
@@ -12,14 +12,14 @@ import {
 export class ChatService {
     private readonly logger = new Logger(ChatService.name);
 
-    constructor(private readonly supabase: SupabaseService) { }
+    constructor(private readonly database: DatabaseService) { }
 
     /**
      * Create a new chat
      */
     async createChat(tenantId: string, userId: string, dto: CreateChatDto): Promise<ChatResponseDto> {
         // Create chat
-        const { data: chat, error } = await this.supabase.client
+        const { data: chat, error } = await this.database.client
             .from('chats')
             .insert({
                 tenant_id: tenantId,
@@ -41,7 +41,7 @@ export class ChatService {
             user_id: participantId,
         }));
 
-        await this.supabase.client
+        await this.database.client
             .from('chat_participants')
             .insert(participantRecords);
 
@@ -54,7 +54,7 @@ export class ChatService {
      */
     async getUserChats(tenantId: string, userId: string): Promise<ChatResponseDto[]> {
         // Get chats where user is participant
-        const { data: participations } = await this.supabase.client
+        const { data: participations } = await this.database.client
             .from('chat_participants')
             .select('chat_id')
             .eq('user_id', userId);
@@ -63,7 +63,7 @@ export class ChatService {
 
         const chatIds = participations.map(p => p.chat_id);
 
-        const { data: chats, error } = await this.supabase.client
+        const { data: chats, error } = await this.database.client
             .from('chats')
             .select('*')
             .eq('tenant_id', tenantId)
@@ -79,7 +79,7 @@ export class ChatService {
      * Get chat by ID
      */
     async getChatById(chatId: string, userId: string): Promise<ChatResponseDto> {
-        const { data: chat, error } = await this.supabase.client
+        const { data: chat, error } = await this.database.client
             .from('chats')
             .select('*')
             .eq('id', chatId)
@@ -93,7 +93,7 @@ export class ChatService {
      * Send message
      */
     async sendMessage(userId: string, dto: SendMessageDto): Promise<MessageResponseDto> {
-        const { data: message, error } = await this.supabase.client
+        const { data: message, error } = await this.database.client
             .from('chat_messages')
             .insert({
                 chat_id: dto.chatId,
@@ -110,7 +110,7 @@ export class ChatService {
         if (error) throw error;
 
         // Update chat's updated_at
-        await this.supabase.client
+        await this.database.client
             .from('chats')
             .update({ updated_at: new Date() })
             .eq('id', dto.chatId);
@@ -125,7 +125,7 @@ export class ChatService {
     async getMessages(chatId: string, page = 1, limit = 50): Promise<{ messages: MessageResponseDto[]; hasMore: boolean }> {
         const offset = (page - 1) * limit;
 
-        const { data: messages, error, count } = await this.supabase.client
+        const { data: messages, error, count } = await this.database.client
             .from('chat_messages')
             .select('*, sender:users(id, name, avatar)', { count: 'exact' })
             .eq('chat_id', chatId)
@@ -146,7 +146,7 @@ export class ChatService {
     async markAsRead(chatId: string, userId: string, messageIds: string[]): Promise<void> {
         // Add user to read_by array for each message
         for (const messageId of messageIds) {
-            await this.supabase.client.rpc('add_to_read_by', {
+            await this.database.client.rpc('add_to_read_by', {
                 p_message_id: messageId,
                 p_user_id: userId,
             });
@@ -157,7 +157,7 @@ export class ChatService {
      * Get unread count
      */
     async getUnreadCount(chatId: string, userId: string): Promise<number> {
-        const { count } = await this.supabase.client
+        const { count } = await this.database.client
             .from('chat_messages')
             .select('*', { count: 'exact', head: true })
             .eq('chat_id', chatId)
@@ -174,7 +174,7 @@ export class ChatService {
 
         if (dto.name) updateData.name = dto.name;
 
-        const { error } = await this.supabase.client
+        const { error } = await this.database.client
             .from('chats')
             .update(updateData)
             .eq('id', chatId);
@@ -183,7 +183,7 @@ export class ChatService {
 
         // Update participants if provided
         if (dto.participantIds) {
-            await this.supabase.client
+            await this.database.client
                 .from('chat_participants')
                 .delete()
                 .eq('chat_id', chatId);
@@ -193,7 +193,7 @@ export class ChatService {
                 user_id: userId,
             }));
 
-            await this.supabase.client
+            await this.database.client
                 .from('chat_participants')
                 .insert(participantRecords);
         }
@@ -205,7 +205,7 @@ export class ChatService {
      * Delete message
      */
     async deleteMessage(messageId: string, userId: string): Promise<void> {
-        await this.supabase.client
+        await this.database.client
             .from('chat_messages')
             .update({
                 content: 'Mensagem apagada',
@@ -219,7 +219,7 @@ export class ChatService {
      * Get chat participants
      */
     async getParticipants(chatId: string) {
-        const { data } = await this.supabase.client
+        const { data } = await this.database.client
             .from('chat_participants')
             .select('user:users(id, name, avatar)')
             .eq('chat_id', chatId);
@@ -232,7 +232,7 @@ export class ChatService {
         const unreadCount = await this.getUnreadCount(chat.id, userId);
 
         // Get last message
-        const { data: lastMessages } = await this.supabase.client
+        const { data: lastMessages } = await this.database.client
             .from('chat_messages')
             .select('*')
             .eq('chat_id', chat.id)

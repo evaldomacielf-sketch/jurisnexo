@@ -32,9 +32,13 @@ export function PipelineColumn({ stage, leads, isLoading }: PipelineColumnProps)
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <div
-                            className="h-3 w-3 rounded-full"
-                            style={{ backgroundColor: stage.color }}
+                            className="h-3 w-3 rounded-full stage-indicator"
                         />
+                        <style jsx>{`
+                            .stage-indicator {
+                                background-color: ${stage.color};
+                            }
+                        `}</style>
                         <CardTitle className="text-base font-semibold">
                             {stage.name}
                         </CardTitle>

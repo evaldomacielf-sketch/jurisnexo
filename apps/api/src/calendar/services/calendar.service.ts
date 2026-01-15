@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { SupabaseService } from '../../database/supabase.service';
+import { DatabaseService } from '../../database/database.service';
 import {
     CreateEventDto,
     UpdateEventDto,
@@ -13,7 +13,7 @@ export class CalendarService {
     private readonly logger = new Logger(CalendarService.name);
 
     constructor(
-        private readonly supabase: SupabaseService,
+        private readonly database: DatabaseService,
         private readonly googleCalendar: GoogleCalendarService,
     ) { }
 
@@ -40,7 +40,7 @@ export class CalendarService {
             color: dto.color,
         };
 
-        const { data, error } = await this.supabase.client
+        const { data, error } = await this.database.client
             .from('calendar_events')
             .insert(eventData)
             .select()
@@ -52,7 +52,7 @@ export class CalendarService {
         if (dto.syncWithGoogle) {
             try {
                 const googleEventId = await this.googleCalendar.createEvent(userId, data);
-                await this.supabase.client
+                await this.database.client
                     .from('calendar_events')
                     .update({ google_event_id: googleEventId })
                     .eq('id', data.id);
@@ -76,7 +76,7 @@ export class CalendarService {
         endDate: string,
         options?: { type?: EventType; caseId?: string; clientId?: string },
     ): Promise<EventResponseDto[]> {
-        let query = this.supabase.client
+        let query = this.database.client
             .from('calendar_events')
             .select('*')
             .eq('tenant_id', tenantId)
@@ -104,7 +104,7 @@ export class CalendarService {
      * Get single event
      */
     async getById(id: string): Promise<EventResponseDto> {
-        const { data, error } = await this.supabase.client
+        const { data, error } = await this.database.client
             .from('calendar_events')
             .select('*')
             .eq('id', id)
@@ -132,7 +132,7 @@ export class CalendarService {
         if (dto.reminders) updateData.reminders = dto.reminders;
         if (dto.color) updateData.color = dto.color;
 
-        const { data, error } = await this.supabase.client
+        const { data, error } = await this.database.client
             .from('calendar_events')
             .update(updateData)
             .eq('id', id)
@@ -168,7 +168,7 @@ export class CalendarService {
             }
         }
 
-        await this.supabase.client
+        await this.database.client
             .from('calendar_events')
             .delete()
             .eq('id', id);
@@ -179,7 +179,7 @@ export class CalendarService {
      */
     async getUpcoming(tenantId: string, userId: string, limit = 5): Promise<EventResponseDto[]> {
         const now = new Date().toISOString();
-        const { data, error } = await this.supabase.client
+        const { data, error } = await this.database.client
             .from('calendar_events')
             .select('*')
             .eq('tenant_id', tenantId)
@@ -195,7 +195,7 @@ export class CalendarService {
      * Get events by type (for reports)
      */
     async getEventsByType(tenantId: string, startDate: string, endDate: string) {
-        const { data, error } = await this.supabase.client
+        const { data, error } = await this.database.client
             .from('calendar_events')
             .select('type')
             .eq('tenant_id', tenantId)
