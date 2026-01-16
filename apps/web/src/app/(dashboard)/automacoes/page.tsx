@@ -7,32 +7,25 @@ import {
   Pause,
   Copy,
   Trash2,
-  Settings,
   Zap,
   Clock,
   CheckCircle,
-  XCircle,
   AlertTriangle,
   ChevronRight,
-  Mail,
   Bell,
   FileText,
   Calendar,
-  Webhook,
   DollarSign,
-  User,
   Briefcase,
   Loader2,
+  User,
 } from 'lucide-react';
 import {
   workflowsApi,
   Workflow,
   WorkflowStats,
   WorkflowTemplate,
-  TriggerType,
 } from '@/services/api/workflows.service';
-import { formatDistanceToNow } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 
 const TRIGGER_ICONS: Record<string, any> = {
   case_created: Briefcase,

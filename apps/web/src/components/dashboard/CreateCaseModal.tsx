@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { X, Save, FileText, User, Tag, Clock, DollarSign } from 'lucide-react';
 import { useKanbanStore } from '@/lib/store/kanban-store';
-import { CaseCategory, CasePriority } from '@/lib/types/kanban';
+// import { CaseCategory, CasePriority } from '@/lib/types/kanban';
 import toast from 'react-hot-toast';
 
 export function CreateCaseModal() {
@@ -13,8 +13,8 @@ export function CreateCaseModal() {
   const [formData, setFormData] = useState({
     clientName: '',
     description: '',
-    priority: 'medium' as CasePriority,
-    category: 'civil' as CaseCategory,
+    priority: 'medium' as string,
+    category: 'civil' as string,
     value: '',
   });
 
