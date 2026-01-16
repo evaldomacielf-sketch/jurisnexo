@@ -1,75 +1,63 @@
-# Deploy Guide - JurisNexo
+# Guia de Deploy - JurisNexo (Hostinger VPS)
 
-## 1. Clonar o repositório
+Este guia descreve como implantar o JurisNexo SaaS em uma VPS Hostinger usando Docker e Docker Compose.
 
-```bash
-git clone https://github.com/jurisnexo/jurisnexo.git
-cd jurisnexo
-```
+## 📁 Estrutura de Deploy
 
-## 2. Configurar variáveis de ambiente
+Usamos Docker para garantir que o ambiente de produção seja idêntico ao de desenvolvimento.
 
-```bash
-cp .env.example .env
-# Edite .env com suas credenciais (AWS, Database, Redis, etc.)
-```
+### 1. Preparação da VPS
 
-## 3. Deploy da Infraestrutura (Terraform)
-
-Este passo irá provisionar todos os recursos na AWS (VPC, RDS, ECS, ALB, etc.).
+Certifique-se de que a VPS possui Docker e Docker Compose instalados:
 
 ```bash
-cd terraform
+# Instalar Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh get-docker.sh
 
-# Inicializar Terraform (baixar providers e módulos)
-terraform init
-
-# Validar e planejar as mudanças
-terraform plan
-
-# Aplicar as mudanças (provisionar a infra)
-# Atenção: Isso gerará custos na AWS.
-terraform apply
+# Instalar Docker Compose
+sudo apt-get install docker-compose-plugin
 ```
 
-Ao final, o Terraform exibirá os **Outputs** (URLs, IDs). Anote-os, pois serão usados para configurar o CI/CD ou acessar os serviços.
+### 2. Configuração de Variáveis (Root .env)
 
-## 4. Deploy da Aplicação (Local / Docker Compose)
+Crie um arquivo `.env` na raiz do projeto com as credenciais de produção:
 
-Para testar a infraestrutura completa localmente, incluindo o monitoramento:
+```env
+# Database (Supabase)
+DB_CONNECTION_STRING="Host=aws-0-us-west-2.pooler.supabase.com;Port=6543;Database=postgres;Username=postgres.xxx;Password=xxx"
+
+# Auth
+JWT_SECRET_KEY="sua_chave_secreta_longa"
+
+# Redis
+REDIS_PASSWORD="sua_senha_redis"
+
+# WhatsApp integration
+EVOLUTION_API_URL="https://api.verona.net.br"
+EVOLUTION_API_KEY="seu_token"
+```
+
+### 3. Deploy com Docker Compose
+
+Execute o comando de build e inicialização:
 
 ```bash
-docker-compose up -d --build
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 ```
 
-Serviços disponíveis localmente:
+### 4. Serviços Mapeados
 
-- **Frontend:** <http://localhost:3000>
-- **Backend API:** <http://localhost:5000>
-- **Swagger:** <http://localhost:5000/api/docs>
-- **Prometheus:** <http://localhost:9090>
-- **Grafana:** <http://localhost:3001>
-- **Postgres:** localhost:5432
-- **Redis:** localhost:6379
+- **Frontend (Next.js)**: Porta 3000 (Mapeado via Nginx para porta 80/443)
+- **Backend (.NET)**: Porta 4000
+- **Worker (Jobs)**: Porta 4001
+- **Redis**: Porta 6379
 
-## 5. Executar Migrations (Banco de Dados)
+## 🛡️ Segurança e Manutenção
 
-Para aplicar a estrutura do banco de dados (tabelas, índices):
+- **Rate Limiting**: Já configurado nativamente no backend .NET (5 req/min no login).
+- **Logs**: Logs são enviados para o Sentry e consolidados no console do Docker.
+- **SSL**: Recomendamos o uso de Nginx Proxy Manager ou Certbot na VPS para gerenciar certificados SSL.
 
-```bash
-dotnet ef database update --project src/JurisNexo.Infrastructure
-```
-
-## 6. Acessar a Aplicação (Produção)
-
-Após o deploy via Terraform e CI/CD:
-
-- **Frontend:** <https://app.jurisnexo.com> (via CloudFront)
-- **Backend API:** <https://api.jurisnexo.com> (via ALB)
-- **Swagger:** <https://api.jurisnexo.com/api/docs>
-- **Monitoring (Grafana):** <https://monitoring.jurisnexo.com>
-
-## 7. Monitoramento Ativo
-
-- **AWS X-Ray:** Acesse o console AWS > X-Ray > Service Map para ver o rastreamento distribuído.
-- **CloudWatch:** Acesse o Dashboard personalizado criado pelo Terraform (`JurisNexo-Production-Overview`).
+---
+Para dúvidas arquiteturais, consulte o `README.md`.
