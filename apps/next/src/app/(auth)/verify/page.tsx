@@ -39,7 +39,7 @@ function VerifyEmailContent() {
             if (result.success) {
                 setStatus('success');
                 setTimeout(() => {
-                    router.push('/auth/login?verified=true');
+                    router.push('/login?verified=true');
                 }, 3000);
             } else {
                 setStatus('error');
@@ -87,7 +87,7 @@ function VerifyEmailContent() {
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Email Verificado!</h2>
                 <p className="text-gray-600 mb-6">Sua conta foi ativada com sucesso.</p>
                 <p className="text-sm text-gray-500">Redirecionando para login...</p>
-                <Link href="/auth/login" className="mt-4 inline-flex items-center text-[#1152d4] hover:underline">
+                <Link href="/login" className="mt-4 inline-flex items-center text-[#1152d4] hover:underline">
                     Ir para Login <ArrowRight className="w-4 h-4 ml-1" />
                 </Link>
             </div>
@@ -104,7 +104,7 @@ function VerifyEmailContent() {
                 <p className="text-red-600 mb-6">{message}</p>
 
                 <div className="flex flex-col gap-3">
-                    <Link href="/auth/login" className="text-gray-600 hover:text-gray-900 text-sm">
+                    <Link href="/login" className="text-gray-600 hover:text-gray-900 text-sm">
                         Voltar para Login
                     </Link>
                     {email && (
@@ -142,7 +142,7 @@ function VerifyEmailContent() {
                     {resending ? 'Reenviando...' : 'Clique para reenviar'}
                 </button>
             </div>
-            <Link href="/auth/login" className="block mt-6 text-sm text-gray-600 hover:text-gray-900">
+            <Link href="/login" className="block mt-6 text-sm text-gray-600 hover:text-gray-900">
                 Voltar para Login
             </Link>
         </div>

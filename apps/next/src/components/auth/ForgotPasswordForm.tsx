@@ -56,7 +56,7 @@ export function ForgotPasswordForm() {
                             Verifique sua caixa de entrada e spam.
                         </p>
                         <Link
-                            href="/auth/login"
+                            href="/login"
                             className="inline-flex items-center gap-2 text-[#1152d4] hover:underline"
                         >
                             <ArrowLeft className="w-4 h-4" />
@@ -139,7 +139,7 @@ export function ForgotPasswordForm() {
                 {/* Back to Login */}
                 <div className="mt-6 text-center">
                     <Link
-                        href="/auth/login"
+                        href="/login"
                         className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-[#1152d4]"
                     >
                         <ArrowLeft className="w-4 h-4" />

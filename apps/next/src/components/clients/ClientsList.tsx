@@ -58,7 +58,7 @@ export function ClientsList() {
                     Comece adicionando seu primeiro cliente
                 </p>
                 <Link
-                    href="/dashboard/clients/new"
+                    href="/clientes/new"
                     className="inline-block px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-opacity-90 transition"
                 >
                     Adicionar Cliente
@@ -133,14 +133,14 @@ export function ClientsList() {
                             {/* Actions */}
                             <div className="flex items-center gap-2">
                                 <button
-                                    onClick={() => router.push(`/dashboard/clients/${client.id}`)}
+                                    onClick={() => router.push(`/clientes/${client.id}`)}
                                     className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
                                     title="Ver detalhes"
                                 >
                                     <Eye className="w-5 h-5" />
                                 </button>
                                 <button
-                                    onClick={() => router.push(`/dashboard/clients/${client.id}/edit`)}
+                                    onClick={() => router.push(`/clientes/${client.id}/edit`)}
                                     className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
                                     title="Editar"
                                 >

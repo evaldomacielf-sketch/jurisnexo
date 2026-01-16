@@ -135,11 +135,11 @@ export function ClientForm({ clientId }: ClientFormProps) {
             if (isEditMode && clientId) {
                 await clientsApi.updateClient(clientId, data);
                 toast.success('Cliente atualizado com sucesso');
-                router.push(`/dashboard/clients/${clientId}`);
+                router.push(`/clientes/${clientId}`);
             } else {
                 await clientsApi.createClient(data);
                 toast.success('Cliente criado com sucesso');
-                router.push('/dashboard/clients');
+                router.push('/clientes');
             }
         } catch (error) {
             toast.error(isEditMode ? 'Erro ao atualizar cliente' : 'Erro ao criar cliente');

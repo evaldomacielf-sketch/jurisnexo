@@ -61,7 +61,7 @@ export default function InvitePage() {
             } else {
                 if (res.status === 401) {
                     alert('Por favor, faça login primeiro.');
-                    router.push('/auth/login?redirect=/invites/' + token);
+                    router.push('/login?redirect=/invites/' + token);
                 } else {
                     const err = await res.json();
                     alert(err.message || 'Falha ao aceitar');
@@ -114,7 +114,7 @@ export default function InvitePage() {
                 <span className="material-symbols-outlined text-4xl text-red-500 mb-4">error</span>
                 <h2 className="text-xl font-bold text-red-700 dark:text-red-400 mb-2">Convite Inválido</h2>
                 <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
-                <Link href="/auth/login" className="text-primary font-bold hover:underline">Ir para Login</Link>
+                <Link href="/login" className="text-primary font-bold hover:underline">Ir para Login</Link>
             </div>
         </AuthShell>
     );
@@ -145,7 +145,7 @@ export default function InvitePage() {
                             {submitting ? 'Entrando...' : 'Aceitar e Entrar'}
                         </button>
                         <p className="mt-4 text-xs text-[#616f89]">
-                            Não é você? <Link href="/auth/login" className="text-primary hover:underline">Fazer login com outra conta</Link>
+                            Não é você? <Link href="/login" className="text-primary hover:underline">Fazer login com outra conta</Link>
                         </p>
                     </div>
                 ) : (

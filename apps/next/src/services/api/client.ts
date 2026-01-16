@@ -46,7 +46,7 @@ apiClient.interceptors.response.use(
             // Token expirado ou inválido
             useAuthStore.getState().logout();
             if (typeof window !== 'undefined') {
-                window.location.href = '/auth/login';
+                window.location.href = '/login';
             }
         }
 

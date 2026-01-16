@@ -60,7 +60,7 @@ export function CaseDetails({ caseId }: CaseDetailsProps) {
         try {
             await casesApi.deleteCase(caseId);
             toast.success('Processo removido com sucesso');
-            router.push('/dashboard/cases');
+            router.push('/casos');
         } catch (err) {
             toast.error('Erro ao remover processo');
         }
@@ -101,7 +101,7 @@ export function CaseDetails({ caseId }: CaseDetailsProps) {
             {/* Header */}
             <div className="flex items-center gap-4">
                 <button
-                    onClick={() => router.push('/dashboard/cases')}
+                    onClick={() => router.push('/casos')}
                     className="flex items-center text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
                 >
                     <ArrowLeft className="h-4 w-4 mr-2" />
@@ -126,7 +126,7 @@ export function CaseDetails({ caseId }: CaseDetailsProps) {
                 </div>
                 <div className="flex gap-2">
                     <button
-                        onClick={() => router.push(`/dashboard/cases/${caseId}/edit`)}
+                        onClick={() => router.push(`/casos/${caseId}/edit`)}
                         className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
                     >
                         <Edit className="h-4 w-4 mr-2" />
@@ -205,7 +205,7 @@ export function CaseDetails({ caseId }: CaseDetailsProps) {
                                 </p>
                                 <div
                                     className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
-                                    onClick={() => caseData.client?.id && router.push(`/dashboard/clients/${caseData.client.id}`)}
+                                    onClick={() => caseData.client?.id && router.push(`/clientes/${caseData.client.id}`)}
                                 >
                                     <p className="font-medium text-gray-900 dark:text-white">{caseData.client?.name || 'Cliente não identificado'}</p>
                                     {/* Assuming client object might have phone if enriched, otherwise just name */}

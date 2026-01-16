@@ -70,7 +70,7 @@ export function RegisterForm() {
             // Sucesso - mostra mensagem e redireciona
             setSuccess(true);
             setTimeout(() => {
-                router.push('/auth/login?registered=true');
+                router.push('/login?registered=true');
             }, 2000);
         } catch (err) {
             setError('Erro inesperado. Tente novamente.');
@@ -326,7 +326,7 @@ export function RegisterForm() {
                     <p className="text-sm text-gray-600">
                         Já tem uma conta?{' '}
                         <Link
-                            href="/auth/login"
+                            href="/login"
                             className="text-[#1152d4] font-medium hover:underline"
                         >
                             Fazer login

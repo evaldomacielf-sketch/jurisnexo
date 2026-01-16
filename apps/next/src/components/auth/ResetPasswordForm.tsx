@@ -49,7 +49,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 
             setSuccess(true);
             setTimeout(() => {
-                router.push('/auth/login?reset=success');
+                router.push('/login?reset=success');
             }, 2000);
         } catch (err) {
             setError('Erro inesperado. Tente novamente.');
@@ -180,7 +180,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 {/* Back to Login */}
                 <div className="mt-6 text-center">
                     <Link
-                        href="/auth/login"
+                        href="/login"
                         className="text-sm text-gray-600 hover:text-[#1152d4]"
                     >
                         Voltar para login

@@ -46,7 +46,7 @@ export function ClientDetails({ clientId }: { clientId: string }) {
         try {
             await clientsApi.deleteClient(clientId);
             toast.success('Cliente removido com sucesso');
-            router.push('/dashboard/clients');
+            router.push('/clientes');
         } catch (error) {
             toast.error('Erro ao remover cliente');
         }
@@ -92,7 +92,7 @@ export function ClientDetails({ clientId }: { clientId: string }) {
                 </div>
                 <div className="flex gap-2">
                     <button
-                        onClick={() => router.push(`/dashboard/clients/${clientId}/edit`)}
+                        onClick={() => router.push(`/clientes/${clientId}/edit`)}
                         className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
                     >
                         <Edit className="h-4 w-4" />

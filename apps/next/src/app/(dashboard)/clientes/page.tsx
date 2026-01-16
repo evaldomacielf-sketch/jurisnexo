@@ -26,7 +26,7 @@ export default function ClientsPage() {
                         </p>
                     </div>
                     <Link
-                        href="/dashboard/clients/new"
+                        href="/clientes/new"
                         className="px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-opacity-90 transition flex items-center gap-2"
                     >
                         <span>+</span>

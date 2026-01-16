@@ -33,7 +33,7 @@ export default function DashboardError({
                     Tentar Novamente
                 </button>
                 <a
-                    href="/auth/login"
+                    href="/login"
                     className="block w-full text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition"
                 >
                     Voltar ao Login

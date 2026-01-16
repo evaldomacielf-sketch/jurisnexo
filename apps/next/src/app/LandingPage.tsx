@@ -37,7 +37,7 @@ const LandingPage = () => {
 
                     {/* Actions */}
                     <div className="hidden lg:flex items-center gap-6">
-                        <Link href="/auth/login" className="text-[15px] font-bold text-slate-300 hover:text-white transition-colors">Login</Link>
+                        <Link href="/login" className="text-[15px] font-bold text-slate-300 hover:text-white transition-colors">Login</Link>
                         <Link href="/auth/register" className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white text-[15px] font-bold px-6 py-3 rounded-full shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] transition-all hover:-translate-y-0.5">
                             Começar gratuitamente
                         </Link>

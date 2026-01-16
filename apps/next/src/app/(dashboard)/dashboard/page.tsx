@@ -7,7 +7,7 @@ export default async function DashboardPage() {
     const token = await getAccessToken();
 
     if (!token) {
-        redirect('/auth/login');
+        redirect('/login');
     }
 
     // Decode token (insecure parse, just for claims check)

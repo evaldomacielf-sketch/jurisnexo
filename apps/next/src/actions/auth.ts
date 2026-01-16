@@ -122,7 +122,7 @@ export async function registerAction(
 export async function logoutAction(): Promise<void> {
     await clearAuthCookies();
     revalidatePath('/', 'layout');
-    redirect('/auth/login');
+    redirect('/login');
 }
 
 /**
