@@ -15,6 +15,9 @@ import {
     ChevronLeft,
     ChevronRight,
     Gavel,
+    Plus,
+    Instagram,
+    Wallet,
     Bot,
 } from 'lucide-react';
 import { logoutAction } from '@/actions/auth';
