@@ -1,11 +1,21 @@
-# Certificados SSL serão colocados aqui
+# SSL Certificates
 
-# Gere com: sudo certbot certonly --standalone -d app.jurisnexo.com.br -d api.jurisnexo.com.br
+Certificados SSL serão colocados aqui.
 
-#
+## Como gerar certificados
 
-# Arquivos necessários
+```bash
+sudo certbot certonly --standalone -d app.jurisnexo.com.br -d api.jurisnexo.com.br
+```
 
-# - fullchain.pem
+## Arquivos necessários
 
-# - privkey.pem
+- `fullchain.pem`
+- `privkey.pem`
+
+## Copiar certificados
+
+```bash
+sudo cp /etc/letsencrypt/live/app.jurisnexo.com.br/fullchain.pem ./
+sudo cp /etc/letsencrypt/live/app.jurisnexo.com.br/privkey.pem ./
+```
