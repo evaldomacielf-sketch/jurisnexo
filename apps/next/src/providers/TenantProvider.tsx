@@ -39,18 +39,22 @@ export function TenantProvider({ children }: { children: ReactNode }): React.Rea
       if (hostname.includes('jurisnexo.canalterra.com')) {
         if (parts.length > 3) {
           const potentialSlug = parts[0];
-          if (!['app', 'www', 'api', 'admin'].includes(potentialSlug)) {
+          if (potentialSlug && !['app', 'www', 'api', 'admin'].includes(potentialSlug)) {
             slug = potentialSlug;
           }
         }
       } else if (isLocalhost && parts.length > 1) {
-        slug = parts[0];
+        const potentialSlug = parts[0];
+        if (potentialSlug) {
+          slug = potentialSlug;
+        }
       }
 
       if (slug) {
         setIsSubdomain(true);
+        const currentSlug: string = slug; // Type guard
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/tenants/lookup/${slug}`);
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/tenants/lookup/${currentSlug}`);
           if (res.ok) {
             const data = await res.json();
             setTenant(data);
@@ -61,38 +65,57 @@ export function TenantProvider({ children }: { children: ReactNode }): React.Rea
         }
       } else {
         // Try to get tenant from JWT cookie or API
+        const AUTH_COOKIE = 'jurisnexo_session';
         let authToken: string | null = null;
 
         try {
-          // Try to decode tenant info from access_token cookie
-          const tokenMatch = document.cookie.match(/access_token=([^;]+)/);
-          if (tokenMatch && tokenMatch[1]) {
-            authToken = tokenMatch[1];
-            // Decode JWT payload (base64)
-            const payloadBase64 = authToken.split('.')[1];
-            if (payloadBase64) {
-              const payload = JSON.parse(atob(payloadBase64));
-              if (payload.tenant_id && payload.tenant_name) {
-                setTenant({
-                  id: String(payload.tenant_id),
-                  name: String(payload.tenant_name),
-                  slug: String(payload.tenant_slug || ''),
-                  status: 'active',
-                });
-                console.log('[TenantProvider] Resolved tenant from JWT:', payload.tenant_name);
-                setLoading(false);
-                return;
+          // Try to decode tenant info from session cookie
+          const cookies = document.cookie.split('; ');
+          const sessionCookie = cookies.find(c => c.startsWith(`${AUTH_COOKIE}=`));
+
+          if (sessionCookie) {
+            authToken = sessionCookie.split('=')[1];
+
+            // Robust JWT payload decoding
+            try {
+              const payloadPart = authToken.split('.')[1];
+              if (payloadPart) {
+                // Base64Url to Base64
+                const base64 = payloadPart.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
+                  '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+                ).join(''));
+
+                const payload = JSON.parse(jsonPayload);
+
+                // If we have full tenant info in JWT, skip API call
+                if (payload.tenant_id && payload.tenant_name && authToken) {
+                  setTenant({
+                    id: String(payload.tenant_id),
+                    name: String(payload.tenant_name),
+                    slug: String(payload.tenant_slug || ''),
+                    status: 'active',
+                  });
+                  console.log('[TenantProvider] Resolved tenant from JWT:', payload.tenant_name);
+                  setLoading(false);
+                  return;
+                }
               }
+            } catch (e) {
+              console.warn('[TenantProvider] JWT parse warning:', e);
             }
           }
 
           // Fallback: fetch from API
-          const headers: Record<string, string> = {};
+          const headers: Record<string, string> = {
+            'Content-Type': 'application/json'
+          };
           if (authToken) {
             headers['Authorization'] = `Bearer ${authToken}`;
           }
 
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/tenants/current`, {
+          const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+          const res = await fetch(`${API_URL}/tenants/current`, {
             credentials: 'include',
             headers,
           });

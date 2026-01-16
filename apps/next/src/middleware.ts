@@ -26,22 +26,36 @@ function decodeJWT(token: string): { exp: number } | null {
   try {
     const parts = token.split('.');
     if (parts.length !== 3) return null;
-    const payloadBase64 = parts[1];
-    if (!payloadBase64) return null;
-    const payload = JSON.parse(
-      Buffer.from(payloadBase64, 'base64url').toString('utf-8')
-    );
+    const payloadPart = parts[1];
+    if (!payloadPart) return null;
+
+    // Base64Url to Base64
+    let base64Payload = payloadPart.replace(/-/g, '+').replace(/_/g, '/');
+
+    // Add padding if necessary
+    const pad = base64Payload.length % 4;
+    if (pad) {
+      if (pad === 1) return null;
+      base64Payload += new Array(5 - pad).join('=');
+    }
+
+    const payload = JSON.parse(atob(base64Payload));
     return payload;
-  } catch {
+  } catch (error) {
+    console.error('[Middleware] JWT Decode Error:', error);
     return null;
   }
 }
 
 function isTokenExpired(token: string): boolean {
   const payload = decodeJWT(token);
-  if (!payload) return true;
+  if (!payload || !payload.exp) return true;
+
+  // exp is in seconds, Date.now() is in ms
   const now = Math.floor(Date.now() / 1000);
-  return payload.exp < now;
+
+  // Add a small buffer (30 seconds) to prevent edge-case race conditions
+  return payload.exp < (now + 30);
 }
 
 async function refreshAccessToken(refreshToken: string): Promise<string | null> {

@@ -41,7 +41,9 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
     // Map backend properties to frontend expectations
     return {
       ...data,
+      status: data.status || 'active',
       emailVerified: data.isEmailVerified ?? data.emailVerified,
+      tenant: data.tenantId ? { id: data.tenantId } : undefined
     };
   } catch (error: any) {
     if (error.name === 'AbortError') {
