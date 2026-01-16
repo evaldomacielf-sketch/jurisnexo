@@ -20,6 +20,8 @@ using JurisNexo.API.Startup;
 using JurisNexo.Infrastructure.Monitoring;
 using Amazon.CloudWatch;
 using Amazon.Extensions.NETCore.Setup;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 using Serilog;
 using Sentry;
@@ -180,6 +182,30 @@ builder.Services.AddControllers();
 builder.Services.AddApiVersioningConfiguration();
 builder.Services.AddSwaggerDocumentation();
 
+// Rate Limiting
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    // Policy for Authentication (Login)
+    options.AddFixedWindowLimiter("auth", opt =>
+    {
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.PermitLimit = 5;
+        opt.QueueLimit = 0;
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+    });
+
+    // Global Policy
+    options.AddFixedWindowLimiter("global", opt =>
+    {
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.PermitLimit = 100;
+        opt.QueueLimit = 2;
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+    });
+});
+
 // Enable XML documentation & JSON Defaults
 builder.Services.Configure<Microsoft.AspNetCore.Mvc.MvcOptions>(options =>
 {
@@ -215,6 +241,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 }
 
 app.UseSerilogRequestLogging();
+app.UseRateLimiter();
 // app.UseMiddleware<PerformanceMonitoringMiddleware>();
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();

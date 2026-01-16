@@ -2,10 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using JurisNexo.Application.Common.Exceptions; // Namespace assumido para as exceções
 
+using Microsoft.AspNetCore.RateLimiting;
+
 namespace JurisNexo.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[EnableRateLimiting("global")]
 public abstract class BaseApiController : ControllerBase
 {
     protected Guid GetCurrentUserId()

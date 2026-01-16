@@ -4,6 +4,7 @@ using JurisNexo.Domain.Entities;
 using JurisNexo.Domain.Interfaces;
 using JurisNexo.Application.Common.Interfaces;
 using JurisNexo.Application.Common.Exceptions;
+using Microsoft.Extensions.Logging;
 
 namespace JurisNexo.Application.Services;
 
@@ -16,6 +17,7 @@ public class AuthService : IAuthService
     private readonly IEmailService _emailService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPipelineSeeder _pipelineSeeder;
+    private readonly ILogger<AuthService> _logger;
 
     public AuthService(
         IUserRepository userRepository,
@@ -24,7 +26,8 @@ public class AuthService : IAuthService
         IJwtTokenGenerator jwtTokenGenerator,
         IEmailService emailService,
         IUnitOfWork unitOfWork,
-        IPipelineSeeder pipelineSeeder)
+        IPipelineSeeder pipelineSeeder,
+        ILogger<AuthService> logger)
     {
         _userRepository = userRepository;
         _tenantRepository = tenantRepository;
@@ -33,15 +36,17 @@ public class AuthService : IAuthService
         _emailService = emailService;
         _unitOfWork = unitOfWork;
         _pipelineSeeder = pipelineSeeder;
+        _logger = logger;
     }
 
     public async Task<LoginResponse> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)
     {
-        var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken)
-            ?? throw new UnauthorizedException("Credenciais inválidas");
-
-        if (!_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
+        var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
+        if (user == null || !_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
+        {
+            _logger.LogWarning("Falha na tentativa de login para o e-mail: {Email}", request.Email);
             throw new UnauthorizedException("Credenciais inválidas");
+        }
 
         if (!user.IsEmailVerified)
             throw new UnauthorizedException("E-mail não verificado");
@@ -53,6 +58,8 @@ public class AuthService : IAuthService
         user.RefreshTokenExpiresAt = DateTime.UtcNow.AddDays(7);
         await _userRepository.UpdateAsync(user, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        _logger.LogInformation("Login bem-sucedido para o usuário: {Email}", user.Email);
 
         return new LoginResponse(
             token,

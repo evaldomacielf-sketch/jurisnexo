@@ -4,6 +4,8 @@ using JurisNexo.Application.Services;
 using JurisNexo.Application.DTOs.Auth;
 using JurisNexo.Application.DTOs;
 
+using Microsoft.AspNetCore.RateLimiting;
+
 namespace JurisNexo.API.Controllers;
 
 /// <summary>
@@ -12,6 +14,7 @@ namespace JurisNexo.API.Controllers;
 [ApiController]
 [Route("api/auth")]
 [Produces("application/json")]
+[EnableRateLimiting("auth")]
 public class AuthController : BaseApiController
 {
     private readonly IAuthService _authService;
