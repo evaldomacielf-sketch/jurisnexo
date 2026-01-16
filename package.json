@@ -5,7 +5,7 @@
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev": "turbo dev",
-    "dev:next": "turbo dev --filter=@jurisnexo/next",
+    "dev:web": "turbo dev --filter=@jurisnexo/next",
     "dev:api": "turbo dev --filter=@jurisnexo/api",
     "dev:worker": "turbo dev --filter=@jurisnexo/worker",
     "build": "turbo build",

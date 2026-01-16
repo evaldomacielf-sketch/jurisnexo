@@ -44,7 +44,7 @@ EOF
 echo -e "${NC}"
 
 # Verificar se está na raiz do projeto
-if [ ! -d "apps/next" ]; then
+if [ ! -d "apps/web" ]; then
     log_error "Erro: Execute este script na raiz do projeto jurisnexo/"
     exit 1
 fi
@@ -52,7 +52,7 @@ fi
 log_info "Iniciando correções automáticas..."
 
 # Navegar para o diretório do frontend
-cd apps/next
+cd apps/web
 
 # ============================================
 # 1. CRIAR BACKUPS
@@ -79,7 +79,7 @@ if [ -f "src/app/(app)/layout.tsx" ]; then
     log_success "Backup: layout.tsx"
 fi
 
-log_success "Backups criados em: apps/next/$BACKUP_DIR"
+log_success "Backups criados em: apps/web/$BACKUP_DIR"
 
 # ============================================
 # 2. CORRIGIR MIDDLEWARE.TS
@@ -508,7 +508,7 @@ echo "  • src/app/(app)/error.tsx"
 echo "  • src/app/(app)/loading.tsx"
 echo ""
 
-log_info "Backups salvos em: apps/next/$BACKUP_DIR"
+log_info "Backups salvos em: apps/web/$BACKUP_DIR"
 echo ""
 
 log_warning "PRÓXIMOS PASSOS:"
@@ -519,7 +519,7 @@ echo "  4. Faça login e teste o dashboard"
 echo ""
 
 log_info "Para reverter as mudanças, use os backups:"
-echo "  cd apps/next/$BACKUP_DIR"
+echo "  cd apps/web/$BACKUP_DIR"
 echo ""
 
 echo -e "${BLUE}🚀 Dashboard JurisNexo pronto para uso!${NC}"
