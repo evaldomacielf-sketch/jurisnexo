@@ -30,6 +30,7 @@ export function LoginForm() {
 
             if (!result.success) {
                 setError(result.error);
+                console.error('[LoginForm] Login failure:', result.error, 'Code:', result.code);
                 return;
             }
 
