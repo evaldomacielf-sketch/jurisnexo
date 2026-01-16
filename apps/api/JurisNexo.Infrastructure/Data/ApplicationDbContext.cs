@@ -43,6 +43,11 @@ public class ApplicationDbContext : DbContext
     public DbSet<ScheduledMessage> ScheduledMessages => Set<ScheduledMessage>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     
+    // Financial Entities
+    public DbSet<JurisNexo.Core.Entities.Financial.Transaction> Transactions => Set<JurisNexo.Core.Entities.Financial.Transaction>();
+    public DbSet<JurisNexo.Core.Entities.Financial.Invoice> Invoices => Set<JurisNexo.Core.Entities.Financial.Invoice>();
+    public DbSet<JurisNexo.Core.Entities.Financial.PaymentMethod> PaymentMethods => Set<JurisNexo.Core.Entities.Financial.PaymentMethod>();
+    
     // Lead Triaging System
     public DbSet<LeadQualificationQuestion> LeadQualificationQuestions => Set<LeadQualificationQuestion>();
     public DbSet<LeadQualificationAnswer> LeadQualificationAnswers => Set<LeadQualificationAnswer>();
