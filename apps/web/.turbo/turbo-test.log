@@ -1,0 +1,33 @@
+
+> @jurisnexo/web@0.0.1 test /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/web
+> vitest
+
+
+[1m[46m RUN [49m[22m [36mv4.0.17 [39m[90m/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/web[39m
+
+[90mstdout[2m | src/hooks/__tests__/useInboxWebSocket.test.tsx[2m > [22m[2museInboxWebSocket[2m > [22m[2mdeve chamar callback onNewMessage quando receber mensagem
+[22m[39m📨 Nova mensagem recebida: {
+  id: [32m'msg-1'[39m,
+  conversation_id: [32m'conv-1'[39m,
+  content: [32m'Test message'[39m,
+  sender_type: [32m'contact'[39m,
+  sender_id: [32m'contact-1'[39m,
+  message_type: [32m'text'[39m,
+  is_read: [33mfalse[39m,
+  sent_at: [32m'2026-01-16T22:37:24.704Z'[39m
+}
+
+ [32m✓[39m src/hooks/__tests__/useInboxWebSocket.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 107[2mms[22m[39m
+ [32m✓[39m src/features/financeiro/honorarios/__tests__/useHonorarios.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 373[2mms[22m[39m
+ [32m✓[39m src/components/clients/__tests__/ClientForm.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1938[2mms[22m[39m
+     [33m[2m✓[22m[39m deve exibir erros de validação ao submeter vazio [33m 550[2mms[22m[39m
+     [33m[2m✓[22m[39m deve criar cliente com sucesso [33m 641[2mms[22m[39m
+     [33m[2m✓[22m[39m deve validar formato de e-mail [33m 410[2mms[22m[39m
+ [2m[90m↓[39m[22m src/app/(auth)/login/__tests__/auth.test.tsx [2m([22m[2m4 tests[22m[2m | [22m[33m4 skipped[39m[2m)[22m
+ [32m✓[39m src/services/api/__tests__/crm.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m4 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (5)[39m
+[2m      Tests [22m [1m[32m25 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (29)[39m
+[2m   Start at [22m 19:37:19
+[2m   Duration [22m 7.74s[2m (transform 477ms, setup 2.95s, import 2.54s, tests 2.43s, environment 9.42s)[22m
+

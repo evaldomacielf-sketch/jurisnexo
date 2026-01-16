@@ -1,1 +1,153 @@
-{"v":5,"entries":{"features-crm-clientform--docs":{"id":"features-crm-clientform--docs","title":"Features/CRM/ClientForm","name":"Docs","importPath":"./src/components/clients/ClientForm.stories.tsx","type":"docs","tags":["dev","test","autodocs"],"storiesImports":[]},"features-crm-clientform--create-mode":{"type":"story","subtype":"story","id":"features-crm-clientform--create-mode","name":"Create Mode","title":"Features/CRM/ClientForm","importPath":"./src/components/clients/ClientForm.stories.tsx","componentPath":"./src/components/clients/ClientForm.tsx","tags":["dev","test","autodocs"],"exportName":"CreateMode"},"features-crm-clientform--with-validation-errors":{"type":"story","subtype":"story","id":"features-crm-clientform--with-validation-errors","name":"With Validation Errors","title":"Features/CRM/ClientForm","importPath":"./src/components/clients/ClientForm.stories.tsx","componentPath":"./src/components/clients/ClientForm.tsx","tags":["dev","test","autodocs","play-fn"],"exportName":"WithValidationErrors"},"features-inbox-conversationlist--docs":{"id":"features-inbox-conversationlist--docs","title":"Features/Inbox/ConversationList","name":"Docs","importPath":"./src/components/inbox/ConversationList.stories.tsx","type":"docs","tags":["dev","test","autodocs"],"storiesImports":[]},"features-inbox-conversationlist--default":{"type":"story","subtype":"story","id":"features-inbox-conversationlist--default","name":"Default","title":"Features/Inbox/ConversationList","importPath":"./src/components/inbox/ConversationList.stories.tsx","componentPath":"./src/components/inbox/ConversationList.tsx","tags":["dev","test","autodocs"],"exportName":"Default"},"features-inbox-conversationlist--empty":{"type":"story","subtype":"story","id":"features-inbox-conversationlist--empty","name":"Empty","title":"Features/Inbox/ConversationList","importPath":"./src/components/inbox/ConversationList.stories.tsx","componentPath":"./src/components/inbox/ConversationList.tsx","tags":["dev","test","autodocs"],"exportName":"Empty"},"features-inbox-conversationlist--loading":{"type":"story","subtype":"story","id":"features-inbox-conversationlist--loading","name":"Loading","title":"Features/Inbox/ConversationList","importPath":"./src/components/inbox/ConversationList.stories.tsx","componentPath":"./src/components/inbox/ConversationList.tsx","tags":["dev","test","autodocs"],"exportName":"Loading"},"ui-button--docs":{"id":"ui-button--docs","title":"UI/Button","name":"Docs","importPath":"./src/components/ui/button.stories.tsx","type":"docs","tags":["dev","test","autodocs"],"storiesImports":[]},"ui-button--default":{"type":"story","subtype":"story","id":"ui-button--default","name":"Default","title":"UI/Button","importPath":"./src/components/ui/button.stories.tsx","componentPath":"./src/components/ui/button.tsx","tags":["dev","test","autodocs"],"exportName":"Default"},"ui-button--variants":{"type":"story","subtype":"story","id":"ui-button--variants","name":"Variants","title":"UI/Button","importPath":"./src/components/ui/button.stories.tsx","componentPath":"./src/components/ui/button.tsx","tags":["dev","test","autodocs"],"exportName":"Variants"},"ui-button--sizes":{"type":"story","subtype":"story","id":"ui-button--sizes","name":"Sizes","title":"UI/Button","importPath":"./src/components/ui/button.stories.tsx","componentPath":"./src/components/ui/button.tsx","tags":["dev","test","autodocs"],"exportName":"Sizes"},"ui-button--with-icons":{"type":"story","subtype":"story","id":"ui-button--with-icons","name":"With Icons","title":"UI/Button","importPath":"./src/components/ui/button.stories.tsx","componentPath":"./src/components/ui/button.tsx","tags":["dev","test","autodocs"],"exportName":"WithIcons"},"ui-button--disabled":{"type":"story","subtype":"story","id":"ui-button--disabled","name":"Disabled","title":"UI/Button","importPath":"./src/components/ui/button.stories.tsx","componentPath":"./src/components/ui/button.tsx","tags":["dev","test","autodocs"],"exportName":"Disabled"},"ui-button--loading":{"type":"story","subtype":"story","id":"ui-button--loading","name":"Loading","title":"UI/Button","importPath":"./src/components/ui/button.stories.tsx","componentPath":"./src/components/ui/button.tsx","tags":["dev","test","autodocs"],"exportName":"Loading"}}}
+{
+  "v": 5,
+  "entries": {
+    "features-crm-clientform--docs": {
+      "id": "features-crm-clientform--docs",
+      "title": "Features/CRM/ClientForm",
+      "name": "Docs",
+      "importPath": "./src/components/clients/ClientForm.stories.tsx",
+      "type": "docs",
+      "tags": ["dev", "test", "autodocs"],
+      "storiesImports": []
+    },
+    "features-crm-clientform--create-mode": {
+      "type": "story",
+      "subtype": "story",
+      "id": "features-crm-clientform--create-mode",
+      "name": "Create Mode",
+      "title": "Features/CRM/ClientForm",
+      "importPath": "./src/components/clients/ClientForm.stories.tsx",
+      "componentPath": "./src/components/clients/ClientForm.tsx",
+      "tags": ["dev", "test", "autodocs"],
+      "exportName": "CreateMode"
+    },
+    "features-crm-clientform--with-validation-errors": {
+      "type": "story",
+      "subtype": "story",
+      "id": "features-crm-clientform--with-validation-errors",
+      "name": "With Validation Errors",
+      "title": "Features/CRM/ClientForm",
+      "importPath": "./src/components/clients/ClientForm.stories.tsx",
+      "componentPath": "./src/components/clients/ClientForm.tsx",
+      "tags": ["dev", "test", "autodocs", "play-fn"],
+      "exportName": "WithValidationErrors"
+    },
+    "features-inbox-conversationlist--docs": {
+      "id": "features-inbox-conversationlist--docs",
+      "title": "Features/Inbox/ConversationList",
+      "name": "Docs",
+      "importPath": "./src/components/inbox/ConversationList.stories.tsx",
+      "type": "docs",
+      "tags": ["dev", "test", "autodocs"],
+      "storiesImports": []
+    },
+    "features-inbox-conversationlist--default": {
+      "type": "story",
+      "subtype": "story",
+      "id": "features-inbox-conversationlist--default",
+      "name": "Default",
+      "title": "Features/Inbox/ConversationList",
+      "importPath": "./src/components/inbox/ConversationList.stories.tsx",
+      "componentPath": "./src/components/inbox/ConversationList.tsx",
+      "tags": ["dev", "test", "autodocs"],
+      "exportName": "Default"
+    },
+    "features-inbox-conversationlist--empty": {
+      "type": "story",
+      "subtype": "story",
+      "id": "features-inbox-conversationlist--empty",
+      "name": "Empty",
+      "title": "Features/Inbox/ConversationList",
+      "importPath": "./src/components/inbox/ConversationList.stories.tsx",
+      "componentPath": "./src/components/inbox/ConversationList.tsx",
+      "tags": ["dev", "test", "autodocs"],
+      "exportName": "Empty"
+    },
+    "features-inbox-conversationlist--loading": {
+      "type": "story",
+      "subtype": "story",
+      "id": "features-inbox-conversationlist--loading",
+      "name": "Loading",
+      "title": "Features/Inbox/ConversationList",
+      "importPath": "./src/components/inbox/ConversationList.stories.tsx",
+      "componentPath": "./src/components/inbox/ConversationList.tsx",
+      "tags": ["dev", "test", "autodocs"],
+      "exportName": "Loading"
+    },
+    "ui-button--docs": {
+      "id": "ui-button--docs",
+      "title": "UI/Button",
+      "name": "Docs",
+      "importPath": "./src/components/ui/button.stories.tsx",
+      "type": "docs",
+      "tags": ["dev", "test", "autodocs"],
+      "storiesImports": []
+    },
+    "ui-button--default": {
+      "type": "story",
+      "subtype": "story",
+      "id": "ui-button--default",
+      "name": "Default",
+      "title": "UI/Button",
+      "importPath": "./src/components/ui/button.stories.tsx",
+      "componentPath": "./src/components/ui/button.tsx",
+      "tags": ["dev", "test", "autodocs"],
+      "exportName": "Default"
+    },
+    "ui-button--variants": {
+      "type": "story",
+      "subtype": "story",
+      "id": "ui-button--variants",
+      "name": "Variants",
+      "title": "UI/Button",
+      "importPath": "./src/components/ui/button.stories.tsx",
+      "componentPath": "./src/components/ui/button.tsx",
+      "tags": ["dev", "test", "autodocs"],
+      "exportName": "Variants"
+    },
+    "ui-button--sizes": {
+      "type": "story",
+      "subtype": "story",
+      "id": "ui-button--sizes",
+      "name": "Sizes",
+      "title": "UI/Button",
+      "importPath": "./src/components/ui/button.stories.tsx",
+      "componentPath": "./src/components/ui/button.tsx",
+      "tags": ["dev", "test", "autodocs"],
+      "exportName": "Sizes"
+    },
+    "ui-button--with-icons": {
+      "type": "story",
+      "subtype": "story",
+      "id": "ui-button--with-icons",
+      "name": "With Icons",
+      "title": "UI/Button",
+      "importPath": "./src/components/ui/button.stories.tsx",
+      "componentPath": "./src/components/ui/button.tsx",
+      "tags": ["dev", "test", "autodocs"],
+      "exportName": "WithIcons"
+    },
+    "ui-button--disabled": {
+      "type": "story",
+      "subtype": "story",
+      "id": "ui-button--disabled",
+      "name": "Disabled",
+      "title": "UI/Button",
+      "importPath": "./src/components/ui/button.stories.tsx",
+      "componentPath": "./src/components/ui/button.tsx",
+      "tags": ["dev", "test", "autodocs"],
+      "exportName": "Disabled"
+    },
+    "ui-button--loading": {
+      "type": "story",
+      "subtype": "story",
+      "id": "ui-button--loading",
+      "name": "Loading",
+      "title": "UI/Button",
+      "importPath": "./src/components/ui/button.stories.tsx",
+      "componentPath": "./src/components/ui/button.tsx",
+      "tags": ["dev", "test", "autodocs"],
+      "exportName": "Loading"
+    }
+  }
+}

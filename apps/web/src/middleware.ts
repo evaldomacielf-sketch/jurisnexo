@@ -27,8 +27,8 @@ export async function middleware(req: NextRequest) {
     '/',
   ];
 
-  const isPublicRoute = publicRoutes.some((route) =>
-    pathname === route || pathname.startsWith(route + '/')
+  const isPublicRoute = publicRoutes.some(
+    (route) => pathname === route || pathname.startsWith(route + '/')
   );
 
   // If no session and not public route, redirect to login
@@ -40,7 +40,9 @@ export async function middleware(req: NextRequest) {
 
   // If has session and trying to access auth pages or landing, go to dashboard
   const authRoutes = ['/login', '/register', '/forgot-password'];
-  const isAuthRoute = authRoutes.some(route => pathname === route || pathname.startsWith(route + '/'));
+  const isAuthRoute = authRoutes.some(
+    (route) => pathname === route || pathname.startsWith(route + '/')
+  );
 
   if (hasSession && (isAuthRoute || pathname === '/')) {
     return NextResponse.redirect(new URL('/dashboard', req.url));

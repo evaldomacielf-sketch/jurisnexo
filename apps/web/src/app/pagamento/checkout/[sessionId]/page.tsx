@@ -1,16 +1,16 @@
-import { CheckoutPage } from "@/features/financeiro/pagamento/pages/CheckoutPage";
-import { notFound } from "next/navigation";
+import { CheckoutPage } from '@/features/financeiro/pagamento/pages/CheckoutPage';
+import { notFound } from 'next/navigation';
 
 interface PageProps {
-    params: Promise<{ sessionId: string }>;
+  params: Promise<{ sessionId: string }>;
 }
 
 export default async function Page({ params }: PageProps) {
-    const { sessionId } = await params;
+  const { sessionId } = await params;
 
-    if (!sessionId) {
-        notFound();
-    }
+  if (!sessionId) {
+    notFound();
+  }
 
-    return <CheckoutPage sessionId={sessionId} />;
+  return <CheckoutPage sessionId={sessionId} />;
 }

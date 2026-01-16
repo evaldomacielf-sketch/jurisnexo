@@ -126,11 +126,11 @@ gcloud run logs read jurisnexo-api-staging --region=southamerica-east1 --limit=5
 
 ### Obrigatórias por Serviço
 
-| Serviço | Variáveis |
-| :--- | :--- |
-| Next.js | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` |
-| API | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `JWT_SECRET` |
-| Worker | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` |
+| Serviço | Variáveis                                                                      |
+| :------ | :----------------------------------------------------------------------------- |
+| Next.js | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`                    |
+| API     | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `JWT_SECRET` |
+| Worker  | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`                                    |
 
 ### Validação de Env
 

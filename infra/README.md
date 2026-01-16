@@ -5,17 +5,17 @@ Este diretório contém scripts para provisionamento da infraestrutura na Google
 ## Pré-requisitos
 
 1. **Instalar Google Cloud SDK (gcloud CLI)**
-    * Mac (via brew): `brew install --cask google-cloud-sdk`
-    * Ou siga: <https://cloud.google.com/sdk/docs/install>
+   - Mac (via brew): `brew install --cask google-cloud-sdk`
+   - Ou siga: <https://cloud.google.com/sdk/docs/install>
 2. **Autenticar**:
 
-    ```bash
-    gcloud auth login
-    ```
+   ```bash
+   gcloud auth login
+   ```
 
 3. **Billing (Pagamento)**:
-    * Garanta que você tem uma conta de faturamento ativa na GCP.
-    * Ao criar o projeto, você precisará vincular essa conta.
+   - Garanta que você tem uma conta de faturamento ativa na GCP.
+   - Ao criar o projeto, você precisará vincular essa conta.
 
 ## Executando o Setup
 
@@ -53,8 +53,8 @@ Cria o cluster GKE com Autoscaling, Workload Identity e conecta o `kubectl`.
 
 Isso provisiona um cluster regional em `southamerica-east1` com nós `e2-standard-4`.
 
-* **Duração estimada**: 15-20 minutos.
-* **Custos**: Este cluster gera custos de nós e taxa de gerenciamento. Certifique-se de destruí-lo se for apenas um teste (`gcloud container clusters delete jurisnexo-cluster --region=southamerica-east1`).
+- **Duração estimada**: 15-20 minutos.
+- **Custos**: Este cluster gera custos de nós e taxa de gerenciamento. Certifique-se de destruí-lo se for apenas um teste (`gcloud container clusters delete jurisnexo-cluster --region=southamerica-east1`).
 
 ### Fase 3: Cloud SQL (PostgreSQL)
 
@@ -66,9 +66,9 @@ Cria a instância de banco de dados, configura o acesso privado (VPC Peering) e 
 
 Isso provisiona:
 
-* Instância PostgreSQL 15 Regional (HA).
-* Database `jurisnexo`.
-* Usuário `jurisnexo_app` com senha gerada automaticamente (exibida no final).
+- Instância PostgreSQL 15 Regional (HA).
+- Database `jurisnexo`.
+- Usuário `jurisnexo_app` com senha gerada automaticamente (exibida no final).
 
 ### Fase 4: Memorystore (Redis)
 
@@ -80,9 +80,9 @@ Cria a instância Redis para cache e filas. Utiliza o mesmo VPC Peering configur
 
 Isso provisiona:
 
-* Redis 7.0 Standard Tier (Alta Disponibilidade).
-* 5 GB de capacidade.
-* Conectado via IP Privado na VPC `jurisnexo-vpc`.
+- Redis 7.0 Standard Tier (Alta Disponibilidade).
+- 5 GB de capacidade.
+- Conectado via IP Privado na VPC `jurisnexo-vpc`.
 
 ### Conclusão da Infraestrutura Base
 
@@ -103,9 +103,9 @@ Cria buckets para Uploads, Backups e Assets Estáticos, e configura CORS.
 
 Isso provisiona:
 
-* `gs://jurisnexo-uploads` (com CORS configurado para app.jurisnexo.com e localhost).
-* `gs://jurisnexo-backups`.
-* `gs://jurisnexo-static`.
+- `gs://jurisnexo-uploads` (com CORS configurado para app.jurisnexo.com e localhost).
+- `gs://jurisnexo-backups`.
+- `gs://jurisnexo-static`.
 
 ### Fase 6: Secret Manager
 
@@ -119,11 +119,11 @@ Cria os segredos (JWT, API Tokens) e configura permissões IAM para que a aplica
 
 Isso provisiona:
 
-* `jwt-secret`
-* `whatsapp-token`
-* `sendgrid-key`
-* `google-oauth-secret`
-* Bindings de IAM para `serviceAccount:...[default/jurisnexo-sa]`
+- `jwt-secret`
+- `whatsapp-token`
+- `sendgrid-key`
+- `google-oauth-secret`
+- Bindings de IAM para `serviceAccount:...[default/jurisnexo-sa]`
 
 ### Fase 7: Containerização e Deploy
 
@@ -131,8 +131,8 @@ Este projeto utiliza **Cloud Run** para serviços stateless (API e Frontend) e *
 
 #### Arquivos de Docker
 
-* `docker/Dockerfile.api`: Build da API NestJS.
-* `docker/Dockerfile.web`: Build do Frontend Next.js.
+- `docker/Dockerfile.api`: Build da API NestJS.
+- `docker/Dockerfile.web`: Build do Frontend Next.js.
 
 #### Script de Deploy Automático
 
@@ -153,10 +153,10 @@ Para os serviços stateful (WebSockets), utilizamos o Kubernetes.
 
 #### Manifestos (`infra/k8s/`)
 
-* `deployment.yaml`: Define o Deployment para o `jurisnexo-websocket-service` (API rodando em modo stateful).
-* `service.yaml`: Expõe o deployment.
-* `ingress.yaml`: Configura o Load Balancer para rotear tráfego `/socket.io`.
-* `secrets.yaml`: Template para injetar variáveis de ambiente.
+- `deployment.yaml`: Define o Deployment para o `jurisnexo-websocket-service` (API rodando em modo stateful).
+- `service.yaml`: Expõe o deployment.
+- `ingress.yaml`: Configura o Load Balancer para rotear tráfego `/socket.io`.
+- `secrets.yaml`: Template para injetar variáveis de ambiente.
 
 #### Aplicação
 
@@ -174,9 +174,9 @@ Configura Tópicos/Subscriptions do Pub/Sub e Service Accounts para integraçõe
 
 Isso provisiona:
 
-* Tópicos Pub/Sub: `whatsapp-messages`, `notification-events`, etc.
-* Service Account `jurisnexo-calendar`.
-* Habilita `calendar-json.googleapis.com`.
+- Tópicos Pub/Sub: `whatsapp-messages`, `notification-events`, etc.
+- Service Account `jurisnexo-calendar`.
+- Habilita `calendar-json.googleapis.com`.
 
 ### Resumo Final
 

@@ -60,4 +60,5 @@ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 - **SSL**: Recomendamos o uso de Nginx Proxy Manager ou Certbot na VPS para gerenciar certificados SSL.
 
 ---
+
 Para dúvidas arquiteturais, consulte o `README.md`.

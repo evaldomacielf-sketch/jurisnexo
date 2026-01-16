@@ -1,13 +1,14 @@
 
-
-> @jurisnexo/shared@0.0.1 test /Volumes/Macintosh HD/crm JurisNexo/jurisnexo/packages/shared
+> @jurisnexo/shared@0.0.1 test /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/packages/@jurisnexo/shared
 > vitest run
 
 
-[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90m/Volumes/Macintosh HD/crm JurisNexo/jurisnexo/packages/shared[39m
+ RUN  v2.1.9 /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/packages/@jurisnexo/shared
 
-[2minclude: [22m[33m**/*.{test,spec}.?(c|m)[jt]s?(x)[39m
-[2mexclude:  [22m[33m**/node_modules/**[2m, [22m**/dist/**[2m, [22m**/cypress/**[2m, [22m**/.{idea,git,cache,output,temp}/**[2m, [22m**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*[39m
-[31m
-No test files found, exiting with code 1[39m
-[?25h[41m[30m ELIFECYCLE [39m[49m [31mTest failed. See above for more details.[39m
+ ✓ tests/placeholder.test.ts (1 test) 3ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  19:37:19
+   Duration  1.78s (transform 117ms, setup 0ms, collect 175ms, tests 3ms, environment 0ms, prepare 406ms)
+

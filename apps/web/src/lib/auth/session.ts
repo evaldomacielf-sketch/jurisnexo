@@ -21,7 +21,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
     const response = await fetch(`${API_URL}/auth/profile`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
       },
       cache: 'no-store',
@@ -43,7 +43,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
       ...data,
       status: data.status || 'active',
       emailVerified: data.isEmailVerified ?? data.emailVerified,
-      tenant: data.tenantId ? { id: data.tenantId } : undefined
+      tenant: data.tenantId ? { id: data.tenantId } : undefined,
     };
   } catch (error: any) {
     if (error.name === 'AbortError') {

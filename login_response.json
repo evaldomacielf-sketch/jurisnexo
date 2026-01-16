@@ -1,1 +1,17 @@
-{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjQ3NDA2ZmE1LTQ0ZTgtNDdlYi04M2ZmLTQ1MDk2MGUzYTUwZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluMkBqdXJpc25leG8uY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IkFkbWluIFR3byIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwidGVuYW50X2lkIjoiYWZlMWU1ZDUtYmEyYS00OWI3LThmZDItMTViNDhjMjRlNzhjIiwiZXhwIjoxNzY4NTY5MTczLCJpc3MiOiJKdXJpc05leG8iLCJhdWQiOiJKdXJpc05leG9BcHAifQ.XOfsWSQPDvP0SWB0cdc_-3LBSxJUiQpQEMgEKW6dv4I","refreshToken":"qQ43Mc1nhkry/zx09jXyjcO8qNo2KFFpx+m92TNk1y0VWa2vyjjQCKu4gkxnapDpt8XuHxpcB8QwkOqvDkBELg==","user":{"id":"47406fa5-44e8-47eb-83ff-450960e3a50e","tenantId":"afe1e5d5-ba2a-49b7-8fd2-15b48c24e78c","email":"admin2@jurisnexo.com","name":"Admin Two","role":"Admin","avatarUrl":null,"phone":"11999999999","isEmailVerified":true,"createdAt":"2026-01-16T11:33:17.49251Z","updatedAt":"2026-01-16T12:12:53.364354Z"},"expiresIn":3600}
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjQ3NDA2ZmE1LTQ0ZTgtNDdlYi04M2ZmLTQ1MDk2MGUzYTUwZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluMkBqdXJpc25leG8uY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IkFkbWluIFR3byIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwidGVuYW50X2lkIjoiYWZlMWU1ZDUtYmEyYS00OWI3LThmZDItMTViNDhjMjRlNzhjIiwiZXhwIjoxNzY4NTY5MTczLCJpc3MiOiJKdXJpc05leG8iLCJhdWQiOiJKdXJpc05leG9BcHAifQ.XOfsWSQPDvP0SWB0cdc_-3LBSxJUiQpQEMgEKW6dv4I",
+  "refreshToken": "qQ43Mc1nhkry/zx09jXyjcO8qNo2KFFpx+m92TNk1y0VWa2vyjjQCKu4gkxnapDpt8XuHxpcB8QwkOqvDkBELg==",
+  "user": {
+    "id": "47406fa5-44e8-47eb-83ff-450960e3a50e",
+    "tenantId": "afe1e5d5-ba2a-49b7-8fd2-15b48c24e78c",
+    "email": "admin2@jurisnexo.com",
+    "name": "Admin Two",
+    "role": "Admin",
+    "avatarUrl": null,
+    "phone": "11999999999",
+    "isEmailVerified": true,
+    "createdAt": "2026-01-16T11:33:17.49251Z",
+    "updatedAt": "2026-01-16T12:12:53.364354Z"
+  },
+  "expiresIn": 3600
+}

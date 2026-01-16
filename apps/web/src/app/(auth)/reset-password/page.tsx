@@ -7,28 +7,28 @@ import { ResetPasswordForm } from '@/components/auth/ResetPasswordForm';
 // ============================================
 
 export const metadata = {
-    title: 'Redefinir Senha | JurisNexo',
-    description: 'Crie uma nova senha para sua conta',
+  title: 'Redefinir Senha | JurisNexo',
+  description: 'Crie uma nova senha para sua conta',
 };
 
 interface PageProps {
-    searchParams: Promise<{ token?: string }>;
+  searchParams: Promise<{ token?: string }>;
 }
 
 export default async function ResetPasswordPage({ searchParams }: PageProps) {
-    const params = await searchParams;
-    const token = params.token;
+  const params = await searchParams;
+  const token = params.token;
 
-    // Se não houver token, redireciona
-    if (!token) {
-        redirect('/auth/forgot-password');
-    }
+  // Se não houver token, redireciona
+  if (!token) {
+    redirect('/auth/forgot-password');
+  }
 
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-            <Suspense fallback={<div>Carregando...</div>}>
-                <ResetPasswordForm token={token} />
-            </Suspense>
-        </div>
-    );
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+      <Suspense fallback={<div>Carregando...</div>}>
+        <ResetPasswordForm token={token} />
+      </Suspense>
+    </div>
+  );
 }

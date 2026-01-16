@@ -1,17 +1,17 @@
 {
-    "name": "@jurisnexo/contracts",
-    "version": "0.0.1",
-    "private": true,
-    "description": "Tipos TypeScript gerados automaticamente do backend .NET",
-    "main": "./src/index.ts",
-    "types": "./src/index.ts",
-    "scripts": {
-        "generate": "./generate.sh",
-        "build": "tsc",
-        "typecheck": "tsc --noEmit"
-    },
-    "devDependencies": {
-        "openapi-typescript": "^7.0.0",
-        "typescript": "^5.7.2"
-    }
+  "name": "@jurisnexo/contracts",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Tipos TypeScript gerados automaticamente do backend .NET",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "generate": "./generate.sh",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.0.0",
+    "typescript": "^5.7.2"
+  }
 }

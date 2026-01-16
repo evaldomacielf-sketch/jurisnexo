@@ -10,12 +10,8 @@ import { SlaJob } from './sla.job';
 import { CalendarEventJob } from './calendar-event.job';
 
 @Module({
-    imports: [
-        ScheduleModule.forRoot(),
-        DatabaseModule,
-        ConfigModule
-    ],
-    controllers: [HealthController],
-    providers: [MessageSenderJob, SlaJob, CalendarEventJob],
+  imports: [ScheduleModule.forRoot(), DatabaseModule, ConfigModule],
+  controllers: [HealthController],
+  providers: [MessageSenderJob, SlaJob, CalendarEventJob],
 })
-export class WorkerModule { }
+export class WorkerModule {}

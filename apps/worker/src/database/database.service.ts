@@ -4,13 +4,13 @@ import { SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable()
 export class DatabaseService implements OnModuleInit {
-    private _client: SupabaseClient<any, "public", any>;
+  private _client: SupabaseClient<any, 'public', any>;
 
-    onModuleInit() {
-        this._client = createAdminClient();
-    }
+  onModuleInit() {
+    this._client = createAdminClient();
+  }
 
-    get client() {
-        return this._client;
-    }
+  get client() {
+    return this._client;
+  }
 }

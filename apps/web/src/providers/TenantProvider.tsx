@@ -54,7 +54,9 @@ export function TenantProvider({ children }: { children: ReactNode }): React.Rea
         setIsSubdomain(true);
         const currentSlug: string = slug; // Type guard
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/tenants/lookup/${currentSlug}`);
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/tenants/lookup/${currentSlug}`
+          );
           if (res.ok) {
             const data = await res.json();
             setTenant(data);
@@ -71,7 +73,7 @@ export function TenantProvider({ children }: { children: ReactNode }): React.Rea
         try {
           // Try to decode tenant info from session cookie
           const cookies = document.cookie.split('; ');
-          const sessionCookie = cookies.find(c => c.startsWith(`${AUTH_COOKIE}=`));
+          const sessionCookie = cookies.find((c) => c.startsWith(`${AUTH_COOKIE}=`));
 
           if (sessionCookie) {
             authToken = sessionCookie.split('=')[1];
@@ -82,9 +84,12 @@ export function TenantProvider({ children }: { children: ReactNode }): React.Rea
               if (payloadPart) {
                 // Base64Url to Base64
                 const base64 = payloadPart.replace(/-/g, '+').replace(/_/g, '/');
-                const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
-                  '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-                ).join(''));
+                const jsonPayload = decodeURIComponent(
+                  atob(base64)
+                    .split('')
+                    .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                    .join('')
+                );
 
                 const payload = JSON.parse(jsonPayload);
 
@@ -108,7 +113,7 @@ export function TenantProvider({ children }: { children: ReactNode }): React.Rea
 
           // Fallback: fetch from API
           const headers: Record<string, string> = {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           };
           if (authToken) {
             headers['Authorization'] = `Bearer ${authToken}`;

@@ -2,7 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from '@/components/ui/table';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 
@@ -14,18 +21,23 @@ export default function SuperadminAuditPage() {
   useEffect(() => {
     if (!token) return;
     fetch('http://localhost:3000/super/audit', {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     })
-      .then(res => res.json())
-      .then(data => { setLogs(data); setLoading(false); })
-      .catch(err => console.error(err));
+      .then((res) => res.json())
+      .then((data) => {
+        setLogs(data);
+        setLoading(false);
+      })
+      .catch((err) => console.error(err));
   }, [token]);
 
   return (
-    <div className="p-8 space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-6 p-8">
+      <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-slate-900">Auditoria Global</h1>
-        <Button variant="outline" onClick={() => window.location.href = '/dashboard/super'}>Voltar</Button>
+        <Button variant="outline" onClick={() => (window.location.href = '/dashboard/super')}>
+          Voltar
+        </Button>
       </div>
 
       <Card>
@@ -50,7 +62,7 @@ export default function SuperadminAuditPage() {
                     <TableCell className="font-medium">{log.action}</TableCell>
                     <TableCell className="font-mono text-xs">{log.actor_id}</TableCell>
                     <TableCell className="font-mono text-xs">{log.tenant_id}</TableCell>
-                    <TableCell className="text-xs text-slate-500 max-w-xs truncate">
+                    <TableCell className="max-w-xs truncate text-xs text-slate-500">
                       {JSON.stringify(log.old_value || log.new_value)}
                     </TableCell>
                   </TableRow>

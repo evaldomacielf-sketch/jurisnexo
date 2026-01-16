@@ -3,9 +3,22 @@
 import { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/hooks/useAuth';
@@ -21,7 +34,7 @@ export default function SuperadminPage() {
   const fetchTenants = async () => {
     try {
       const res = await fetch('http://localhost:3000/super/tenants', {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
@@ -44,9 +57,9 @@ export default function SuperadminPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ reason: disableReason })
+        body: JSON.stringify({ reason: disableReason }),
       });
       setDisableModalOpen(false);
       setDisableReason('');
@@ -57,10 +70,12 @@ export default function SuperadminPage() {
   };
 
   return (
-    <div className="p-8 space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-6 p-8">
+      <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-slate-900">Superadmin Dashboard</h1>
-        <Button variant="outline" onClick={() => window.location.href = '/dashboard/super/audit'}>Ver Logs de Auditoria</Button>
+        <Button variant="outline" onClick={() => (window.location.href = '/dashboard/super/audit')}>
+          Ver Logs de Auditoria
+        </Button>
       </div>
 
       <Card>
@@ -90,7 +105,7 @@ export default function SuperadminPage() {
                         {tenant.status || 'ACTIVE'}
                       </Badge>
                       {tenant.status === 'DISABLED' && (
-                        <p className="text-xs text-red-500 mt-1">{tenant.disabled_reason}</p>
+                        <p className="mt-1 text-xs text-red-500">{tenant.disabled_reason}</p>
                       )}
                     </TableCell>
                     <TableCell>
@@ -98,7 +113,10 @@ export default function SuperadminPage() {
                         <Button
                           variant="destructive"
                           size="sm"
-                          onClick={() => { setSelectedTenantId(tenant.id); setDisableModalOpen(true); }}
+                          onClick={() => {
+                            setSelectedTenantId(tenant.id);
+                            setDisableModalOpen(true);
+                          }}
                         >
                           Desabilitar
                         </Button>
@@ -119,11 +137,19 @@ export default function SuperadminPage() {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <Label>Motivo do Bloqueio</Label>
-            <Input value={disableReason} onChange={(e) => setDisableReason(e.target.value)} placeholder="Ex: Falta de pagamento" />
+            <Input
+              value={disableReason}
+              onChange={(e) => setDisableReason(e.target.value)}
+              placeholder="Ex: Falta de pagamento"
+            />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDisableModalOpen(false)}>Cancelar</Button>
-            <Button variant="destructive" onClick={handleDisable}>Confirmar Bloqueio</Button>
+            <Button variant="outline" onClick={() => setDisableModalOpen(false)}>
+              Cancelar
+            </Button>
+            <Button variant="destructive" onClick={handleDisable}>
+              Confirmar Bloqueio
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

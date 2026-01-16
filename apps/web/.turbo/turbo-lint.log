@@ -1,0 +1,101 @@
+
+> @jurisnexo/web@0.0.1 lint /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/web
+> next lint
+
+`next lint` is deprecated and will be removed in Next.js 16.
+For new projects, use create-next-app to choose your preferred linter.
+For existing projects, migrate to the ESLint CLI:
+npx @next/codemod@canary next-lint-to-eslint-cli .
+
+(node:37311) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/evaldomacielfilho/Downloads/crm%20JurisNexo/jurisnexo/packages/@jurisnexo/config/dist/env.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/packages/@jurisnexo/config/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+./src/app/(auth)/verify/page.tsx
+32:6  Warning: React Hook useEffect has a missing dependency: 'verifyToken'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/(dashboard)/calendario/page.tsx
+89:6  Warning: React Hook useEffect has a missing dependency: 'loadEvents'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+166:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/app/(dashboard)/financeiro/pagar/page.tsx
+89:6  Warning: React Hook useEffect has a missing dependency: 'loadPayables'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/(dashboard)/financeiro/receber/page.tsx
+72:6  Warning: React Hook useEffect has a missing dependency: 'loadReceivables'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/(dashboard)/super/page.tsx
+51:6  Warning: React Hook useEffect has a missing dependency: 'fetchTenants'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/invites/[token]/page.tsx
+25:6  Warning: React Hook useEffect has a missing dependency: 'fetchInvite'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/layout.tsx
+16:9  Warning: Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
+
+./src/app/tenants/create/page.tsx
+70:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/app/tenants/select/page.tsx
+79:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/cases/CaseDetails.tsx
+43:6  Warning: React Hook useEffect has a missing dependency: 'loadCase'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/cases/CasesList.tsx
+28:6  Warning: React Hook useEffect has a missing dependency: 'loadCases'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/clients/ClientDetails.tsx
+32:6  Warning: React Hook useEffect has a missing dependency: 'loadClient'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/clients/ClientDocuments.tsx
+27:6  Warning: React Hook useEffect has a missing dependency: 'loadDocuments'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/clients/ClientInteractions.tsx
+30:6  Warning: React Hook useEffect has a missing dependency: 'loadInteractions'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/crm/ChatWindow.tsx
+76:6  Warning: React Hook useEffect has missing dependencies: 'joinConversation' and 'leaveConversation'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/dashboard/CRMSyncDashboard.tsx
+120:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/finance/CreateLegalFeeModal.tsx
+98:6  Warning: React Hook useEffect has a missing dependency: 'fetchClients'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/inbox/MessageList.tsx
+31:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/instagram/InstagramInbox.tsx
+109:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+143:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/settings/CRMAutoSyncSettings.tsx
+78:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+96:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+114:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+132:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/settings/CRMIntegrationSettings.tsx
+71:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/whatsapp/ChatWindow.tsx
+84:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/whatsapp/ContactAvatar.tsx
+25:18  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/whatsapp/MessageBubble.tsx
+53:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/whatsapp/WhatsAppChatView.tsx
+30:6  Warning: React Hook useEffect has a missing dependency: 'loadConversations'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/features/financeiro/pagamento/components/CheckoutPix.tsx
+21:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/features/financeiro/pagamento/pages/CheckoutPage.tsx
+43:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules

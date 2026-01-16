@@ -1,0 +1,4 @@
+
+> @jurisnexo/worker@0.0.1 lint /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/worker
+> eslint "{src,test}/**/*.ts"
+

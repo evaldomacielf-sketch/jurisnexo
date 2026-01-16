@@ -7,49 +7,46 @@ import { BrowserRouter } from 'react-router-dom';
  * Cria QueryClient para testes
  */
 function createTestQueryClient() {
-    return new QueryClient({
-        defaultOptions: {
-            queries: {
-                retry: false,
-                gcTime: Infinity,
-            },
-            mutations: {
-                retry: false,
-            },
-        },
-        logger: {
-            log: () => { },
-            warn: () => { },
-            error: () => { },
-        },
-    });
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+        gcTime: Infinity,
+      },
+      mutations: {
+        retry: false,
+      },
+    },
+    logger: {
+      log: () => {},
+      warn: () => {},
+      error: () => {},
+    },
+  });
 }
 
 /**
  * Wrapper com providers necessários
  */
 interface AllProvidersProps {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 function AllProviders({ children }: AllProvidersProps) {
-    const queryClient = createTestQueryClient();
+  const queryClient = createTestQueryClient();
 
-    return (
-        <QueryClientProvider client={queryClient}>
-            <BrowserRouter>{children}</BrowserRouter>
-        </QueryClientProvider>
-    );
+  return (
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>{children}</BrowserRouter>
+    </QueryClientProvider>
+  );
 }
 
 /**
  * Render customizado com providers
  */
-function customRender(
-    ui: ReactElement,
-    options?: Omit<RenderOptions, 'wrapper'>
-) {
-    return render(ui, { wrapper: AllProviders, ...options });
+function customRender(ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>) {
+  return render(ui, { wrapper: AllProviders, ...options });
 }
 
 // Re-export tudo do testing-library
