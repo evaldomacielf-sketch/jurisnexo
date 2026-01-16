@@ -4,6 +4,101 @@
         <name>JurisNexo.Application</name>
     </assembly>
     <members>
+        <member name="M:JurisNexo.Application.Common.Interfaces.IAuditService.LogAsync(JurisNexo.Application.Common.Interfaces.AuditLogEntry)">
+            <summary>
+            Log an audit event
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.IAuditService.LogChangeAsync``1(System.String,``0,``0,System.Nullable{System.Guid})">
+            <summary>
+            Log an audit event with entity change tracking
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.IAuditService.GetAuditLogsAsync(JurisNexo.Application.Common.Interfaces.AuditLogFilter)">
+            <summary>
+            Get audit logs with filters
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.IAuditService.ExportAuditLogsAsync(System.DateTime,System.DateTime,System.String)">
+            <summary>
+            Export audit logs to CSV
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.IAuditService.GetEntityHistoryAsync(System.String,System.String)">
+            <summary>
+            Get audit logs for a specific entity
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.IConversationTransferService.TransferConversationAsync(System.Guid,System.Guid,System.Guid,System.String)">
+            <summary>
+            Transfer conversation to another lawyer
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.IConversationTransferService.GetTransferHistoryAsync(System.Guid)">
+            <summary>
+            Get transfer history for a conversation
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.IConversationTransferService.GetAvailableLawyersAsync(System.Guid)">
+            <summary>
+            Get available lawyers for transfer
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.ILGPDConsentService.RequestConsentAsync(System.Guid)">
+            <summary>
+            Request consent from a contact (first interaction)
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.ILGPDConsentService.ProcessConsentResponseAsync(System.Guid,System.String)">
+            <summary>
+            Process consent response from contact
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.ILGPDConsentService.RevokeConsentAsync(System.Guid)">
+            <summary>
+            Revoke consent for a contact
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.ILGPDConsentService.ExportContactDataAsync(System.Guid)">
+            <summary>
+            Export all contact data (LGPD right)
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.ILGPDConsentService.HasValidConsentAsync(System.Guid)">
+            <summary>
+            Check if contact has valid consent
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.ILGPDConsentService.GetConsentStatusAsync(System.Guid)">
+            <summary>
+            Get consent status for a contact
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.IWhatsAppSchedulingService.CreateScheduledMessageAsync(System.Guid,System.String,System.DateTime,System.Nullable{System.Guid},System.Boolean)">
+            <summary>
+            Create a scheduled message
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.IWhatsAppSchedulingService.CancelScheduledMessageAsync(System.Guid)">
+            <summary>
+            Cancel a scheduled message
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.IWhatsAppSchedulingService.GetScheduledMessagesAsync(System.Guid)">
+            <summary>
+            Get scheduled messages for a conversation
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.IWhatsAppSchedulingService.ProcessConfirmationResponseAsync(System.Guid,System.String)">
+            <summary>
+            Process a confirmation response
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.IWhatsAppSchedulingService.GetPendingConfirmationsAsync(System.Guid)">
+            <summary>
+            Get pending confirmations for a conversation
+            </summary>
+        </member>
         <member name="T:JurisNexo.Application.DTOs.Auth.LoginRequest">
             <summary>
             Requisição de login

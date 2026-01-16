@@ -65,8 +65,7 @@ export default function LeadFunnelChart({ funnel, isLoading }: LeadFunnelChartPr
                                     {/* Funnel Bar */}
                                     <div className="relative h-12 bg-gray-100 rounded-lg overflow-hidden">
                                         <div
-                                            className={`h-full ${stage.bgColor} transition-all duration-500 flex items-center justify-center text-white font-semibold rounded-lg`}
-                                            style={{ width: `${Math.max(percentage, 5)}%` }}
+                                            className={`h-full ${stage.bgColor} transition-all duration-500 flex items-center justify-center text-white font-semibold rounded-lg funnel-bar-${Math.round(Math.max(percentage, 5))}`}
                                         >
                                             {percentage > 15 && `${percentage.toFixed(0)}%`}
                                         </div>

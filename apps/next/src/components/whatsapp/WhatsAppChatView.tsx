@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-Send,
+import {
+    Send,
     Paperclip,
     MoreVertical,
     Phone,

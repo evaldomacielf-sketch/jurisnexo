@@ -26,6 +26,13 @@ public class Contact : TenantEntity
     public bool IsLead { get; set; }
     public string? AvatarUrl { get; set; }
     
+    // LGPD Consent Fields
+    public Enums.ConsentStatus ConsentStatus { get; set; } = Enums.ConsentStatus.None;
+    public DateTime? ConsentRequestedAt { get; set; }
+    public DateTime? ConsentGrantedAt { get; set; }
+    public DateTime? ConsentDeniedAt { get; set; }
+    public DateTime? ConsentRevokedAt { get; set; }
+    
     // Navigation properties
     public virtual ICollection<Interaction> Interactions { get; set; } = new List<Interaction>();
     public virtual ICollection<ContactDocument> Documents { get; set; } = new List<ContactDocument>();

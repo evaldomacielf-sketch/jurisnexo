@@ -7,6 +7,21 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { WhatsAppContactDetails } from '@/types/whatsapp';
 
+// Helper function to get tag color classes
+function getTagColorClass(color: string): string {
+    const colorMap: Record<string, string> = {
+        '#EF4444': 'bg-red-100 text-red-700',
+        '#F97316': 'bg-orange-100 text-orange-700',
+        '#EAB308': 'bg-yellow-100 text-yellow-700',
+        '#22C55E': 'bg-green-100 text-green-700',
+        '#3B82F6': 'bg-blue-100 text-blue-700',
+        '#8B5CF6': 'bg-purple-100 text-purple-700',
+        '#EC4899': 'bg-pink-100 text-pink-700',
+        '#6B7280': 'bg-gray-100 text-gray-700',
+    };
+    return colorMap[color] || 'bg-gray-100 text-gray-700';
+}
+
 interface ContactDetailsProps {
     contactId: string;
     onClose: () => void;
@@ -66,8 +81,7 @@ export function ContactDetails({ contactId, onClose }: ContactDetailsProps) {
                         {contact.tags?.map((tag) => (
                             <span
                                 key={tag.id}
-                                className="px-2 py-1 text-xs rounded-full"
-                                style={{ backgroundColor: tag.color + '20', color: tag.color }}
+                                className={`px-2 py-1 text-xs rounded-full ${getTagColorClass(tag.color)}`}
                             >
                                 {tag.name}
                             </span>

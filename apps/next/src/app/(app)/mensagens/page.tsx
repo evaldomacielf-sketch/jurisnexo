@@ -17,7 +17,7 @@ import {
     Plus,
 } from 'lucide-react';
 import { chatApi, Chat, ChatMessage, ChatType, MessageType, SendMessageDto } from '@/services/api/chat.service';
-import { WhatsAppDashboard } from '@/components/whatsapp/WhatsAppDashboard';
+import WhatsAppDashboard from '@/components/whatsapp/WhatsAppDashboard';
 import { formatDistanceToNow, format, isToday, isYesterday } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 

@@ -39,6 +39,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<WhatsAppWebhookLog> WhatsAppWebhookLogs => Set<WhatsAppWebhookLog>();
     public DbSet<WhatsAppContact> WhatsAppContacts => Set<WhatsAppContact>();
     public DbSet<WhatsAppMedia> WhatsAppMedia => Set<WhatsAppMedia>();
+    public DbSet<ConversationTransfer> ConversationTransfers => Set<ConversationTransfer>();
+    public DbSet<ScheduledMessage> ScheduledMessages => Set<ScheduledMessage>();
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     
     // Lead Triaging System
     public DbSet<LeadQualificationQuestion> LeadQualificationQuestions => Set<LeadQualificationQuestion>();

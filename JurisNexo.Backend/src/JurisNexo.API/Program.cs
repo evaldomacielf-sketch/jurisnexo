@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using StackExchange.Redis;
 using JurisNexo.Infrastructure.Data;
 using JurisNexo.Infrastructure.Repositories;
 using JurisNexo.Infrastructure.Services;
@@ -70,6 +71,12 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
 });
 
+// Redis Connection Multiplexer for Queue Service
+var redisConnectionString = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+    ConnectionMultiplexer.Connect(redisConnectionString));
+builder.Services.AddScoped<IWhatsAppQueueService, WhatsAppQueueService>();
+
 // Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IContactRepository, ContactRepository>();
@@ -106,6 +113,7 @@ builder.Services.AddScoped<IAIClassifierService, AIClassifierService>();
 builder.Services.AddHttpClient<IWhatsAppClient, MetaWhatsAppService>();
 builder.Services.AddScoped<IWhatsAppService, WhatsAppService>();
 builder.Services.AddScoped<IWhatsAppAnalyticsService, WhatsAppAnalyticsService>();
+builder.Services.AddScoped<IWhatsApp24HourWindowService, WhatsApp24HourWindowService>();
 builder.Services.AddScoped<IStorageService, AzureBlobStorageService>();
 builder.Services.AddScoped<IInboxNotificationService, SignalRInboxNotificationService>();
 
@@ -113,9 +121,15 @@ builder.Services.AddScoped<IInboxNotificationService, SignalRInboxNotificationSe
 builder.Services.AddScoped<IPushNotificationService, PushNotificationService>();
 builder.Services.AddScoped<ISmsService, SmsService>();
 builder.Services.AddScoped<ILeadNotificationService, LeadNotificationService>();
+builder.Services.AddScoped<ILGPDConsentService, LGPDConsentService>();
+builder.Services.AddScoped<IConversationTransferService, ConversationTransferService>();
+builder.Services.AddScoped<IWhatsAppSchedulingService, WhatsAppSchedulingService>();
+builder.Services.AddScoped<IAuditService, AuditService>();
 
 // Background Workers
 builder.Services.AddHostedService<WhatsAppMessageWorker>();
+builder.Services.AddHostedService<SLAMonitorService>();
+builder.Services.AddHostedService<ScheduledMessageWorker>();
 
 // Monitoring
 builder.Services.AddAWSService<IAmazonCloudWatch>();
