@@ -95,7 +95,8 @@ export async function middleware(request: NextRequest) {
 
   const hasValidToken = accessToken && !isTokenExpired(accessToken);
 
-  if (hasValidToken && isAuthRoute(pathname)) {
+  // If authenticated and trying to access auth pages OR the landing page, go to dashboard
+  if (hasValidToken && (isAuthRoute(pathname) || pathname === '/')) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
@@ -139,6 +140,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|auth/login|auth/register|.*\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };
