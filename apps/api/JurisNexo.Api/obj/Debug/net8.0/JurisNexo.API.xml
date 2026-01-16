@@ -254,5 +254,30 @@
             Aplica valores padrão aos parâmetros do Swagger
             </summary>
         </member>
+        <member name="M:JurisNexo.Api.Controllers.CasesController.List(System.Int32,System.Int32,System.String,System.String)">
+            <summary>
+            Lista todos os casos do escritório (tenant)
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Api.Controllers.CasesController.GetById(System.Guid)">
+            <summary>
+            Busca caso por ID
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Api.Controllers.CasesController.Create(JurisNexo.Application.UseCases.Cases.CreateCase.CreateCaseCommand)">
+            <summary>
+            Cria novo caso
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Api.Controllers.CasesController.Update(System.Guid,JurisNexo.Api.Controllers.UpdateCaseDto)">
+            <summary>
+            Atualiza caso existente
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Api.Controllers.CasesController.Delete(System.Guid)">
+            <summary>
+            Deleta caso (soft delete)
+            </summary>
+        </member>
     </members>
 </doc>

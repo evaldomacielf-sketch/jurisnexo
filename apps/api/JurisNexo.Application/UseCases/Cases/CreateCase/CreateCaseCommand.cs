@@ -5,10 +5,11 @@ namespace JurisNexo.Application.UseCases.Cases.CreateCase;
 
 public record CreateCaseCommand(
     string Title,
-    string Number,
-    string Description,
-    Guid ClientId,
-    Guid? ResponsibleUserId,
-    string? Court,
-    DateTime? DistributionDate
+    string? CaseNumber,
+    string? Description,
+    Guid? ClientId,
+    Guid? ResponsibleLawyerId,
+    string? PracticeArea,
+    bool IsUrgent = false,
+    List<string>? Tags = null
 ) : IRequest<CaseDto>;

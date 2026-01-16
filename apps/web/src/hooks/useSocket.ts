@@ -20,7 +20,7 @@ export const useSocket = () => {
             const token = getCookie('jurisnexo_session'); // Updated to use correct cookie name
 
             // Adjust URL based on environment
-            const socketUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+            const socketUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
             socketRef.current = io(socketUrl, {
                 query: { token },

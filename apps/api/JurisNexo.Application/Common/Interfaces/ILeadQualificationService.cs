@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using JurisNexo.Core.Entities;
 using JurisNexo.Application.DTOs;
+using JurisNexo.Application.DTOs.Analytics;
 
 namespace JurisNexo.Application.Common.Interfaces
 {

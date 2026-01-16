@@ -12,16 +12,19 @@ namespace JurisNexo.Infrastructure.Services
     public class SmartLeadRoutingService : ISmartLeadRoutingService
     {
         private readonly ApplicationDbContext _context;
-        private readonly IInboxNotificationService _notificationService;
+        private readonly IInboxNotificationService _inboxNotificationService;
+        private readonly ILeadNotificationService _leadNotificationService;
         private readonly ILogger<SmartLeadRoutingService> _logger;
 
         public SmartLeadRoutingService(
             ApplicationDbContext context,
-            IInboxNotificationService notificationService,
+            IInboxNotificationService inboxNotificationService,
+            ILeadNotificationService leadNotificationService,
             ILogger<SmartLeadRoutingService> logger)
         {
             _context = context;
-            _notificationService = notificationService;
+            _inboxNotificationService = inboxNotificationService;
+            _leadNotificationService = leadNotificationService;
             _logger = logger;
         }
 
@@ -79,7 +82,12 @@ namespace JurisNexo.Infrastructure.Services
             await _context.SaveChangesAsync();
             
             // 5. Notificar advogado
-            await NotifyAdvogadoAsync(selectedAdvogado, lead);
+            // 5. Notificar advogado
+            var scoreObj = new LeadScore 
+            { 
+                ScoreValue = lead.Score
+            };
+            await _leadNotificationService.NotifyAdvogadoAsync(selectedAdvogado.Id, lead, scoreObj);
             
             return selectedAdvogado.Id;
         }
@@ -134,18 +142,6 @@ namespace JurisNexo.Infrastructure.Services
             return score;
         }
 
-        private async Task NotifyAdvogadoAsync(User advogado, Lead lead)
-        {
-             // Use InboxNotificationService to notify real-time
-             // Or send email logic
-             _logger.LogInformation("Notifying lawyer {Name} of new lead assignment: {LeadId}", advogado.Name, lead.Id);
-             
-             // Construct notification message
-             var message = $"Novo Lead Atribuído: {lead.Name} ({lead.CaseType}) - Score: {lead.Score}";
-             
-             // Assuming NotificationService has a method to send system notification
-             // If not, we just log for now as per previous pattern, or use available method
-             // await _notificationService.SendSystemNotificationAsync(advogado.Id, message); // If it exists
-        }
+
     }
 }

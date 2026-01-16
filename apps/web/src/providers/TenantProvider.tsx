@@ -54,7 +54,7 @@ export function TenantProvider({ children }: { children: ReactNode }): React.Rea
         setIsSubdomain(true);
         const currentSlug: string = slug; // Type guard
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/tenants/lookup/${currentSlug}`);
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/tenants/lookup/${currentSlug}`);
           if (res.ok) {
             const data = await res.json();
             setTenant(data);
@@ -114,7 +114,7 @@ export function TenantProvider({ children }: { children: ReactNode }): React.Rea
             headers['Authorization'] = `Bearer ${authToken}`;
           }
 
-          const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+          const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
           const res = await fetch(`${API_URL}/tenants/current`, {
             credentials: 'include',
             headers,

@@ -1,24 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useWhatsAppMessages, useSendMessage, useMarkAsRead } from '@/hooks/useWhatsApp';
-import { MessageBubble } from './MessageBubble';
-import { TypingIndicator } from './TypingIndicator';
-import { EmojiPicker } from './EmojiPicker';
+import MessageBubble from './MessageBubble';
+import TypingIndicator from './TypingIndicator';
+import EmojiPicker from './EmojiPicker';
 import { WhatsAppConversation } from '@/types/whatsapp';
 import {
-    Info as InformationCircleIcon,
-    Smile as FaceSmileIcon,
-    Paperclip as PaperClipIcon,
-    Send as PaperAirplaneIcon
-} from 'lucide-react'; // Mapping requested Heroicons to Lucide
+    PaperAirplaneIcon,
+    PaperClipIcon,
+    FaceSmileIcon,
+    InformationCircleIcon
+} from '@heroicons/react/24/outline'; // User generic icons
 
 interface ChatWindowProps {
     conversation: WhatsAppConversation;
     onToggleDetails: () => void;
-    onSendMessage?: (text: string) => void; // Optional to support parent control if needed, but hook handles it
+    // Props passed by Dashboard
+    onSendMessage?: (text: string) => void;
     isDetailsOpen?: boolean;
 }
 
-export function ChatWindow({ conversation, onToggleDetails }: ChatWindowProps) {
+export default function ChatWindow({ conversation, onToggleDetails }: ChatWindowProps) {
     const [messageText, setMessageText] = useState('');
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -37,18 +38,19 @@ export function ChatWindow({ conversation, onToggleDetails }: ChatWindowProps) {
         if (conversation.unreadCount && conversation.unreadCount > 0) {
             markAsRead.mutate(conversation.id);
         }
-    }, [conversation.id, conversation.unreadCount]);
+    }, [conversation.id, conversation.unreadCount, markAsRead]);
 
     const handleSend = async () => {
         if (!messageText.trim()) return;
 
+        // Using simple mutation which expects { conversationId, content }
+        // The hook will resolve phone internally or we pass it if we updated hook (we didn't yet update hook to NOT resolve, so we rely on cache)
         await sendMessage.mutateAsync({
             conversationId: conversation.id,
             content: messageText
         });
 
         setMessageText('');
-        setShowEmojiPicker(false);
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -59,63 +61,68 @@ export function ChatWindow({ conversation, onToggleDetails }: ChatWindowProps) {
     };
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // Placeholder for upload logic
+        // Stub for file upload
         console.log("File upload requested", e.target.files);
+        alert("File upload not fully implemented in this demo.");
     };
 
-    return (
-        <div className="flex flex-col h-full">
-            {/* Wrapped in div to ensure flex layout works if parent doesn't provide it */}
+    // Adaptation: conversation.contact is likely flattened in our current Type.
+    // We use conversation directly.
+    const contactName = conversation.customerName || conversation.customerPhone;
+    const contactPhone = conversation.customerPhone;
+    const contactAvatar = (conversation as any).avatarUrl || '/default-avatar.png'; // Type might not have avatarUrl
+    const isOnline = false; // Stub
+    const isTyping = false; // Stub
 
+    return (
+        <>
             {/* Header */}
             <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     {/* Avatar com status online */}
                     <div className="relative">
-                        {/* Using img as requested, fallback to default if avatarUrl missing */}
                         <img
-                            src={'/default-avatar.png'} // Placeholder as we don't have avatarUrl in type yet
-                            alt={conversation.customerName}
-                            className="w-10 h-10 rounded-full bg-gray-200"
+                            src={contactAvatar}
+                            alt={contactName}
+                            className="w-10 h-10 rounded-full bg-gray-200 object-cover"
                         />
-                        {/* Status online is hardcoded or needs real-time hook. Using true for demo or implicit locally */}
-                        <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />
+                        {isOnline && (
+                            <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />
+                        )}
                     </div>
 
                     <div>
                         <h2 className="font-semibold text-gray-900">
-                            {conversation.customerName}
+                            {contactName}
                         </h2>
                         <p className="text-sm text-gray-500">
-                            {conversation.customerPhone}
+                            {contactPhone}
                         </p>
                     </div>
                 </div>
 
                 <button
                     onClick={onToggleDetails}
-                    className="text-gray-600 hover:text-gray-900"
-                    title="Ver detalhes do contato"
-                    aria-label="Ver detalhes do contato"
+                    className="text-gray-600 hover:text-gray-900 p-2 rounded-full hover:bg-gray-100"
                 >
                     <InformationCircleIcon className="w-6 h-6" />
                 </button>
             </div>
 
             {/* Área de Mensagens */}
-            <div className="flex-1 overflow-y-auto bg-gray-50 p-6 space-y-4">
+            <div className="flex-1 overflow-y-auto bg-[#efeae2] p-6 space-y-4">
                 {isLoading ? (
                     <div className="flex justify-center items-center h-full">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500" />
                     </div>
                 ) : (
                     <>
-                        {(messages || conversation.messages)?.map((message: any) => (
+                        {messages?.map((message) => (
                             <MessageBubble key={message.id} message={message} />
                         ))}
 
-                        {/* Indicador "digitando..." - Hardcoded false or need hook */}
-                        {/* {conversation.contact.isTyping && <TypingIndicator />} */}
+                        {/* Indicador "digitando..." */}
+                        {isTyping && <TypingIndicator />}
 
                         <div ref={messagesEndRef} />
                     </>
@@ -123,27 +130,24 @@ export function ChatWindow({ conversation, onToggleDetails }: ChatWindowProps) {
             </div>
 
             {/* Input de Mensagem */}
-            <div className="bg-white border-t border-gray-200 p-4">
-                <div className="flex items-end gap-2 relative">
+            <div className="bg-white border-t border-gray-200 p-4 relative">
+                <div className="flex items-end gap-2">
                     {/* Botão Emoji */}
                     <button
                         onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                        className="text-gray-500 hover:text-gray-700 mb-2"
-                        title="Abrir emojis"
-                        aria-label="Abrir emojis"
+                        className="text-gray-500 hover:text-gray-700 p-2"
                     >
                         <FaceSmileIcon className="w-6 h-6" />
                     </button>
 
                     {/* Botão Upload */}
-                    <label className="text-gray-500 hover:text-gray-700 cursor-pointer mb-2" title="Anexar arquivo">
+                    <label className="text-gray-500 hover:text-gray-700 cursor-pointer p-2">
                         <PaperClipIcon className="w-6 h-6" />
                         <input
                             type="file"
                             className="hidden"
                             onChange={handleFileUpload}
                             accept="image/*,application/pdf,.doc,.docx"
-                            aria-label="Anexar arquivo"
                         />
                     </label>
 
@@ -151,10 +155,10 @@ export function ChatWindow({ conversation, onToggleDetails }: ChatWindowProps) {
                     <textarea
                         value={messageText}
                         onChange={(e) => setMessageText(e.target.value)}
-                        onKeyDown={handleKeyPress}
+                        onKeyPress={handleKeyPress}
                         placeholder="Digite uma mensagem..."
                         rows={1}
-                        className="flex-1 resize-none border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 min-h-[42px] max-h-32"
+                        className="flex-1 resize-none border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 max-h-32"
                     />
 
                     {/* Botão Enviar */}
@@ -162,25 +166,23 @@ export function ChatWindow({ conversation, onToggleDetails }: ChatWindowProps) {
                         onClick={handleSend}
                         disabled={!messageText.trim()}
                         className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed mb-0.5"
-                        title="Enviar mensagem"
-                        aria-label="Enviar mensagem"
                     >
-                        <PaperAirplaneIcon className="w-6 h-6" />
+                        <PaperAirplaneIcon className="w-5 h-5 transform -rotate-45 translate-x-0.5" />
                     </button>
                 </div>
 
                 {/* Emoji Picker */}
                 {showEmojiPicker && (
-                    <div className="absolute bottom-20 left-4 z-10">
+                    <div className="absolute bottom-20 left-4 z-10 shadow-lg rounded-lg bg-white">
                         <EmojiPicker
-                            onSelect={(emoji: any) => {
-                                setMessageText(messageText + (typeof emoji === 'string' ? emoji : emoji.native));
+                            onSelect={(emoji: string) => {
+                                setMessageText(prev => prev + emoji);
                                 setShowEmojiPicker(false);
                             }}
                         />
                     </div>
                 )}
             </div>
-        </div>
+        </>
     );
 }

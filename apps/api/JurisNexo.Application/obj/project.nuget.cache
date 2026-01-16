@@ -1,11 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "X5Oe0pZJmZA=",
+  "dgSpecHash": "oWwBqVwWsHQ=",
   "success": true,
-  "projectFilePath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Application/JurisNexo.Application.csproj",
+  "projectFilePath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Application/JurisNexo.Application.csproj",
   "expectedPackageFiles": [
     "/Users/evaldomacielfilho/.nuget/packages/fluentvalidation/11.9.0/fluentvalidation.11.9.0.nupkg.sha512",
     "/Users/evaldomacielfilho/.nuget/packages/fluentvalidation.dependencyinjectionextensions/11.9.0/fluentvalidation.dependencyinjectionextensions.11.9.0.nupkg.sha512",
+    "/Users/evaldomacielfilho/.nuget/packages/mediatr/12.2.0/mediatr.12.2.0.nupkg.sha512",
+    "/Users/evaldomacielfilho/.nuget/packages/mediatr.contracts/2.0.1/mediatr.contracts.2.0.1.nupkg.sha512",
     "/Users/evaldomacielfilho/.nuget/packages/microsoft.entityframeworkcore/8.0.1/microsoft.entityframeworkcore.8.0.1.nupkg.sha512",
     "/Users/evaldomacielfilho/.nuget/packages/microsoft.entityframeworkcore.abstractions/8.0.1/microsoft.entityframeworkcore.abstractions.8.0.1.nupkg.sha512",
     "/Users/evaldomacielfilho/.nuget/packages/microsoft.entityframeworkcore.analyzers/8.0.1/microsoft.entityframeworkcore.analyzers.8.0.1.nupkg.sha512",

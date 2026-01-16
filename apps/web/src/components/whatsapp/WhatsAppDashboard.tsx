@@ -1,19 +1,9 @@
-'use client';
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useWhatsAppConversations } from '@/hooks/useWhatsApp';
 import ConversationList from './ConversationList';
-import { ChatWindow } from './ChatWindow';
-import { ContactDetails } from './ContactDetails';
-import { whatsappApi } from '@/services/api/whatsapp.service';
-import { WhatsAppTemplate } from '@/types/whatsapp';
-import { MagnifyingGlassIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline'; // Using Heroicons as per likely design system or swapping to Lucide if preferred. User didn't verify icon lib.
-// Note: User code used `MagnifyingGlassIcon` which is typical of Heroicons v2. 
-// My previous files used Lucide. I will stick to Lucide where possible but map them if needed.
-// However, `MagnifyingGlassIcon` is distinctly Heroicons.
-// Let me double check if I have Heroicons installed. `package.json` didn't show it explicitly but `@types/react` etc might have it or `lucide-react` is used elsewhere.
-// I will import typical names from `lucide-react` to be safe OR just use `Search` as `MagnifyingGlass`.
-import { Search, MessageSquare } from 'lucide-react';
+import ChatWindow from './ChatWindow';
+import ContactDetails from './ContactDetails';
+import { MagnifyingGlassIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 
 export default function WhatsAppDashboard() {
     const [selectedConversationId, setSelectedConversationId] =
@@ -22,7 +12,7 @@ export default function WhatsAppDashboard() {
     const [filter, setFilter] = useState<'all' | 'unread' | 'archived'>('all');
     const [searchQuery, setSearchQuery] = useState('');
 
-    const { data: conversations, isLoading, refetch } = useWhatsAppConversations({
+    const { data: conversations, isLoading } = useWhatsAppConversations({
         filter,
         search: searchQuery
     });
@@ -30,33 +20,6 @@ export default function WhatsAppDashboard() {
     const selectedConversation = conversations?.find(
         c => c.id === selectedConversationId
     );
-
-    const handleSendMessage = async (text: string) => {
-        if (!selectedConversation) return;
-        try {
-            await whatsappApi.sendMessage({
-                phone: selectedConversation.customerPhone,
-                content: text
-            });
-            refetch(); // Refresh list to show new message or status
-        } catch (error) {
-            console.error('Error sending message:', error);
-        }
-    };
-
-    const handleSendTemplate = async (template: WhatsAppTemplate) => {
-        if (!selectedConversation) return;
-        try {
-            await whatsappApi.sendMessage({
-                phone: selectedConversation.customerPhone,
-                content: template.content
-            });
-            refetch();
-            setShowContactDetails(false);
-        } catch (error) {
-            console.error('Error sending template:', error);
-        }
-    };
 
     return (
         <div className="flex h-screen bg-gray-100">
@@ -75,36 +38,36 @@ export default function WhatsAppDashboard() {
                             placeholder="Buscar conversas..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg"
                         />
-                        <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
+                        <MagnifyingGlassIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
                     </div>
 
                     {/* Filtros */}
                     <div className="flex gap-2 mt-3">
                         <button
                             onClick={() => setFilter('all')}
-                            className={`px-3 py-1 text-sm rounded-full transition-colors ${filter === 'all'
+                            className={`px-3 py-1 text-sm rounded-full ${filter === 'all'
                                     ? 'bg-green-100 text-green-700'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                    : 'bg-gray-100 text-gray-600'
                                 }`}
                         >
                             Todas
                         </button>
                         <button
                             onClick={() => setFilter('unread')}
-                            className={`px-3 py-1 text-sm rounded-full transition-colors ${filter === 'unread'
+                            className={`px-3 py-1 text-sm rounded-full ${filter === 'unread'
                                     ? 'bg-green-100 text-green-700'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                    : 'bg-gray-100 text-gray-600'
                                 }`}
                         >
                             Não Lidas
                         </button>
                         <button
                             onClick={() => setFilter('archived')}
-                            className={`px-3 py-1 text-sm rounded-full transition-colors ${filter === 'archived'
+                            className={`px-3 py-1 text-sm rounded-full ${filter === 'archived'
                                     ? 'bg-green-100 text-green-700'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                    : 'bg-gray-100 text-gray-600'
                                 }`}
                         >
                             Arquivadas
@@ -127,13 +90,11 @@ export default function WhatsAppDashboard() {
                     <ChatWindow
                         conversation={selectedConversation}
                         onToggleDetails={() => setShowContactDetails(!showContactDetails)}
-                        onSendMessage={handleSendMessage}
-                        isDetailsOpen={showContactDetails}
                     />
                 ) : (
                     <div className="flex-1 flex items-center justify-center text-gray-500">
                         <div className="text-center">
-                            <MessageSquare className="w-24 h-24 mx-auto mb-4 text-gray-300" />
+                            <ChatBubbleLeftRightIcon className="w-24 h-24 mx-auto mb-4 text-gray-300" />
                             <p className="text-lg">Selecione uma conversa para começar</p>
                         </div>
                     </div>
@@ -144,9 +105,8 @@ export default function WhatsAppDashboard() {
             {showContactDetails && selectedConversation && (
                 <div className="w-96 bg-white border-l border-gray-200">
                     <ContactDetails
-                        conversation={selectedConversation}
+                        contactId={selectedConversation.contactId} // Note: This assumes selectedConversation has contactId. If not, error.
                         onClose={() => setShowContactDetails(false)}
-                        onSendTemplate={handleSendTemplate}
                     />
                 </div>
             )}

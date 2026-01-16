@@ -1,0 +1,14 @@
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:4000
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Api
+warn: JurisNexo.Api.Middleware.TenantMiddleware[0]
+      Requisição sem TenantId: /api/tenants/current
+warn: JurisNexo.Api.Middleware.TenantMiddleware[0]
+      Requisição sem TenantId: /api/tenants/current
+warn: JurisNexo.Api.Middleware.TenantMiddleware[0]
+      Requisição sem TenantId: /api/tenants/current

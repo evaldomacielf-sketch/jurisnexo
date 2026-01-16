@@ -89,47 +89,7 @@ namespace JurisNexo.Application.DTOs
         public decimal ConversionRate { get; set; }
     }
 
-    public class LeadMetricsDto 
-    {
-        // Volume
-        public int TotalLeads { get; set; }
-        public int NewLeads { get; set; }
-        public int QualifiedLeads { get; set; }
-        public int ConvertedCount { get; set; }
-        public int LostLeads { get; set; }
-        
-        // Taxa de Conversão
-        public decimal ConversionRate { get; set; }
-        public decimal QualificationRate { get; set; }
-        
-        // Tempo
-        public double AverageResponseTimeMinutes { get; set; }
-        public int AvgConversionTimeDays { get; set; }
-        
-        // Qualidade
-        public int HighQualityLeads { get; set; }
-        public int MediumQualityLeads { get; set; }
-        public int LowQualityLeads { get; set; }
-        
-        // Por Tipo de Caso
-        public Dictionary<string, int> LeadsByCaseType { get; set; } = new();
-        public Dictionary<string, decimal> ConversionRateByCaseType { get; set; } = new();
-        
-        // Por Fonte
-        public Dictionary<string, int> LeadsBySource { get; set; } = new();
-        
-        // Por Advogado
-        public Dictionary<string, int> LeadsByAdvogado { get; set; } = new();
-        public Dictionary<string, decimal> ConversionRateByAdvogado { get; set; } = new();
-        
-        // Tendências
-        public decimal LeadsTrend { get; set; }
-        public string LeadsTrendDirection { get; set; } = "up";
-        public decimal ConversionTrend { get; set; }
-        public string ConversionTrendDirection { get; set; } = "up";
-        public decimal ResponseTimeTrend { get; set; }
-        public string ResponseTimeTrendDirection { get; set; } = "down";
-    }
+
 
     public class AssignLeadRequest
     {

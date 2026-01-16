@@ -44,9 +44,7 @@ namespace JurisNexo.Infrastructure.Services
                 return;
             }
 
-            _logger.LogInformation("Notifying advogado {Name} about lead {LeadId}", advogado.Name, lead.Id);
-
-            // 1. In-App Notification (SignalR)
+            // 1. Notificação In-App (SignalR)
             try
             {
                 await _hubContext.Clients.User(advogadoId.ToString())
@@ -56,15 +54,15 @@ namespace JurisNexo.Infrastructure.Services
                         leadName = lead.Name,
                         caseType = lead.CaseType,
                         score = score.ScoreValue,
-                        quality = lead.Quality.ToString(),
-                        urgency = lead.Urgency.ToString()
+                        quality = lead.Quality,
+                        urgency = lead.Urgency
                     });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to send SignalR notification");
             }
-
+            
             // 2. Push Notification
             try
             {
@@ -79,18 +77,18 @@ namespace JurisNexo.Infrastructure.Services
             {
                 _logger.LogError(ex, "Failed to send push notification");
             }
-
-            // 3. Email (if urgency High or Critical)
-            if (lead.Urgency == LeadPriority.High || lead.Urgency == LeadPriority.Critical)
+            
+            // 3. Email (se urgência alta/crítica)
+            if (lead.Urgency >= LeadPriority.High)
             {
                 try
                 {
                     await _emailService.SendEmailAsync(
-                        advogado.Email,
+                         advogado.Email,
                         "🔥 Lead URGENTE atribuído a você",
                         $@"
                         <h2>Olá {advogado.Name},</h2>
-                        <p>Um novo lead URGENTE foi atribuído a você:</p>
+                        <p>Um lead <strong>URGENTE</strong> foi atribuído a você.</p>
                         <ul>
                             <li><strong>Nome:</strong> {lead.Name}</li>
                             <li><strong>Tipo de Caso:</strong> {lead.CaseType}</li>
@@ -98,29 +96,32 @@ namespace JurisNexo.Infrastructure.Services
                             <li><strong>Score:</strong> {score.ScoreValue}/100</li>
                             <li><strong>Urgência:</strong> {lead.Urgency}</li>
                         </ul>
-                        <p><a href='https://app.jurisnexo.com/leads/{lead.Id}'>Ver Lead</a></p>
+                        <p><a href='https://app.jurisnexo.com/whatsapp?lead={lead.Id}'>Acessar Lead Agora</a></p>
                         "
+                        // Note: User snippet used 'Template' logic ("lead-urgent-assignment"). 
+                        // Since I don't have a template engine configured here, implementation remains HTML string for now.
+                        // I preserved the structure but adapted to existing EmailService call.
                     );
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to send email notification");
+                     _logger.LogError(ex, "Failed to send email notification");
                 }
             }
-
-            // 4. SMS (if Critical)
-            if (lead.Urgency == LeadPriority.Critical && !string.IsNullOrEmpty(advogado.Phone))
+            
+            // 4. SMS (se crítico)
+            // User snippet checks: if (lead.Urgency == LeadUrgency.Critical)
+            // Existing code checks: if (lead.Urgency == LeadPriority.Critical && !string.IsNullOrEmpty(advogado.Phone))
+            if (lead.Urgency == LeadPriority.Critical && !string.IsNullOrEmpty(advogado.Phone)) // Assuming 'Phone' is correct property on User entity
             {
                 try
                 {
-                    await _smsService.SendAsync(
-                        advogado.Phone,
-                        $"URGENTE: Novo lead {lead.Name} ({lead.CaseType}) aguardando seu contato. Score: {score.ScoreValue}/100"
-                    );
+                    await _smsService.SendAsync(advogado.Phone,
+                        $"URGENTE: Novo lead {lead.Name} ({lead.CaseType}) aguardando seu contato. Score: {score.ScoreValue}/100");
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to send SMS notification");
+                     _logger.LogError(ex, "Failed to send SMS notification");
                 }
             }
         }

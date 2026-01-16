@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Infrastructure/JurisNexo.Infrastructure.csproj": {}
+    "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Infrastructure/JurisNexo.Infrastructure.csproj": {}
   },
   "projects": {
-    "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Application/JurisNexo.Application.csproj": {
+    "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Application/JurisNexo.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Application/JurisNexo.Application.csproj",
+        "projectUniqueName": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Application/JurisNexo.Application.csproj",
         "projectName": "JurisNexo.Application",
-        "projectPath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Application/JurisNexo.Application.csproj",
+        "projectPath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Application/JurisNexo.Application.csproj",
         "packagesPath": "/Users/evaldomacielfilho/.nuget/packages/",
-        "outputPath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Application/obj/",
+        "outputPath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Application/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/evaldomacielfilho/.nuget/NuGet/NuGet.Config"
@@ -26,8 +26,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/JurisNexo.Domain.csproj": {
-                "projectPath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/JurisNexo.Domain.csproj"
+              "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Core/JurisNexo.Core.csproj": {
+                "projectPath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Core/JurisNexo.Core.csproj"
               }
             }
           }
@@ -54,6 +54,10 @@
             "FluentValidation.DependencyInjectionExtensions": {
               "target": "Package",
               "version": "[11.9.0, )"
+            },
+            "MediatR": {
+              "target": "Package",
+              "version": "[12.2.0, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
@@ -88,14 +92,14 @@
         }
       }
     },
-    "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/JurisNexo.Domain.csproj": {
+    "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Core/JurisNexo.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/JurisNexo.Domain.csproj",
-        "projectName": "JurisNexo.Domain",
-        "projectPath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/JurisNexo.Domain.csproj",
+        "projectUniqueName": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Core/JurisNexo.Core.csproj",
+        "projectName": "JurisNexo.Core",
+        "projectPath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Core/JurisNexo.Core.csproj",
         "packagesPath": "/Users/evaldomacielfilho/.nuget/packages/",
-        "outputPath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Domain/obj/",
+        "outputPath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Core/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/evaldomacielfilho/.nuget/NuGet/NuGet.Config"
@@ -126,6 +130,12 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "MediatR": {
+              "target": "Package",
+              "version": "[12.2.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -146,14 +156,14 @@
         }
       }
     },
-    "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Infrastructure/JurisNexo.Infrastructure.csproj": {
+    "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Infrastructure/JurisNexo.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Infrastructure/JurisNexo.Infrastructure.csproj",
+        "projectUniqueName": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Infrastructure/JurisNexo.Infrastructure.csproj",
         "projectName": "JurisNexo.Infrastructure",
-        "projectPath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Infrastructure/JurisNexo.Infrastructure.csproj",
+        "projectPath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Infrastructure/JurisNexo.Infrastructure.csproj",
         "packagesPath": "/Users/evaldomacielfilho/.nuget/packages/",
-        "outputPath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Infrastructure/obj/",
+        "outputPath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Infrastructure/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/evaldomacielfilho/.nuget/NuGet/NuGet.Config"
@@ -168,8 +178,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Application/JurisNexo.Application.csproj": {
-                "projectPath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Application/JurisNexo.Application.csproj"
+              "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Application/JurisNexo.Application.csproj": {
+                "projectPath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Application/JurisNexo.Application.csproj"
               }
             }
           }

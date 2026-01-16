@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using JurisNexo.Application.Common.Interfaces;
+using JurisNexo.Application.DTOs.Analytics;
 using JurisNexo.Application.DTOs;
 using JurisNexo.Core.Entities;
 using JurisNexo.Infrastructure.Data;
@@ -120,11 +121,15 @@ namespace JurisNexo.Infrastructure.Services
                 TotalLeads = totalLeads,
                 NewLeads = newLeads,
                 QualifiedLeads = qualifiedLeads,
-                ConvertedCount = convertedLeads,
+                ConvertedLeads = convertedLeads,
                 LostLeads = lostLeads,
                 ConversionRate = Math.Round(conversionRate, 1),
                 QualificationRate = Math.Round(qualificationRate, 1),
-                AverageResponseTimeMinutes = avgResponseTime,
+                AvgResponseTimeMinutes = avgResponseTime, // Changed from AverageResponseTimeMinutes in old DTO? Let's check DTO.
+                // DTO has AvgResponseTimeMinutes. Service assigns AverageResponseTimeMinutes.
+                // Step 519: public double AvgResponseTimeMinutes { get; set; }
+                // Service Step 537: AverageResponseTimeMinutes = avgResponseTime.
+                // So I need to update this too.
                 AvgConversionTimeDays = 7, // Mock
                 HighQualityLeads = highQuality,
                 MediumQualityLeads = mediumQuality,

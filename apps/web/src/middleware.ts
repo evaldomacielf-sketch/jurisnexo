@@ -1,34 +1,22 @@
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { logger } from './lib/logger';
+
+// Cookie name for JWT auth (matches lib/auth/cookies.ts)
+const AUTH_COOKIE_NAME = 'jurisnexo_session';
 
 export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
-  const supabase = createMiddlewareClient({ req, res });
-
-  // Renovar sessão se expirada (o helper cuida de setar os cookies na response se necessário)
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
   const { pathname } = req.nextUrl;
 
-  if (session) {
-    logger.info('Authenticated request', {
-      path: pathname,
-      user: session.user.email
-    });
-  } else {
-    logger.info('Anonymous request', { path: pathname });
-  }
+  // Get auth cookie
+  const token = req.cookies.get(AUTH_COOKIE_NAME)?.value;
+  const hasSession = !!token;
 
-  // Redireciona antigo /auth/login para o novo /login
+  // Legacy redirect
   if (pathname === '/auth/login') {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
-  // Rotas públicas que não precisam de autenticação
+  // Public routes that don't require authentication
   const publicRoutes = [
     '/login',
     '/register',
@@ -43,22 +31,22 @@ export async function middleware(req: NextRequest) {
     pathname === route || pathname.startsWith(route + '/')
   );
 
-  // Se não tem sessão e não é rota pública, redireciona para login
-  if (!session && !isPublicRoute) {
+  // If no session and not public route, redirect to login
+  if (!hasSession && !isPublicRoute) {
     const redirectUrl = new URL('/login', req.url);
     redirectUrl.searchParams.set('redirectTo', pathname);
     return NextResponse.redirect(redirectUrl);
   }
 
-  // Se tem sessão e está tentando acessar páginas de auth ou landing page, vai pro dashboard
+  // If has session and trying to access auth pages or landing, go to dashboard
   const authRoutes = ['/login', '/register', '/forgot-password'];
   const isAuthRoute = authRoutes.some(route => pathname === route || pathname.startsWith(route + '/'));
 
-  if (session && (isAuthRoute || pathname === '/')) {
+  if (hasSession && (isAuthRoute || pathname === '/')) {
     return NextResponse.redirect(new URL('/dashboard', req.url));
   }
 
-  return res;
+  return NextResponse.next();
 }
 
 export const config = {

@@ -14,6 +14,7 @@ public class User : TenantEntity
 {
     public string Name { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+    public string? CPF { get; set; }
     public string PasswordHash { get; set; } = string.Empty;
     public string? Phone { get; set; }
     public string? AvatarUrl { get; set; }
@@ -41,4 +42,12 @@ public class User : TenantEntity
     public virtual ICollection<Appointment> CreatedAppointments { get; set; } = new List<Appointment>();
     public virtual ICollection<Case> ResponsibleCases { get; set; } = new List<Case>();
     public virtual ICollection<Lead> AssignedLeads { get; set; } = new List<Lead>();
+
+    // CRM Integrations
+    public string? SalesforceId { get; set; }
+    public string? HubSpotId { get; set; }
+    public string? PipedriveId { get; set; }
+    public string? RDStationId { get; set; }
+    public bool NeedsCRMSync { get; set; }
+    public DateTime? LastCRMSyncAt { get; set; }
 }

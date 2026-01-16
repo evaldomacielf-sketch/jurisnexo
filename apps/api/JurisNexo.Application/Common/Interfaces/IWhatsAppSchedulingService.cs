@@ -35,6 +35,11 @@ namespace JurisNexo.Application.Common.Interfaces
         /// Get pending confirmations for a conversation
         /// </summary>
         Task<IEnumerable<ScheduledMessageDto>> GetPendingConfirmationsAsync(Guid conversationId);
+
+        /// <summary>
+        /// Process due messages and send them
+        /// </summary>
+        Task ProcessDueMessagesAsync(CancellationToken cancellationToken);
     }
 
     public class ScheduledMessageDto

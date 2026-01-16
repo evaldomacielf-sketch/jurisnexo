@@ -45,6 +45,9 @@ namespace JurisNexo.Core.Entities
     {
         public string Name { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
+        public string? Email { get; set; }
+        public DateTime? LastCRMSyncAt { get; set; }
+        public bool NeedsCRMSync { get; set; } // Added for Sync Logic
         public LeadStatus Status { get; set; } = LeadStatus.New;
         public LeadSource Source { get; set; }
         public int Score { get; set; } // 0-100
@@ -61,6 +64,7 @@ namespace JurisNexo.Core.Entities
         // Routing & Assignment
         public Guid? AssignedToUserId { get; set; }
         public string? AssignedToUserName { get; set; } 
+        public Guid? ClientId { get; set; } // Link to created Client User 
         
         public DateTime? AssignedAt { get; set; }
         public DateTime? FirstContactAt { get; set; }
@@ -98,6 +102,12 @@ namespace JurisNexo.Core.Entities
         public virtual User? AssignedToUser { get; set; } // Navigation property for AssignedToUserId
 
         public string? Tags { get; set; }
+
+        // CRM Integrations
+        public string? SalesforceId { get; set; }
+        public string? HubSpotId { get; set; }
+        public string? PipedriveId { get; set; }
+        public string? RDStationId { get; set; }
 
         public ICollection<LeadActivity> Activities { get; set; }
         public Lead()

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "U5z4OdEnArToPJ3dzp6Y5pK4E0thGCfF1O+UGYAQtZk=",
+  "Hash": "iHz8vRrHURyIZ0lKTAZqwZQ59ipFt8k7iXzolJw/qwI=",
   "Source": "JurisNexo.API",
   "BasePath": "_content/JurisNexo.API",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "JurisNexo.API/wwwroot",
       "Source": "JurisNexo.API",
-      "ContentRoot": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.API/wwwroot/",
+      "ContentRoot": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Api/wwwroot/",
       "BasePath": "_content/JurisNexo.API",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.API/wwwroot/swagger-ui/custom.css",
+      "Identity": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Api/wwwroot/swagger-ui/custom.css",
       "SourceId": "JurisNexo.API",
       "SourceType": "Discovered",
-      "ContentRoot": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.API/wwwroot/",
+      "ContentRoot": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Api/wwwroot/",
       "BasePath": "_content/JurisNexo.API",
       "RelativePath": "swagger-ui/custom.css",
       "AssetKind": "All",

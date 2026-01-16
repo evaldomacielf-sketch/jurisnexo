@@ -10,11 +10,12 @@ public class CreateCaseValidator : AbstractValidator<CreateCaseCommand>
             .NotEmpty().WithMessage("O título é obrigatório.")
             .MaximumLength(200).WithMessage("O título deve ter no máximo 200 caracteres.");
 
-        RuleFor(x => x.Number)
-            .NotEmpty().WithMessage("O número do processo é obrigatório.")
-            .MaximumLength(50).WithMessage("O número deve ter no máximo 50 caracteres.");
+        RuleFor(x => x.CaseNumber)
+            .MaximumLength(50).WithMessage("O número deve ter no máximo 50 caracteres.")
+            .When(x => !string.IsNullOrEmpty(x.CaseNumber));
 
-        RuleFor(x => x.ClientId)
-            .NotEmpty().WithMessage("O cliente é obrigatório.");
+        RuleFor(x => x.PracticeArea)
+            .MaximumLength(100).WithMessage("A área de prática deve ter no máximo 100 caracteres.")
+            .When(x => !string.IsNullOrEmpty(x.PracticeArea));
     }
 }

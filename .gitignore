@@ -1,36 +1,42 @@
 # Dependencies
 node_modules/
-.pnpm-store/
+bin/
+obj/
+.pnpm-store
 
-# Build outputs
-dist/
-.next/
-.turbo/
-*.tsbuildinfo
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.suo
+*.user
 
-# Environment
+# Env vars
 .env
 .env.local
-.env.*.local
-
-# IDE
-.vscode/
-.idea/
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+*.env.*
 
 # OS
 .DS_Store
 Thumbs.db
 
 # Logs
-*.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 pnpm-debug.log*
 
-# Test
+# Next.js
+.next/
+out/
+build/
+dist/
 coverage/
 
 # Supabase
+supabase/tmp/
 supabase/.temp/
-
-*storybook.log
-storybook-static

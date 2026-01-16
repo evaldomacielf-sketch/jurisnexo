@@ -99,6 +99,11 @@
             Get pending confirmations for a conversation
             </summary>
         </member>
+        <member name="M:JurisNexo.Application.Common.Interfaces.IWhatsAppSchedulingService.ProcessDueMessagesAsync(System.Threading.CancellationToken)">
+            <summary>
+            Process due messages and send them
+            </summary>
+        </member>
         <member name="T:JurisNexo.Application.DTOs.Auth.LoginRequest">
             <summary>
             Requisição de login
@@ -178,6 +183,16 @@
             Telefone/WhatsApp (opcional)
             </summary>
             <example>11999999999</example>
+        </member>
+        <member name="T:JurisNexo.Application.DTOs.CaseDtoSimple">
+            <summary>
+            DTO simplificado para uso nos Controllers
+            </summary>
+        </member>
+        <member name="M:JurisNexo.Application.DTOs.CaseDtoSimple.#ctor(System.Guid,System.String,System.String,System.String,System.String,System.Guid,System.String,System.Nullable{System.Guid},System.String,System.String,System.Nullable{System.DateTime},System.DateTime,System.DateTime)">
+            <summary>
+            DTO simplificado para uso nos Controllers
+            </summary>
         </member>
     </members>
 </doc>

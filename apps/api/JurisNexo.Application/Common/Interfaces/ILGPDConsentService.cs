@@ -54,7 +54,7 @@ namespace JurisNexo.Application.Common.Interfaces
 
     public class ConsentStatusDto
     {
-        public Domain.Enums.ConsentStatus Status { get; set; }
+        public JurisNexo.Core.Enums.ConsentStatus Status { get; set; }
         public DateTime? RequestedAt { get; set; }
         public DateTime? GrantedAt { get; set; }
         public DateTime? DeniedAt { get; set; }

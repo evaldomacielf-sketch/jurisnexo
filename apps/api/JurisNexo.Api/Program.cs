@@ -1,6 +1,7 @@
 using JurisNexo.Api.Middleware;
 using JurisNexo.Application;
 using JurisNexo.Infrastructure;
+using JurisNexo.Infrastructure.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -16,7 +17,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "https://app.jurisnexo.com.br")
+        policy.WithOrigins(
+                "http://localhost:3000", 
+                "http://127.0.0.1:3000",
+                "https://app.jurisnexo.com.br")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -72,6 +76,9 @@ builder.Services.AddHealthChecks()
     .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection")!)
     .AddRedis(builder.Configuration.GetConnectionString("Redis")!);
 
+// SignalR
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // ====================================
@@ -98,6 +105,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<InboxHub>("/hubs/inbox");
 app.MapHealthChecks("/health");
 
 // Rota raiz

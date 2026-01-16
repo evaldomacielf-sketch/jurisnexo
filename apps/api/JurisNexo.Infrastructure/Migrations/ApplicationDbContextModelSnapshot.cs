@@ -183,6 +183,86 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.ToTable("AuditLogs");
                 });
 
+            modelBuilder.Entity("JurisNexo.Core.Entities.CRMAutoSyncSettings", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<List<string>>("CaseTypesToSync")
+                        .IsRequired()
+                        .HasColumnType("text[]");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EscritorioId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("HubSpotEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("HubSpotFieldMapping")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("MaxRetryAttempts")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("PipedriveEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("PipedriveFieldMapping")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("RDStationEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("RDStationFieldMapping")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("RetryDelayMinutes")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("SalesforceEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SalesforceFieldMapping")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int[]>("SourcesToSync")
+                        .IsRequired()
+                        .HasColumnType("integer[]");
+
+                    b.Property<bool>("SyncOnCaseCreated")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("SyncOnContactUpdated")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("SyncOnLeadConverted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("SyncOnLeadCreated")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("SyncOnLeadQualified")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("SyncOnlyHighQualityLeads")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CRMAutoSyncSettings");
+                });
+
             modelBuilder.Entity("JurisNexo.Core.Entities.Case", b =>
                 {
                     b.Property<Guid>("Id")
@@ -516,6 +596,221 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.ToTable("ConversationTransfers");
                 });
 
+            modelBuilder.Entity("JurisNexo.Core.Entities.Financial.Invoice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid?>("CaseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("IssueDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("TaxAmount")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CaseId");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("Invoices");
+                });
+
+            modelBuilder.Entity("JurisNexo.Core.Entities.Financial.PaymentMethod", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("GatewayConfig")
+                        .HasColumnType("text");
+
+                    b.Property<string>("GatewayId")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("PaymentMethods");
+                });
+
+            modelBuilder.Entity("JurisNexo.Core.Entities.Financial.Transaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid?>("CaseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ClientId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("InvoiceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CaseId");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("InvoiceId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("JurisNexo.Core.Entities.Honorario", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AssignedToUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CaseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("HubSpotDealId")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<decimal>("PaidAmount")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("PipedriveDealId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SalesforceOpportunityId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignedToUserId");
+
+                    b.HasIndex("CaseId");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("Honorarios");
+                });
+
             modelBuilder.Entity("JurisNexo.Core.Entities.Interaction", b =>
                 {
                     b.Property<Guid>("Id")
@@ -582,6 +877,9 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.Property<string>("City")
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("ClientId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid?>("ContactId")
                         .HasColumnType("uuid");
 
@@ -600,6 +898,9 @@ namespace JurisNexo.Infrastructure.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
                     b.Property<decimal>("EstimatedValue")
                         .HasColumnType("numeric");
 
@@ -612,11 +913,17 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.Property<bool>("HasExistingCase")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("HubSpotId")
+                        .HasColumnType("text");
+
                     b.Property<int>("InteractionCount")
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastCRMSyncAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("LastContactDate")
                         .HasColumnType("timestamp with time zone");
@@ -628,11 +935,17 @@ namespace JurisNexo.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("NeedsCRMSync")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime?>("NextFollowUpDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PipedriveId")
                         .HasColumnType("text");
 
                     b.Property<Guid?>("PipelineId")
@@ -650,8 +963,14 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.Property<int>("Quality")
                         .HasColumnType("integer");
 
+                    b.Property<string>("RDStationId")
+                        .HasColumnType("text");
+
                     b.Property<TimeSpan?>("ResponseTime")
                         .HasColumnType("interval");
+
+                    b.Property<string>("SalesforceId")
+                        .HasColumnType("text");
 
                     b.Property<int>("Score")
                         .HasColumnType("integer");
@@ -1450,6 +1769,9 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.Property<double>("AvgResponseTimeMinutes")
                         .HasColumnType("double precision");
 
+                    b.Property<string>("CPF")
+                        .HasColumnType("text");
+
                     b.Property<double>("ConversionRate")
                         .HasColumnType("double precision");
 
@@ -1467,16 +1789,25 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.Property<DateTime?>("EmailVerificationCodeExpiresAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("HubSpotId")
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsEmailVerified")
                         .HasColumnType("boolean");
 
+                    b.Property<DateTime?>("LastCRMSyncAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
+
+                    b.Property<bool>("NeedsCRMSync")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -1491,6 +1822,12 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("text");
 
+                    b.Property<string>("PipedriveId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RDStationId")
+                        .HasColumnType("text");
+
                     b.Property<string>("RefreshToken")
                         .HasColumnType("text");
 
@@ -1501,6 +1838,9 @@ namespace JurisNexo.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<string>("SalesforceId")
+                        .HasColumnType("text");
 
                     b.Property<string>("SpecializationsJson")
                         .IsRequired()
@@ -2041,6 +2381,104 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.Navigation("ToUser");
                 });
 
+            modelBuilder.Entity("JurisNexo.Core.Entities.Financial.Invoice", b =>
+                {
+                    b.HasOne("JurisNexo.Core.Entities.Case", "Case")
+                        .WithMany()
+                        .HasForeignKey("CaseId");
+
+                    b.HasOne("JurisNexo.Core.Entities.Contact", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JurisNexo.Core.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Case");
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("JurisNexo.Core.Entities.Financial.PaymentMethod", b =>
+                {
+                    b.HasOne("JurisNexo.Core.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("JurisNexo.Core.Entities.Financial.Transaction", b =>
+                {
+                    b.HasOne("JurisNexo.Core.Entities.Case", "Case")
+                        .WithMany()
+                        .HasForeignKey("CaseId");
+
+                    b.HasOne("JurisNexo.Core.Entities.Contact", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId");
+
+                    b.HasOne("JurisNexo.Core.Entities.Financial.Invoice", "Invoice")
+                        .WithMany("Transactions")
+                        .HasForeignKey("InvoiceId");
+
+                    b.HasOne("JurisNexo.Core.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Case");
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Invoice");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("JurisNexo.Core.Entities.Honorario", b =>
+                {
+                    b.HasOne("JurisNexo.Core.Entities.User", "AssignedToUser")
+                        .WithMany()
+                        .HasForeignKey("AssignedToUserId");
+
+                    b.HasOne("JurisNexo.Core.Entities.Case", "Case")
+                        .WithMany()
+                        .HasForeignKey("CaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JurisNexo.Core.Entities.User", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JurisNexo.Core.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AssignedToUser");
+
+                    b.Navigation("Case");
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Tenant");
+                });
+
             modelBuilder.Entity("JurisNexo.Core.Entities.Interaction", b =>
                 {
                     b.HasOne("JurisNexo.Core.Entities.Contact", "Contact")
@@ -2476,6 +2914,11 @@ namespace JurisNexo.Infrastructure.Migrations
             modelBuilder.Entity("JurisNexo.Core.Entities.Conversation", b =>
                 {
                     b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("JurisNexo.Core.Entities.Financial.Invoice", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("JurisNexo.Core.Entities.Lead", b =>

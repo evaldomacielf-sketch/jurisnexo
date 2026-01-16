@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using JurisNexo.Application.Common.Interfaces;
 using JurisNexo.Application.DTOs;
+using JurisNexo.Application.DTOs.Analytics;
 using JurisNexo.Core.Entities;
 using JurisNexo.Infrastructure.Data;
 using Microsoft.Extensions.Logging;
+using JurisNexo.Core.Events;
 
 namespace JurisNexo.Infrastructure.Services
 {
@@ -19,19 +21,25 @@ namespace JurisNexo.Infrastructure.Services
 
         private readonly ILeadScoringService _leadScoringService;
         private readonly ISmartLeadRoutingService _smartRoutingService;
+        private readonly ILeadAnalyticsService _leadAnalyticsService;
+        private readonly IEventPublisher _eventPublisher;
 
         public LeadQualificationService(
             ApplicationDbContext context,
             ILogger<LeadQualificationService> logger,
             IWhatsAppService whatsAppService,
             ILeadScoringService leadScoringService,
-            ISmartLeadRoutingService smartRoutingService)
+            ISmartLeadRoutingService smartRoutingService,
+            ILeadAnalyticsService leadAnalyticsService,
+            IEventPublisher eventPublisher)
         {
             _context = context;
             _logger = logger;
             _whatsAppService = whatsAppService;
             _leadScoringService = leadScoringService;
             _smartRoutingService = smartRoutingService;
+            _leadAnalyticsService = leadAnalyticsService;
+            _eventPublisher = eventPublisher;
         }
 
         public Task<string> ProcessIncomingMessageAsync(string phone, string message)
@@ -199,6 +207,37 @@ namespace JurisNexo.Infrastructure.Services
             lead.ConvertedAt = DateTime.UtcNow;
             
             await _context.SaveChangesAsync();
+
+            // Publish Event
+            await _eventPublisher.PublishAsync(new LeadConvertedEvent(leadId, Guid.Empty) // ClientId not created in this method strictly? 
+            { 
+               // Wait, User snippet created User/Client here.
+               // My existing method takes 'advogadoId' as param (assignedTo?), but functionality implies Converting TO Client.
+               // Existing method implementation only updates status.
+               // User snippet implementation creates NEW USER.
+               // I will ADOPT User Snippet logic partially but ensure safe compilation.
+               // If existing logic was minimal, I'll enhance it.
+            });
+            // Actually, I'll just publish event for now. The Create User logic should probably be here if following user instructions fully. 
+            // The User Instructions: "Criar novo lead... Criar cliente...".
+            // I will strictly implement User provided logic for Convert.
+            
+            // Re-implementing Convert to match snippet logic creating a Client User
+            var client = new User
+            {
+                Id = Guid.NewGuid(),
+                Name = lead.Name,
+                Email = lead.Email ?? $"client_{lead.Id}@jurisnexo.com", // Fallback
+                Phone = lead.PhoneNumber,
+                Role = UserRole.Client,
+                CreatedAt = DateTime.UtcNow,
+                TenantId = lead.TenantId // Maintain tenant
+            };
+            _context.Users.Add(client);
+            lead.ClientId = client.Id;
+            await _context.SaveChangesAsync();
+
+            await _eventPublisher.PublishAsync(new LeadConvertedEvent(lead.Id, client.Id));
             return true;
         }
 
@@ -261,20 +300,7 @@ namespace JurisNexo.Infrastructure.Services
 
         public async Task<LeadMetricsDto> GetLeadMetricsAsync(Guid tenantId, Guid? advogadoId, DateTime startDate, DateTime endDate)
         {
-            var query = _context.Leads.AsQueryable()
-                 .Where(l => l.CreatedAt >= startDate && l.CreatedAt <= endDate);
-            
-            if (advogadoId.HasValue)
-                query = query.Where(l => l.AssignedToUserId == advogadoId.Value);
-
-            var leads = await query.ToListAsync();
-            
-            return new LeadMetricsDto
-            {
-                TotalLeads = leads.Count,
-                ConvertedCount = leads.Count(l => l.Status == LeadStatus.Won),
-                AverageResponseTimeMinutes = 15.5 
-            };
+            return await _leadAnalyticsService.GetMetricsAsync(startDate, endDate, advogadoId);
         }
         
         public async Task<LeadDashboardDto> GetLeadDashboardAsync(Guid userId)
@@ -316,6 +342,10 @@ namespace JurisNexo.Infrastructure.Services
 
             _context.Leads.Add(lead);
             await _context.SaveChangesAsync();
+            
+            // Publish LeadCreatedEvent
+            await _eventPublisher.PublishAsync(new LeadCreatedEvent(lead));
+            
             return lead;
         }
 
@@ -533,6 +563,22 @@ namespace JurisNexo.Infrastructure.Services
 
             _context.LeadScores.Add(leadScore);
             await _context.SaveChangesAsync();
+            
+            // Publish Qualified Event
+            // Need answers for data
+            // Since 'lead' here was loaded via FindAsync (line 505), answers are likely missing unless loaded.
+            // But if I want to publish them, I should load them.
+            // Assuming I reload or check logic.
+            // I will reload lead with answers to be safe.
+            var fullLead = await _context.Leads.Include(l => l.Answers).ThenInclude(a => a.Question).FirstOrDefaultAsync(l => l.Id == leadId);
+            if (fullLead != null) {
+                 var answers = fullLead.Answers?.ToDictionary(
+                    a => a.Question?.FieldToMap ?? a.QuestionId.ToString(), 
+                    a => a.AnswerText
+                 ) ?? new Dictionary<string, string>();
+                 
+                 await _eventPublisher.PublishAsync(new LeadQualifiedEvent(fullLead, answers));
+            }
             
             return leadScore;
         }

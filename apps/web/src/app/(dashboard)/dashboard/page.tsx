@@ -1,23 +1,23 @@
 import { getAccessToken } from '@/lib/auth/cookies';
 import { redirect } from 'next/navigation';
-import { decode } from 'jsonwebtoken';
 import DashboardClient from './DashboardClient';
 
 export default async function DashboardPage() {
-    const token = await getAccessToken();
+    let token: string | undefined;
+
+    try {
+        token = await getAccessToken();
+    } catch (error) {
+        console.error('Error getting access token:', error);
+        // Continue without token for debugging
+    }
 
     if (!token) {
         redirect('/login');
     }
 
-    // Decode token (insecure parse, just for claims check)
-    // Verify should ideally happen in middleware.
-    const payload: any = decode(token);
-
-    if (!payload || !payload.tenant_id) {
-        // No tenant context
-        // redirect('/tenants/select'); // Temporarily commented out to avoid loop if tenant flow is not ready
-    }
+    // Removed jsonwebtoken decode - was causing SSR issues
+    // Token validation should happen in middleware or API
 
     return (
         <DashboardClient />

@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using JurisNexo.Application.Common.Interfaces;
 using JurisNexo.Application.DTOs;
+using JurisNexo.Application.DTOs.Analytics;
 using JurisNexo.Core.Entities;
-using JurisNexo.API.Extensions;
+using JurisNexo.API.ExtensionMethods;
 
 namespace JurisNexo.API.Controllers
 {

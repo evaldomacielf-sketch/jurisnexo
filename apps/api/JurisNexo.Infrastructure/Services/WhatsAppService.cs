@@ -20,6 +20,8 @@ public class WhatsAppService : IWhatsAppService
     private readonly IContactRepository _contactRepository;
     private readonly IStorageService _storageService;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IWhatsAppTemplateService _templateService;
+    private readonly IWhatsAppAnalyticsService _analyticsService;
     private readonly ILogger<WhatsAppService> _logger;
 
     public WhatsAppService(
@@ -29,6 +31,8 @@ public class WhatsAppService : IWhatsAppService
         IContactRepository contactRepository,
         IStorageService storageService,
         IUnitOfWork unitOfWork,
+        IWhatsAppTemplateService templateService,
+        IWhatsAppAnalyticsService analyticsService,
         ILogger<WhatsAppService> logger)
     {
         _whatsAppClient = whatsAppClient;
@@ -37,6 +41,8 @@ public class WhatsAppService : IWhatsAppService
         _contactRepository = contactRepository;
         _storageService = storageService;
         _unitOfWork = unitOfWork;
+        _templateService = templateService;
+        _analyticsService = analyticsService;
         _logger = logger;
     }
 
@@ -287,13 +293,33 @@ public class WhatsAppService : IWhatsAppService
 
     public async Task<List<WhatsAppTemplateDto>> GetTemplatesAsync(Guid tenantId)
     {
-        // Should fetch from DB or Client
-        return new List<WhatsAppTemplateDto>();
+        var templates = await _templateService.GetTemplatesAsync();
+        return templates.Select(t => new WhatsAppTemplateDto
+        {
+            Id = t.Id, // Assuming t.Id is Guid. If string, parse it. t.Id is Guid in entity usually.
+            Name = t.Name,
+            Category = t.Category,
+            Language = t.Language,
+            Body = t.Content // Mapping Content to Body
+        }).ToList();
     }
 
     public async Task<WhatsAppAnalyticsDto> GetAnalyticsAsync(Guid tenantId, DateTime startDate, DateTime endDate)
     {
-         return new WhatsAppAnalyticsDto();
+         var metrics = await _analyticsService.GetMetricsAsync(startDate, endDate);
+         
+         return new WhatsAppAnalyticsDto
+         {
+             MessagesSent = metrics.TotalMessagesSent,
+             MessagesReceived = metrics.TotalMessagesReceived,
+             ActiveConversations = metrics.TotalConversations,
+             ResponseRate = metrics.ReadRate, // Proxying ReadRate as ResponseRate for now
+             AvgResponseTime = TimeSpan.FromMinutes(metrics.AverageResponseTimeMinutes),
+             
+             // Populate lists with mock or real data from metrics if available
+             TopTemplates = new List<TemplateStatDto>(), // Needs data from somewhere
+             MessageVolume = new List<TimeSeriesDataDto>() // Needs daily stats
+         };
     }
 
     public async Task<bool> IsConnectedAsync(CancellationToken cancellationToken = default)

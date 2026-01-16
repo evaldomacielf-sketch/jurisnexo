@@ -190,7 +190,7 @@ namespace JurisNexo.Infrastructure.Services
                     Name = lawyer.Name,
                     AvatarUrl = lawyer.AvatarUrl,
                     CurrentLoad = currentLoad,
-                    IsAvailable = status == Domain.Enums.AdvogadoStatus.Disponivel
+                    IsAvailable = status == JurisNexo.Core.Enums.AdvogadoStatus.Disponivel
                 });
             }
 

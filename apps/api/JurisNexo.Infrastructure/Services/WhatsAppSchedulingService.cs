@@ -193,6 +193,55 @@ namespace JurisNexo.Infrastructure.Services
             });
         }
 
+        public async Task ProcessDueMessagesAsync(CancellationToken cancellationToken)
+        {
+            var dueMessages = await _context.ScheduledMessages
+                .Include(m => m.Conversation)
+                .Where(m => m.Status == ScheduledMessageStatus.Pending && 
+                            m.ScheduledFor <= DateTime.UtcNow)
+                .ToListAsync(cancellationToken);
+
+            foreach (var message in dueMessages)
+            {
+                if (cancellationToken.IsCancellationRequested) break;
+
+                try
+                {
+                    if (string.IsNullOrEmpty(message.Conversation?.CustomerPhone))
+                    {
+                        _logger.LogWarning("Cannot send scheduled message {MessageId}: Customer phone is missing", message.Id);
+                        continue;
+                    }
+
+                    // Send message via WhatsApp
+                    await _whatsAppClient.SendMessageAsync(
+                        message.Conversation.CustomerPhone, 
+                        message.Message, 
+                        null, 
+                        cancellationToken);
+
+                    // Update status
+                    message.Status = message.RequestConfirmation 
+                        ? ScheduledMessageStatus.AwaitingConfirmation 
+                        : ScheduledMessageStatus.Sent;
+                    
+                    message.SentAt = DateTime.UtcNow;
+                    
+                    _logger.LogInformation("Scheduled message {MessageId} sent successfully", message.Id);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to process scheduled message {MessageId}", message.Id);
+                    // Optionally mark as failed or retry count
+                }
+            }
+
+            if (dueMessages.Any())
+            {
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+        }
+
         #region Helpers
 
         private bool IsConfirmation(string message)

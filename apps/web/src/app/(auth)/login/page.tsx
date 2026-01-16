@@ -1,19 +1,20 @@
 'use client'
 
 import { useState } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
+import { setAuthCookies } from '@/lib/auth/cookies'
 
 export default function LoginPage() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
     const router = useRouter()
-    const supabase = createClientComponentClient()
+    const searchParams = useSearchParams()
+    const redirectTo = searchParams.get('redirectTo') || '/dashboard'
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -28,27 +29,43 @@ export default function LoginPage() {
 
             console.log('🔐 Tentando login com:', email)
 
-            // AUTENTICAÇÃO
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
+            // AUTENTICAÇÃO via API .NET
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+            const response = await fetch(`${API_URL}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+                credentials: 'include',
             })
 
-            if (error) {
-                console.error('❌ Erro de autenticação:', error)
-                toast.error(error.message)
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}))
+                console.error('❌ Erro de autenticação:', errorData)
+                toast.error(errorData.message || 'Credenciais inválidas')
                 return
             }
 
-            console.log('✅ Login bem-sucedido:', data)
+            const data = await response.json()
+            console.log('✅ Login bem-sucedido')
+
+            // Setar cookies de autenticação
+            if (data.accessToken && data.refreshToken) {
+                await setAuthCookies({
+                    accessToken: data.accessToken,
+                    refreshToken: data.refreshToken,
+                })
+            }
+
             toast.success('Login realizado com sucesso!')
 
             // REDIRECIONAMENTO
-            router.push('/dashboard')
+            router.push(redirectTo)
             router.refresh()
         } catch (error) {
             console.error('❌ Erro inesperado:', error)
-            toast.error('Erro ao fazer login')
+            toast.error('Erro ao conectar com o servidor')
         } finally {
             setLoading(false)
         }
@@ -98,7 +115,7 @@ export default function LoginPage() {
                     <p className="text-muted-foreground">
                         Ainda não tem conta?{' '}
                         <button
-                            onClick={() => router.push('/auth/register')}
+                            onClick={() => router.push('/register')}
                             className="font-medium text-primary hover:underline"
                         >
                             Cadastre-se

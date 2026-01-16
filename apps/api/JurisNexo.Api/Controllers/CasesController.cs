@@ -4,6 +4,7 @@ using JurisNexo.Application.UseCases.Cases.ListCases;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CaseDto = JurisNexo.Application.DTOs.CaseDtoSimple;
 
 namespace JurisNexo.Api.Controllers;
 

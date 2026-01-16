@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "mGYEK4hn1xA=",
+  "dgSpecHash": "9IVr8Qv0e6Q=",
   "success": true,
-  "projectFilePath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/JurisNexo.Backend/src/JurisNexo.Infrastructure/JurisNexo.Infrastructure.csproj",
+  "projectFilePath": "/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Infrastructure/JurisNexo.Infrastructure.csproj",
   "expectedPackageFiles": [
     "/Users/evaldomacielfilho/.nuget/packages/awssdk.cloudwatch/3.7.300/awssdk.cloudwatch.3.7.300.nupkg.sha512",
     "/Users/evaldomacielfilho/.nuget/packages/awssdk.core/3.7.300/awssdk.core.3.7.300.nupkg.sha512",
@@ -15,6 +15,8 @@
     "/Users/evaldomacielfilho/.nuget/packages/fluentvalidation.dependencyinjectionextensions/11.9.0/fluentvalidation.dependencyinjectionextensions.11.9.0.nupkg.sha512",
     "/Users/evaldomacielfilho/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/Users/evaldomacielfilho/.nuget/packages/mailkit/4.3.0/mailkit.4.3.0.nupkg.sha512",
+    "/Users/evaldomacielfilho/.nuget/packages/mediatr/12.2.0/mediatr.12.2.0.nupkg.sha512",
+    "/Users/evaldomacielfilho/.nuget/packages/mediatr.contracts/2.0.1/mediatr.contracts.2.0.1.nupkg.sha512",
     "/Users/evaldomacielfilho/.nuget/packages/microsoft.bcl.asyncinterfaces/6.0.0/microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
     "/Users/evaldomacielfilho/.nuget/packages/microsoft.codeanalysis.analyzers/3.3.3/microsoft.codeanalysis.analyzers.3.3.3.nupkg.sha512",
     "/Users/evaldomacielfilho/.nuget/packages/microsoft.codeanalysis.common/4.5.0/microsoft.codeanalysis.common.4.5.0.nupkg.sha512",

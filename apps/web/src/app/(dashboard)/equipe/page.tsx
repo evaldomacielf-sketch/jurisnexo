@@ -37,8 +37,8 @@ export default function TeamPage() {
     const fetchData = async () => {
         try {
             const [memRes, invRes] = await Promise.all([
-                fetch('http://localhost:4000/api/tenants/me/members', { credentials: 'include' }),
-                fetch('http://localhost:4000/api/tenants/me/invites', { credentials: 'include' })
+                fetch('http://localhost:5000/api/tenants/me/members', { credentials: 'include' }),
+                fetch('http://localhost:5000/api/tenants/me/invites', { credentials: 'include' })
             ]);
 
             if (memRes.ok) setMembers(await memRes.json());
@@ -51,7 +51,7 @@ export default function TeamPage() {
     const handleInvite = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:4000/api/tenants/me/invites', {
+            const res = await fetch('http://localhost:5000/api/tenants/me/invites', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: inviteEmail, role: inviteRole }),
@@ -72,7 +72,7 @@ export default function TeamPage() {
     const handleRevoke = async (id: string) => {
         if (!confirm('Revogar convite?')) return;
         try {
-            await fetch(`http://localhost:4000/api/tenants/me/invites/${id}`, {
+            await fetch(`http://localhost:5000/api/tenants/me/invites/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });

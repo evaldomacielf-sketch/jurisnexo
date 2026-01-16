@@ -26,7 +26,7 @@ export default function InvitePage() {
 
     const fetchInvite = async () => {
         try {
-            const res = await fetch(`http://localhost:4000/api/tenants/invites/${token}`);
+            const res = await fetch(`http://localhost:5000/api/tenants/invites/${token}`);
             if (!res.ok) throw new Error('Convite inválido ou expirado');
             const data = await res.json();
             setInvite(data);
@@ -48,7 +48,7 @@ export default function InvitePage() {
             // Let's assume user is logged in if they click "Aceitar". 
             // If fetch fails with 401, redirect to login.
 
-            const res = await fetch('http://localhost:4000/api/tenants/invites/accept', {
+            const res = await fetch('http://localhost:5000/api/tenants/invites/accept', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token }),
@@ -80,7 +80,7 @@ export default function InvitePage() {
 
         setSubmitting(true);
         try {
-            const res = await fetch('http://localhost:4000/api/auth/register-invite', {
+            const res = await fetch('http://localhost:5000/api/auth/register-invite', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token, fullName, password }),

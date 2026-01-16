@@ -21,13 +21,14 @@ public class CreateCaseHandler : IRequestHandler<CreateCaseCommand, CaseDto>
         var newCase = new Case
         {
             Title = request.Title,
-            Number = request.Number,
+            CaseNumber = request.CaseNumber,
             Description = request.Description,
             ClientId = request.ClientId,
-            AssignedToId = request.ResponsibleUserId,
-            Court = request.Court,
-            DistributionDate = request.DistributionDate,
-            Status = CaseStatus.Open
+            ResponsibleLawyerId = request.ResponsibleLawyerId,
+            PracticeArea = request.PracticeArea,
+            IsUrgent = request.IsUrgent,
+            Status = CaseStatus.Active,
+            Tags = request.Tags ?? new List<string>()
         };
 
         await _caseRepository.AddAsync(newCase, cancellationToken);
@@ -36,15 +37,15 @@ public class CreateCaseHandler : IRequestHandler<CreateCaseCommand, CaseDto>
         return new CaseDto(
             newCase.Id,
             newCase.Title,
-            newCase.Number,
+            newCase.CaseNumber ?? string.Empty,
             newCase.Description,
             newCase.Status.ToString(),
-            newCase.ClientId,
+            newCase.ClientId ?? Guid.Empty,
             null, // ClientName - would need to fetch
-            newCase.AssignedToId,
+            newCase.ResponsibleLawyerId,
             null, // ResponsibleName
-            newCase.Court,
-            newCase.DistributionDate,
+            newCase.PracticeArea,
+            null, // DistributionDate - not in entity
             newCase.CreatedAt,
             newCase.UpdatedAt
         );

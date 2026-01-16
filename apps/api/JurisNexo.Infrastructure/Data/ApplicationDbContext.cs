@@ -56,6 +56,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<LeadAssignment> LeadAssignments => Set<LeadAssignment>();
     public DbSet<LeadConversionFunnel> LeadConversionFunnels => Set<LeadConversionFunnel>();
     public DbSet<LeadFollowUpTask> LeadFollowUpTasks => Set<LeadFollowUpTask>();
+    public DbSet<Honorario> Honorarios => Set<Honorario>();
+    public DbSet<CRMAutoSyncSettings> CRMAutoSyncSettings => Set<CRMAutoSyncSettings>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
