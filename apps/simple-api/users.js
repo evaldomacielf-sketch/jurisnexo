@@ -6,6 +6,10 @@ const bcrypt = require("bcryptjs");
 
 const users = new Map(); // chave=email, valor={ hashedPassword }
 
+// Usuário de teste padrão (criar de forma síncrona)
+const testPassword = bcrypt.hashSync("password123", 10);
+users.set("test@example.com", { hashedPassword: testPassword });
+
 async function addUser(email, password) {
     if (users.has(email)) {
         const err = new Error("EMAIL_EXISTS");
@@ -17,4 +21,12 @@ async function addUser(email, password) {
     users.set(email, { hashedPassword });
 }
 
-module.exports = { addUser };
+async function verifyUser(email, password) {
+    const user = users.get(email);
+    if (!user) {
+        return false;
+    }
+    return await bcrypt.compare(password, user.hashedPassword);
+}
+
+module.exports = { addUser, verifyUser };

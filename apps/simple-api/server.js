@@ -1,7 +1,7 @@
 // server.js
 const express = require("express");
 const cors = require("cors");
-const { addUser } = require("./users");
+const { addUser, verifyUser } = require("./users");
 
 const app = express();
 // Using 4001 to avoid conflict with main app (3000) and API (4000)
@@ -67,6 +67,38 @@ app.post("/api/signup", async (req, res) => {
     }
 });
 
+app.post("/api/auth/login", async (req, res) => {
+    try {
+        const { email, password } = req.body || {};
+
+        if (!email || !password) {
+            return res.status(400).json({ error: "Email e senha são obrigatórios" });
+        }
+
+        const isValid = await verifyUser(String(email).trim().toLowerCase(), String(password));
+        
+        if (!isValid) {
+            return res.status(401).json({ error: "Credenciais inválidas" });
+        }
+
+        // Criar tokens mock
+        const accessToken = createMockToken({ email: email });
+        const refreshToken = createMockToken({ email: email, type: "refresh" });
+
+        return res.status(200).json({
+            accessToken,
+            refreshToken,
+            user: {
+                email: email,
+                name: email.split('@')[0]
+            }
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+});
+
 app.post("/api/auth/request-code", (req, res) => {
     const { email } = req.body || {};
     if (!email) {
@@ -117,6 +149,16 @@ app.post("/api/tenants/me/active-tenant", (req, res) => {
     const token = createMockToken({ tenant_id: tenantId });
 
     return res.status(200).json({ success: true, token });
+});
+
+app.get("/api/tenants/current", (req, res) => {
+    // Retornar tenant padrão
+    return res.status(200).json({
+        id: "tenant-default",
+        name: "Meu Escritório",
+        slug: "meu-escritorio",
+        status: "active"
+    });
 });
 
 app.post("/api/tenants", (req, res) => {
@@ -363,5 +405,10 @@ app.get("/api/crm/kanban", (req, res) => {
             }
         ]
     });
+});
+
+app.listen(PORT, () => {
+    console.log(`🚀 API rodando em http://localhost:${PORT}`);
+    console.log(`📝 Teste com: test@example.com / password123`);
 });
 
