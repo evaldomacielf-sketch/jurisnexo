@@ -5,9 +5,10 @@
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev": "turbo dev",
-    "dev:web": "turbo dev --filter=@jurisnexo/next",
-    "dev:api": "turbo dev --filter=@jurisnexo/api",
+    "dev:web": "turbo dev --filter=@jurisnexo/web",
+    "dev:api": "cd apps/api/JurisNexo.Api && dotnet run --urls \"http://localhost:4000\"",
     "dev:worker": "turbo dev --filter=@jurisnexo/worker",
+    "generate:types": "echo 'Generating types from OpenAPI...' && cd apps/web && npx openapi-typescript http://localhost:4000/api-docs/v1/swagger.json -o ./src/types/backend.d.ts",
     "build": "turbo build",
     "test": "turbo test",
     "test:e2e": "turbo test:e2e",
