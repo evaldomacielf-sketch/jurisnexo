@@ -15,9 +15,7 @@ import {
     ChevronLeft,
     ChevronRight,
     Gavel,
-    Plus,
-    Instagram,
-    Wallet,
+    Bot,
 } from 'lucide-react';
 import { logoutAction } from '@/actions/auth';
 import type { AuthUser } from '@/lib/auth/types';
@@ -38,8 +36,13 @@ const MENU_ITEMS = [
         icon: LayoutDashboard,
     },
     {
+        label: 'Casos',
+        href: '/dashboard/cases',
+        icon: FileText,
+    },
+    {
         label: 'Clientes',
-        href: '/dashboard/clients',
+        href: '/leads',
         icon: Users,
     },
     {
@@ -48,24 +51,19 @@ const MENU_ITEMS = [
         icon: Gavel,
     },
     {
-        label: 'Casos',
-        href: '/dashboard/cases',
-        icon: FileText,
+        label: 'Financeiro',
+        href: '/financeiro',
+        icon: Wallet,
     },
     {
-        label: 'WhatsApp',
-        href: '/dashboard/whatsapp',
-        icon: MessageSquare,
-    },
-    {
-        label: 'Agendamentos',
-        href: '/dashboard/schedule',
+        label: 'Agenda',
+        href: '/calendario',
         icon: Calendar,
     },
     {
-        label: 'Financeiro',
-        href: '/dashboard/financial',
-        icon: Wallet,
+        label: 'WhatsApp',
+        href: '/mensagens',
+        icon: MessageSquare,
     },
     {
         label: 'Equipe',
@@ -78,9 +76,9 @@ const MENU_ITEMS = [
         icon: Settings,
     },
     {
-        label: 'Instagram',
-        href: '/dashboard/instagram/inbox',
-        icon: Instagram,
+        label: 'IA',
+        href: '/ai',
+        icon: Bot,
     },
 ] as const;
 
@@ -162,7 +160,7 @@ export function Sidebar({ user = { id: 'temp', name: 'User', email: 'user@demo.c
                     <ul className="space-y-1">
                         {MENU_ITEMS.map((item) => {
                             const Icon = item.icon;
-                            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+                            const isActive = pathname === item.href;
 
                             return (
                                 <li key={item.href}>
