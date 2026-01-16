@@ -1,6 +1,7 @@
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { logger } from './lib/logger';
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
@@ -12,6 +13,15 @@ export async function middleware(req: NextRequest) {
   } = await supabase.auth.getSession();
 
   const { pathname } = req.nextUrl;
+
+  if (session) {
+    logger.info('Authenticated request', {
+      path: pathname,
+      user: session.user.email
+    });
+  } else {
+    logger.info('Anonymous request', { path: pathname });
+  }
 
   // Redireciona antigo /auth/login para o novo /login
   if (pathname === '/auth/login') {
