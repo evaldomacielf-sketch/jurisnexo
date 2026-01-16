@@ -1,4 +1,5 @@
 using JurisNexo.Application.DTOs.Auth;
+using JurisNexo.Application.DTOs;
 
 namespace JurisNexo.Application.Services;
 
@@ -11,4 +12,5 @@ public interface IAuthService
     Task<LoginResponse> RefreshTokenAsync(RefreshTokenRequest request, CancellationToken cancellationToken = default);
     Task<bool> RequestPasswordResetAsync(string email, CancellationToken cancellationToken = default);
     Task<bool> ResetPasswordAsync(ResetPasswordRequest request, CancellationToken cancellationToken = default);
+    Task<UserDto> GetUserProfileAsync(Guid userId, CancellationToken cancellationToken = default);
 }

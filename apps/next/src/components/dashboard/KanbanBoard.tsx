@@ -17,6 +17,7 @@ import toast from 'react-hot-toast';
 import { KanbanColumn } from './KanbanColumn';
 import { CaseCard } from './CaseCard';
 import { CaseDetailModal } from './CaseDetailModal';
+import { CreateCaseModal } from './CreateCaseModal';
 import { useKanbanStore } from '@/lib/store/kanban-store';
 import type { CaseCard as CaseCardType } from '@/lib/types/kanban';
 
@@ -131,6 +132,7 @@ export function KanbanBoard() {
                 </DragOverlay>
             </DndContext>
             <CaseDetailModal />
+            <CreateCaseModal />
         </div>
     );
 }

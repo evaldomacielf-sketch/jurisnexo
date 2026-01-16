@@ -273,8 +273,8 @@ public class AuthController : BaseApiController
         try
         {
             var userId = GetCurrentUserId();
-            // TODO: Implementar busca de perfil
-            return Ok();
+            var user = await _authService.GetUserProfileAsync(userId, cancellationToken);
+            return Ok(user);
         }
         catch (Exception ex)
         {

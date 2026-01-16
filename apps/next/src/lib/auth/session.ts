@@ -17,7 +17,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-    const response = await fetch(`${API_URL}/auth/me`, {
+    const response = await fetch(`${API_URL}/auth/profile`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${accessToken}`,
@@ -34,9 +34,9 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
       return null;
     }
 
-    const data = await response.json();
-    console.log('[Session] User from API:', JSON.stringify(data.user, null, 2));
-    return data.user;
+    const user = await response.json();
+    console.log('[Session] User from API:', JSON.stringify(user, null, 2));
+    return user;
   } catch (error: any) {
     if (error.name === 'AbortError') {
       console.error('[Session] Request timeout');

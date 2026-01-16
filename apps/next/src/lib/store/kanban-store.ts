@@ -13,10 +13,15 @@ interface KanbanStore {
     filterCategory: string | null;
     filterPriority: string | null;
 
+    isCreateModalOpen: boolean;
+    createModalColumnId: CaseStatus | null;
+
     // Actions
     setColumns: (columns: KanbanColumn[]) => void;
     moveCard: (cardId: string, fromStatus: CaseStatus, toStatus: CaseStatus) => void;
     selectCard: (card: CaseCard | null) => void;
+    openCreateModal: (columnId: CaseStatus) => void;
+    closeCreateModal: () => void;
     setSearchQuery: (query: string) => void;
     setFilterCategory: (category: string | null) => void;
     setFilterPriority: (priority: string | null) => void;
@@ -28,11 +33,16 @@ interface KanbanStore {
 export const useKanbanStore = create<KanbanStore>((set) => ({
     columns: MOCK_KANBAN_DATA,
     selectedCard: null,
+    isCreateModalOpen: false,
+    createModalColumnId: null,
     searchQuery: '',
     filterCategory: null,
     filterPriority: null,
 
     setColumns: (columns) => set({ columns }),
+
+    openCreateModal: (columnId) => set({ isCreateModalOpen: true, createModalColumnId: columnId }),
+    closeCreateModal: () => set({ isCreateModalOpen: false, createModalColumnId: null }),
 
     moveCard: (cardId, fromStatus, toStatus) =>
         set((state) => {

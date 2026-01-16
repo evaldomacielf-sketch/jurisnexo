@@ -62,7 +62,7 @@ export function RegisterForm() {
         try {
             const result = await registerAction(formData);
 
-            if (!result.success) {
+            if (result.success === false) {
                 setError(result.error);
                 return;
             }

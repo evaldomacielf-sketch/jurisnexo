@@ -43,11 +43,14 @@ export async function loginAction(
             };
         }
 
-        const result: LoginResponse = await response.json();
+        const result = await response.json();
+
+        // Map Backend "token" to Frontend "accessToken"
+        const accessToken = result.token || result.accessToken;
 
         // Setta tokens em HTTP-only cookies
         await setAuthCookies({
-            accessToken: result.accessToken,
+            accessToken: accessToken,
             refreshToken: result.refreshToken,
         });
 

@@ -23,33 +23,268 @@ namespace JurisNexo.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("JurisNexo.Domain.Common.BaseEntity", b =>
+            modelBuilder.Entity("JurisNexo.Domain.Entities.Appointment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("CaseId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(34)
-                        .HasColumnType("character varying(34)");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("GoogleCalendarEventId")
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
+
+                    b.Property<bool>("IsOnline")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("text");
+
+                    b.Property<string>("MeetLink")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.ToTable("BaseEntity");
+                    b.HasIndex("CaseId");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("BaseEntity");
+                    b.HasIndex("CreatedByUserId");
 
-                    b.UseTphMappingStrategy();
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("Appointments");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.AppointmentParticipant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AppointmentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppointmentId");
+
+                    b.ToTable("AppointmentParticipants");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.AuditLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Details")
+                        .HasColumnType("text");
+
+                    b.Property<string>("EntityId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("IpAddress")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsCritical")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("NewValue")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OldValue")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AuditLogs");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.Case", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CaseNumber")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("ClientId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsUrgent")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("PracticeArea")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("ResponsibleLawyerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<List<string>>("Tags")
+                        .IsRequired()
+                        .HasColumnType("text[]");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("ResponsibleLawyerId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("Cases");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.CaseEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CaseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("EventDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CaseId");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.ToTable("CaseEvents");
                 });
 
             modelBuilder.Entity("JurisNexo.Domain.Entities.Contact", b =>
@@ -66,6 +301,21 @@ namespace JurisNexo.Infrastructure.Migrations
 
                     b.Property<string>("City")
                         .HasColumnType("text");
+
+                    b.Property<DateTime?>("ConsentDeniedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ConsentGrantedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ConsentRequestedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ConsentRevokedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ConsentStatus")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Cpf")
                         .HasColumnType("text");
@@ -121,6 +371,149 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.HasIndex("TenantId", "Phone");
 
                     b.ToTable("Contacts", (string)null);
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.ContactDocument", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ContactId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("Size")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UploadedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UploadedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.HasIndex("UploadedByUserId");
+
+                    b.ToTable("ContactDocuments");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.Conversation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AssignedToUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ContactId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastMessageAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("UnreadCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("WhatsappChatId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignedToUserId");
+
+                    b.HasIndex("ContactId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("Conversations");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.ConversationTransfer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ConversationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("FromUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("ToUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("TransferredAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("FromUserId");
+
+                    b.HasIndex("ToUserId");
+
+                    b.ToTable("ConversationTransfers");
                 });
 
             modelBuilder.Entity("JurisNexo.Domain.Entities.Interaction", b =>
@@ -386,6 +779,129 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.ToTable("LeadActivities", (string)null);
                 });
 
+            modelBuilder.Entity("JurisNexo.Domain.Entities.LeadAssignment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("AssignedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("AssignedUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AssignmentReason")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("LeadId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LeadId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("LeadAssignments");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.LeadConversionFunnel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<TimeSpan>("DurationInPreviousStage")
+                        .HasColumnType("interval");
+
+                    b.Property<int>("FromStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("LeadId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("ToStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("TransitionedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("LeadConversionFunnels");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.LeadFollowUpTask", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("LeadId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("TaskDescription")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LeadId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("LeadFollowUpTasks");
+                });
+
             modelBuilder.Entity("JurisNexo.Domain.Entities.LeadNote", b =>
                 {
                     b.Property<Guid>("Id")
@@ -428,6 +944,260 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("LeadNotes", (string)null);
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.LeadQualificationAnswer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AnswerText")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("LeadId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LeadId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("LeadQualificationAnswers");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.LeadQualificationQuestion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ExpectedResponseType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FieldToMap")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("OptionsJson")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("QuestionText")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("LeadQualificationQuestions");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.LeadRoutingRule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CriteriaJson")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("RuleName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("TargetUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("LeadRoutingRules");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.LeadScore", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("LeadId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ScoreValue")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("ScoredAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LeadId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("LeadScores");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.Message", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("ConversationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("MediaUrl")
+                        .HasColumnType("text");
+
+                    b.Property<int>("MessageType")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("SenderType")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("WhatsappMessageId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConversationId");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.MessageTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("MessageTemplates");
                 });
 
             modelBuilder.Entity("JurisNexo.Domain.Entities.Pipeline", b =>
@@ -476,6 +1246,73 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.HasIndex("TenantId", "IsDefault");
 
                     b.ToTable("Pipelines", (string)null);
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.ScheduledMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ConfirmationResponse")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ConfirmedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ConversationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("CreatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("NextRetryAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("RequestConfirmation")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("RetryCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("ScheduledFor")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("SentAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.ToTable("ScheduledMessages");
                 });
 
             modelBuilder.Entity("JurisNexo.Domain.Entities.Stage", b =>
@@ -543,6 +1380,62 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.HasIndex("PipelineId", "Position");
 
                     b.ToTable("Stages", (string)null);
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.Tenant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("text");
+
+                    b.Property<string>("City")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirmName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LogoUrl")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("State")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("TrialEndsAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ZipCode")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tenants");
                 });
 
             modelBuilder.Entity("JurisNexo.Domain.Entities.User", b =>
@@ -629,644 +1522,11 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("JurisNexo.Domain.Entities.Appointment", b =>
-                {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
-
-                    b.Property<Guid?>("CaseId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CreatedByUserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("GoogleCalendarEventId")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsOnline")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("text");
-
-                    b.Property<string>("MeetLink")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("TenantId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasIndex("CaseId");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("TenantId");
-
-                    b.HasDiscriminator().HasValue("Appointment");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.AppointmentParticipant", b =>
-                {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
-
-                    b.Property<Guid>("AppointmentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.HasIndex("AppointmentId");
-
-                    b.HasDiscriminator().HasValue("AppointmentParticipant");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.Case", b =>
-                {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
-
-                    b.Property<string>("CaseNumber")
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("ClientId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsUrgent")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("PracticeArea")
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("ResponsibleLawyerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<List<string>>("Tags")
-                        .IsRequired()
-                        .HasColumnType("text[]");
-
-                    b.Property<Guid>("TenantId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("ResponsibleLawyerId");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("BaseEntity", t =>
-                        {
-                            t.Property("Description")
-                                .HasColumnName("Case_Description");
-
-                            t.Property("Status")
-                                .HasColumnName("Case_Status");
-
-                            t.Property("Title")
-                                .HasColumnName("Case_Title");
-                        });
-
-                    b.HasDiscriminator().HasValue("Case");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.CaseEvent", b =>
-                {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
-
-                    b.Property<Guid>("CaseId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CreatedByUserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("EventDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.HasIndex("CaseId");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.ToTable("BaseEntity", t =>
-                        {
-                            t.Property("CaseId")
-                                .HasColumnName("CaseEvent_CaseId");
-
-                            t.Property("CreatedBy")
-                                .HasColumnName("CaseEvent_CreatedBy");
-
-                            t.Property("CreatedByUserId")
-                                .HasColumnName("CaseEvent_CreatedByUserId");
-
-                            t.Property("Description")
-                                .HasColumnName("CaseEvent_Description");
-
-                            t.Property("Title")
-                                .HasColumnName("CaseEvent_Title");
-
-                            t.Property("Type")
-                                .HasColumnName("CaseEvent_Type");
-                        });
-
-                    b.HasDiscriminator().HasValue("CaseEvent");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.ContactDocument", b =>
-                {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
-
-                    b.Property<Guid>("ContactId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("MimeType")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<long>("Size")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("UploadedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UploadedByUserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasIndex("ContactId");
-
-                    b.HasIndex("UploadedByUserId");
-
-                    b.ToTable("BaseEntity", t =>
-                        {
-                            t.Property("Name")
-                                .HasColumnName("ContactDocument_Name");
-                        });
-
-                    b.HasDiscriminator().HasValue("ContactDocument");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.Conversation", b =>
-                {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
-
-                    b.Property<Guid?>("AssignedToUserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ContactId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("LastMessageAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Priority")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("TenantId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("UnreadCount")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("WhatsappChatId")
-                        .HasColumnType("text");
-
-                    b.HasIndex("AssignedToUserId");
-
-                    b.HasIndex("ContactId");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("BaseEntity", t =>
-                        {
-                            t.Property("ContactId")
-                                .HasColumnName("Conversation_ContactId");
-
-                            t.Property("Status")
-                                .HasColumnName("Conversation_Status");
-                        });
-
-                    b.HasDiscriminator().HasValue("Conversation");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.LeadAssignment", b =>
-                {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
-
-                    b.Property<DateTime>("AssignedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("AssignedUserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("AssignmentReason")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("LeadId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TenantId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("uuid");
-
-                    b.HasIndex("LeadId");
-
-                    b.HasIndex("TenantId");
-
-                    b.HasDiscriminator().HasValue("LeadAssignment");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.LeadConversionFunnel", b =>
-                {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
-
-                    b.Property<TimeSpan>("DurationInPreviousStage")
-                        .HasColumnType("interval");
-
-                    b.Property<int>("FromStatus")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("LeadId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TenantId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("ToStatus")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("TransitionedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("BaseEntity", t =>
-                        {
-                            t.Property("LeadId")
-                                .HasColumnName("LeadConversionFunnel_LeadId");
-                        });
-
-                    b.HasDiscriminator().HasValue("LeadConversionFunnel");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.LeadFollowUpTask", b =>
-                {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
-
-                    b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("LeadId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("TaskDescription")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("TenantId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("uuid");
-
-                    b.HasIndex("LeadId");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("BaseEntity", t =>
-                        {
-                            t.Property("LeadId")
-                                .HasColumnName("LeadFollowUpTask_LeadId");
-                        });
-
-                    b.HasDiscriminator().HasValue("LeadFollowUpTask");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.LeadQualificationAnswer", b =>
-                {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
-
-                    b.Property<string>("AnswerText")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("LeadId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("QuestionId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TenantId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("uuid");
-
-                    b.HasIndex("LeadId");
-
-                    b.HasIndex("QuestionId");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("BaseEntity", t =>
-                        {
-                            t.Property("LeadId")
-                                .HasColumnName("LeadQualificationAnswer_LeadId");
-                        });
-
-                    b.HasDiscriminator().HasValue("LeadQualificationAnswer");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.LeadQualificationQuestion", b =>
-                {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
-
-                    b.Property<string>("ExpectedResponseType")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("FieldToMap")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("OptionsJson")
-                        .HasColumnType("text");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("QuestionText")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("TenantId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("uuid");
-
-                    b.HasIndex("TenantId");
-
-                    b.HasDiscriminator().HasValue("LeadQualificationQuestion");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.LeadRoutingRule", b =>
-                {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
-
-                    b.Property<string>("CriteriaJson")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("Priority")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("RuleName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("TargetUserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TenantId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("uuid");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("BaseEntity", t =>
-                        {
-                            t.Property("IsActive")
-                                .HasColumnName("LeadRoutingRule_IsActive");
-
-                            t.Property("Priority")
-                                .HasColumnName("LeadRoutingRule_Priority");
-                        });
-
-                    b.HasDiscriminator().HasValue("LeadRoutingRule");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.LeadScore", b =>
-                {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
-
-                    b.Property<Guid>("LeadId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("ScoreValue")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("ScoredAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("TenantId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("uuid");
-
-                    b.HasIndex("LeadId");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("BaseEntity", t =>
-                        {
-                            t.Property("LeadId")
-                                .HasColumnName("LeadScore_LeadId");
-                        });
-
-                    b.HasDiscriminator().HasValue("LeadScore");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.Message", b =>
-                {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("ConversationId")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("MediaUrl")
-                        .HasColumnType("text");
-
-                    b.Property<int>("MessageType")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("SenderId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("SenderType")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("SentAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("WhatsappMessageId")
-                        .HasColumnType("text");
-
-                    b.HasIndex("ConversationId");
-
-                    b.HasDiscriminator().HasValue("Message");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.MessageTemplate", b =>
-                {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("TenantId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("uuid");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("BaseEntity", t =>
-                        {
-                            t.Property("Content")
-                                .HasColumnName("MessageTemplate_Content");
-
-                            t.Property("Name")
-                                .HasColumnName("MessageTemplate_Name");
-                        });
-
-                    b.HasDiscriminator().HasValue("MessageTemplate");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.Tenant", b =>
-                {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("text");
-
-                    b.Property<string>("City")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("FirmName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("LogoUrl")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("text");
-
-                    b.Property<string>("State")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("TrialEndsAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ZipCode")
-                        .HasColumnType("text");
-
-                    b.ToTable("BaseEntity", t =>
-                        {
-                            t.Property("Email")
-                                .HasColumnName("Tenant_Email");
-
-                            t.Property("IsActive")
-                                .HasColumnName("Tenant_IsActive");
-                        });
-
-                    b.HasDiscriminator().HasValue("Tenant");
-                });
-
             modelBuilder.Entity("JurisNexo.Domain.Entities.WhatsAppContact", b =>
                 {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("BusinessCategory")
                         .HasColumnType("text");
@@ -1274,8 +1534,14 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.Property<Guid?>("ContactId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("LastSyncedAt")
                         .HasColumnType("timestamp with time zone");
@@ -1293,32 +1559,29 @@ namespace JurisNexo.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<Guid>("TenantId")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("WhatsAppId")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.HasKey("Id");
+
                     b.HasIndex("ContactId");
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("BaseEntity", t =>
-                        {
-                            t.Property("ContactId")
-                                .HasColumnName("WhatsAppContact_ContactId");
-
-                            t.Property("Description")
-                                .HasColumnName("WhatsAppContact_Description");
-                        });
-
-                    b.HasDiscriminator().HasValue("WhatsAppContact");
+                    b.ToTable("WhatsAppContacts");
                 });
 
             modelBuilder.Entity("JurisNexo.Domain.Entities.WhatsAppConversation", b =>
                 {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("AssignedToUserId")
                         .HasColumnType("uuid");
@@ -1328,6 +1591,9 @@ namespace JurisNexo.Infrastructure.Migrations
 
                     b.Property<Guid?>("CaseId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CustomerName")
                         .IsRequired()
@@ -1341,6 +1607,9 @@ namespace JurisNexo.Infrastructure.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsBotEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsMuted")
@@ -1365,15 +1634,19 @@ namespace JurisNexo.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<Guid>("TenantId")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("uuid");
 
                     b.Property<int>("UnreadCount")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("WhatsAppId")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("AssignedToUserId");
 
@@ -1381,37 +1654,21 @@ namespace JurisNexo.Infrastructure.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("BaseEntity", t =>
-                        {
-                            t.Property("AssignedToUserId")
-                                .HasColumnName("WhatsAppConversation_AssignedToUserId");
-
-                            t.Property("CaseId")
-                                .HasColumnName("WhatsAppConversation_CaseId");
-
-                            t.Property("LastMessageAt")
-                                .HasColumnName("WhatsAppConversation_LastMessageAt");
-
-                            t.Property("TagsJson")
-                                .HasColumnName("WhatsAppConversation_TagsJson");
-
-                            t.Property("UnreadCount")
-                                .HasColumnName("WhatsAppConversation_UnreadCount");
-
-                            t.Property("WhatsAppId")
-                                .HasColumnName("WhatsAppConversation_WhatsAppId");
-                        });
-
-                    b.HasDiscriminator().HasValue("WhatsAppConversation");
+                    b.ToTable("WhatsAppConversations");
                 });
 
             modelBuilder.Entity("JurisNexo.Domain.Entities.WhatsAppMedia", b =>
                 {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("BlobStorageUrl")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("ExpiresAt")
                         .HasColumnType("timestamp with time zone");
@@ -1421,6 +1678,9 @@ namespace JurisNexo.Infrastructure.Migrations
 
                     b.Property<long>("FileSize")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<Guid?>("MessageId")
                         .HasColumnType("uuid");
@@ -1433,8 +1693,10 @@ namespace JurisNexo.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<Guid>("TenantId")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("UploadedAt")
                         .HasColumnType("timestamp with time zone");
@@ -1443,29 +1705,33 @@ namespace JurisNexo.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.HasKey("Id");
+
                     b.HasIndex("MessageId");
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("BaseEntity", t =>
-                        {
-                            t.Property("MimeType")
-                                .HasColumnName("WhatsAppMedia_MimeType");
-                        });
-
-                    b.HasDiscriminator().HasValue("WhatsAppMedia");
+                    b.ToTable("WhatsAppMedia");
                 });
 
             modelBuilder.Entity("JurisNexo.Domain.Entities.WhatsAppMessage", b =>
                 {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("Direction")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("MediaType")
                         .HasColumnType("text");
@@ -1489,6 +1755,9 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<Guid>("WhatsAppConversationId")
                         .HasColumnType("uuid");
 
@@ -1496,35 +1765,18 @@ namespace JurisNexo.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.HasKey("Id");
+
                     b.HasIndex("WhatsAppConversationId");
 
-                    b.ToTable("BaseEntity", t =>
-                        {
-                            t.Property("Content")
-                                .HasColumnName("WhatsAppMessage_Content");
-
-                            t.Property("MediaUrl")
-                                .HasColumnName("WhatsAppMessage_MediaUrl");
-
-                            t.Property("MetadataJson")
-                                .HasColumnName("WhatsAppMessage_MetadataJson");
-
-                            t.Property("SentAt")
-                                .HasColumnName("WhatsAppMessage_SentAt");
-
-                            t.Property("Status")
-                                .HasColumnName("WhatsAppMessage_Status");
-
-                            t.Property("Type")
-                                .HasColumnName("WhatsAppMessage_Type");
-                        });
-
-                    b.HasDiscriminator().HasValue("WhatsAppMessage");
+                    b.ToTable("WhatsAppMessages");
                 });
 
             modelBuilder.Entity("JurisNexo.Domain.Entities.WhatsAppTemplate", b =>
                 {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Body")
                         .IsRequired()
@@ -1541,8 +1793,14 @@ namespace JurisNexo.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("ExternalId")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Language")
                         .IsRequired()
@@ -1556,32 +1814,26 @@ namespace JurisNexo.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<Guid>("TenantId")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("BaseEntity", t =>
-                        {
-                            t.Property("Category")
-                                .HasColumnName("WhatsAppTemplate_Category");
-
-                            t.Property("Content")
-                                .HasColumnName("WhatsAppTemplate_Content");
-
-                            t.Property("Name")
-                                .HasColumnName("WhatsAppTemplate_Name");
-
-                            t.Property("Status")
-                                .HasColumnName("WhatsAppTemplate_Status");
-                        });
-
-                    b.HasDiscriminator().HasValue("WhatsAppTemplate");
+                    b.ToTable("WhatsAppTemplates");
                 });
 
             modelBuilder.Entity("JurisNexo.Domain.Entities.WhatsAppWebhookLog", b =>
                 {
-                    b.HasBaseType("JurisNexo.Domain.Common.BaseEntity");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ErrorMessage")
                         .HasColumnType("text");
@@ -1589,6 +1841,9 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.Property<string>("EventType")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Payload")
                         .IsRequired()
@@ -1605,12 +1860,103 @@ namespace JurisNexo.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("TenantId")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("TenantId");
 
-                    b.HasDiscriminator().HasValue("WhatsAppWebhookLog");
+                    b.ToTable("WhatsAppWebhookLogs");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.Appointment", b =>
+                {
+                    b.HasOne("JurisNexo.Domain.Entities.Case", "Case")
+                        .WithMany()
+                        .HasForeignKey("CaseId");
+
+                    b.HasOne("JurisNexo.Domain.Entities.User", "CreatedByUser")
+                        .WithMany("CreatedAppointments")
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JurisNexo.Domain.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Case");
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.AppointmentParticipant", b =>
+                {
+                    b.HasOne("JurisNexo.Domain.Entities.Appointment", "Appointment")
+                        .WithMany("Participants")
+                        .HasForeignKey("AppointmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Appointment");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.AuditLog", b =>
+                {
+                    b.HasOne("JurisNexo.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.Case", b =>
+                {
+                    b.HasOne("JurisNexo.Domain.Entities.Contact", "Client")
+                        .WithMany("Cases")
+                        .HasForeignKey("ClientId");
+
+                    b.HasOne("JurisNexo.Domain.Entities.User", "ResponsibleLawyer")
+                        .WithMany("ResponsibleCases")
+                        .HasForeignKey("ResponsibleLawyerId");
+
+                    b.HasOne("JurisNexo.Domain.Entities.Tenant", "Tenant")
+                        .WithMany("Cases")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("ResponsibleLawyer");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.CaseEvent", b =>
+                {
+                    b.HasOne("JurisNexo.Domain.Entities.Case", "Case")
+                        .WithMany("Events")
+                        .HasForeignKey("CaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JurisNexo.Domain.Entities.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Case");
+
+                    b.Navigation("CreatedByUser");
                 });
 
             modelBuilder.Entity("JurisNexo.Domain.Entities.Contact", b =>
@@ -1622,6 +1968,77 @@ namespace JurisNexo.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.ContactDocument", b =>
+                {
+                    b.HasOne("JurisNexo.Domain.Entities.Contact", "Contact")
+                        .WithMany("Documents")
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JurisNexo.Domain.Entities.User", "UploadedByUser")
+                        .WithMany()
+                        .HasForeignKey("UploadedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contact");
+
+                    b.Navigation("UploadedByUser");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.Conversation", b =>
+                {
+                    b.HasOne("JurisNexo.Domain.Entities.User", "AssignedToUser")
+                        .WithMany()
+                        .HasForeignKey("AssignedToUserId");
+
+                    b.HasOne("JurisNexo.Domain.Entities.Contact", "Contact")
+                        .WithMany("Conversations")
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JurisNexo.Domain.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AssignedToUser");
+
+                    b.Navigation("Contact");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.ConversationTransfer", b =>
+                {
+                    b.HasOne("JurisNexo.Domain.Entities.WhatsAppConversation", "Conversation")
+                        .WithMany()
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JurisNexo.Domain.Entities.User", "FromUser")
+                        .WithMany()
+                        .HasForeignKey("FromUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JurisNexo.Domain.Entities.User", "ToUser")
+                        .WithMany()
+                        .HasForeignKey("ToUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("FromUser");
+
+                    b.Navigation("ToUser");
                 });
 
             modelBuilder.Entity("JurisNexo.Domain.Entities.Interaction", b =>
@@ -1719,196 +2136,6 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.Navigation("Tenant");
                 });
 
-            modelBuilder.Entity("JurisNexo.Domain.Entities.LeadNote", b =>
-                {
-                    b.HasOne("JurisNexo.Domain.Entities.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("JurisNexo.Domain.Entities.Lead", "Lead")
-                        .WithMany()
-                        .HasForeignKey("LeadId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("JurisNexo.Domain.Entities.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("Lead");
-
-                    b.Navigation("Tenant");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.Pipeline", b =>
-                {
-                    b.HasOne("JurisNexo.Domain.Entities.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Tenant");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.Stage", b =>
-                {
-                    b.HasOne("JurisNexo.Domain.Entities.Pipeline", "Pipeline")
-                        .WithMany("Stages")
-                        .HasForeignKey("PipelineId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("JurisNexo.Domain.Entities.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Pipeline");
-
-                    b.Navigation("Tenant");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.User", b =>
-                {
-                    b.HasOne("JurisNexo.Domain.Entities.Tenant", "Tenant")
-                        .WithMany("Users")
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Tenant");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.Appointment", b =>
-                {
-                    b.HasOne("JurisNexo.Domain.Entities.Case", "Case")
-                        .WithMany()
-                        .HasForeignKey("CaseId");
-
-                    b.HasOne("JurisNexo.Domain.Entities.User", "CreatedByUser")
-                        .WithMany("CreatedAppointments")
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("JurisNexo.Domain.Entities.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Case");
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("Tenant");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.AppointmentParticipant", b =>
-                {
-                    b.HasOne("JurisNexo.Domain.Entities.Appointment", "Appointment")
-                        .WithMany("Participants")
-                        .HasForeignKey("AppointmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Appointment");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.Case", b =>
-                {
-                    b.HasOne("JurisNexo.Domain.Entities.Contact", "Client")
-                        .WithMany("Cases")
-                        .HasForeignKey("ClientId");
-
-                    b.HasOne("JurisNexo.Domain.Entities.User", "ResponsibleLawyer")
-                        .WithMany("ResponsibleCases")
-                        .HasForeignKey("ResponsibleLawyerId");
-
-                    b.HasOne("JurisNexo.Domain.Entities.Tenant", "Tenant")
-                        .WithMany("Cases")
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
-
-                    b.Navigation("ResponsibleLawyer");
-
-                    b.Navigation("Tenant");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.CaseEvent", b =>
-                {
-                    b.HasOne("JurisNexo.Domain.Entities.Case", "Case")
-                        .WithMany("Events")
-                        .HasForeignKey("CaseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("JurisNexo.Domain.Entities.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Case");
-
-                    b.Navigation("CreatedByUser");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.ContactDocument", b =>
-                {
-                    b.HasOne("JurisNexo.Domain.Entities.Contact", "Contact")
-                        .WithMany("Documents")
-                        .HasForeignKey("ContactId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("JurisNexo.Domain.Entities.User", "UploadedByUser")
-                        .WithMany()
-                        .HasForeignKey("UploadedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contact");
-
-                    b.Navigation("UploadedByUser");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.Conversation", b =>
-                {
-                    b.HasOne("JurisNexo.Domain.Entities.User", "AssignedToUser")
-                        .WithMany()
-                        .HasForeignKey("AssignedToUserId");
-
-                    b.HasOne("JurisNexo.Domain.Entities.Contact", "Contact")
-                        .WithMany("Conversations")
-                        .HasForeignKey("ContactId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("JurisNexo.Domain.Entities.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AssignedToUser");
-
-                    b.Navigation("Contact");
-
-                    b.Navigation("Tenant");
-                });
-
             modelBuilder.Entity("JurisNexo.Domain.Entities.LeadAssignment", b =>
                 {
                     b.HasOne("JurisNexo.Domain.Entities.Lead", "Lead")
@@ -1952,6 +2179,33 @@ namespace JurisNexo.Infrastructure.Migrations
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Lead");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.LeadNote", b =>
+                {
+                    b.HasOne("JurisNexo.Domain.Entities.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("JurisNexo.Domain.Entities.Lead", "Lead")
+                        .WithMany()
+                        .HasForeignKey("LeadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JurisNexo.Domain.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
 
                     b.Navigation("Lead");
 
@@ -2048,6 +2302,64 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.Navigation("Tenant");
                 });
 
+            modelBuilder.Entity("JurisNexo.Domain.Entities.Pipeline", b =>
+                {
+                    b.HasOne("JurisNexo.Domain.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.ScheduledMessage", b =>
+                {
+                    b.HasOne("JurisNexo.Domain.Entities.WhatsAppConversation", "Conversation")
+                        .WithMany()
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JurisNexo.Domain.Entities.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId");
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("CreatedByUser");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.Stage", b =>
+                {
+                    b.HasOne("JurisNexo.Domain.Entities.Pipeline", "Pipeline")
+                        .WithMany("Stages")
+                        .HasForeignKey("PipelineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JurisNexo.Domain.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pipeline");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.User", b =>
+                {
+                    b.HasOne("JurisNexo.Domain.Entities.Tenant", "Tenant")
+                        .WithMany("Users")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
             modelBuilder.Entity("JurisNexo.Domain.Entities.WhatsAppContact", b =>
                 {
                     b.HasOne("JurisNexo.Domain.Entities.Contact", "Contact")
@@ -2138,6 +2450,16 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.Navigation("Tenant");
                 });
 
+            modelBuilder.Entity("JurisNexo.Domain.Entities.Appointment", b =>
+                {
+                    b.Navigation("Participants");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.Case", b =>
+                {
+                    b.Navigation("Events");
+                });
+
             modelBuilder.Entity("JurisNexo.Domain.Entities.Contact", b =>
                 {
                     b.Navigation("Cases");
@@ -2149,6 +2471,11 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.Navigation("Interactions");
 
                     b.Navigation("Leads");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.Conversation", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("JurisNexo.Domain.Entities.Lead", b =>
@@ -2176,30 +2503,6 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.Navigation("Leads");
                 });
 
-            modelBuilder.Entity("JurisNexo.Domain.Entities.User", b =>
-                {
-                    b.Navigation("AssignedLeads");
-
-                    b.Navigation("CreatedAppointments");
-
-                    b.Navigation("ResponsibleCases");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.Appointment", b =>
-                {
-                    b.Navigation("Participants");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.Case", b =>
-                {
-                    b.Navigation("Events");
-                });
-
-            modelBuilder.Entity("JurisNexo.Domain.Entities.Conversation", b =>
-                {
-                    b.Navigation("Messages");
-                });
-
             modelBuilder.Entity("JurisNexo.Domain.Entities.Tenant", b =>
                 {
                     b.Navigation("Cases");
@@ -2207,6 +2510,15 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.Navigation("Contacts");
 
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("JurisNexo.Domain.Entities.User", b =>
+                {
+                    b.Navigation("AssignedLeads");
+
+                    b.Navigation("CreatedAppointments");
+
+                    b.Navigation("ResponsibleCases");
                 });
 
             modelBuilder.Entity("JurisNexo.Domain.Entities.WhatsAppConversation", b =>

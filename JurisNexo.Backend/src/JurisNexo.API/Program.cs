@@ -29,33 +29,30 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateBootstrapLogger();
 
-try
+var builder = WebApplication.CreateBuilder(args);
+
+// Add Serilog
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext()
+    .WriteTo.Console());
+
+// Add Sentry
+var sentryDsn = builder.Configuration["Sentry:Dsn"];
+if (!string.IsNullOrEmpty(sentryDsn))
 {
-    var builder = WebApplication.CreateBuilder(args);
-
-    // Add Serilog
-    builder.Host.UseSerilog((context, services, configuration) => configuration
-        .ReadFrom.Configuration(context.Configuration)
-        .ReadFrom.Services(services)
-        .Enrich.FromLogContext()
-        .WriteTo.Console());
-
-    // Add Sentry
-    // Add Sentry only if DSN is present
-    var sentryDsn = builder.Configuration["Sentry:Dsn"];
-    if (!string.IsNullOrEmpty(sentryDsn))
+    builder.WebHost.UseSentry(options =>
     {
-        builder.WebHost.UseSentry(options =>
-        {
-            options.Dsn = sentryDsn;
-            options.TracesSampleRate = 1.0;
-            options.Debug = false;
-            options.Environment = builder.Environment.EnvironmentName;
-        });
-    }
+        options.Dsn = sentryDsn;
+        options.TracesSampleRate = 1.0;
+        options.Debug = false;
+        options.Environment = builder.Environment.EnvironmentName;
+    });
+}
 
-    // Add X-Ray Tracing
-    builder.Services.AddXRayTracing();
+// Add X-Ray Tracing
+// builder.Services.AddXRayTracing();
 
 // Configuration
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
@@ -66,16 +63,17 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Redis
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
-});
+// builder.Services.AddStackExchangeRedisCache(options =>
+// {
+//     options.Configuration = builder.Configuration.GetConnectionString("Redis");
+// });
+builder.Services.AddDistributedMemoryCache();
 
 // Redis Connection Multiplexer for Queue Service
 var redisConnectionString = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
-builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-    ConnectionMultiplexer.Connect(redisConnectionString));
-builder.Services.AddScoped<IWhatsAppQueueService, WhatsAppQueueService>();
+// builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+//    ConnectionMultiplexer.Connect(redisConnectionString));
+// builder.Services.AddScoped<IWhatsAppQueueService, WhatsAppQueueService>();
 
 // Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -91,7 +89,14 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-builder.Services.AddScoped<IEmailService, EmailService>();
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddScoped<IEmailService, JurisNexo.Infrastructure.Services.DevEmailService>();
+}
+else
+{
+    builder.Services.AddScoped<IEmailService, EmailService>();
+}
 builder.Services.AddScoped<IStorageService, LocalStorageService>();
 builder.Services.AddScoped<IPipelineService, PipelineService>();
 builder.Services.AddScoped<ILeadService, LeadService>();
@@ -106,7 +111,7 @@ builder.Services.AddScoped<ILeadAnalyticsService, LeadAnalyticsService>();
 
 // WhatsApp Services
 builder.Services.AddScoped<IWhatsAppWebhookHandler, WhatsAppWebhookHandler>();
-builder.Services.AddScoped<IWhatsAppMessageProcessor, WhatsAppWebhookHandler>(); // Register same class for processor
+builder.Services.AddScoped<IWhatsAppMessageProcessor, WhatsAppWebhookHandler>();
 builder.Services.AddScoped<IWhatsAppWebhookValidator, WhatsAppWebhookValidator>();
 builder.Services.AddScoped<IWhatsAppChatbotService, WhatsAppChatbotService>();
 builder.Services.AddScoped<IAIClassifierService, AIClassifierService>();
@@ -122,18 +127,18 @@ builder.Services.AddScoped<IPushNotificationService, PushNotificationService>();
 builder.Services.AddScoped<ISmsService, SmsService>();
 builder.Services.AddScoped<ILeadNotificationService, LeadNotificationService>();
 builder.Services.AddScoped<ILGPDConsentService, LGPDConsentService>();
-builder.Services.AddScoped<IConversationTransferService, ConversationTransferService>();
-builder.Services.AddScoped<IWhatsAppSchedulingService, WhatsAppSchedulingService>();
+// builder.Services.AddScoped<IConversationTransferService, ConversationTransferService>();
+// builder.Services.AddScoped<IWhatsAppSchedulingService, WhatsAppSchedulingService>();
 builder.Services.AddScoped<IAuditService, AuditService>();
 
 // Background Workers
-builder.Services.AddHostedService<WhatsAppMessageWorker>();
-builder.Services.AddHostedService<SLAMonitorService>();
-builder.Services.AddHostedService<ScheduledMessageWorker>();
+// builder.Services.AddHostedService<WhatsAppMessageWorker>();
+// builder.Services.AddHostedService<SLAMonitorService>();
+// builder.Services.AddHostedService<ScheduledMessageWorker>();
 
 // Monitoring
-builder.Services.AddAWSService<IAmazonCloudWatch>();
-builder.Services.AddSingleton<IMetricsPublisher, CloudWatchMetricsPublisher>();
+// builder.Services.AddAWSService<IAmazonCloudWatch>();
+// builder.Services.AddSingleton<IMetricsPublisher, CloudWatchMetricsPublisher>();
 
 // HttpContext
 builder.Services.AddHttpContextAccessor();
@@ -184,43 +189,33 @@ builder.Services.Configure<Microsoft.AspNetCore.Mvc.MvcOptions>(options =>
 
 var app = builder.Build();
 
-// X-Ray Tracing Middleware (Must be early in the pipeline)
-app.UseXRayTracing();
+// X-Ray Tracing Middleware
+// app.UseXRayTracing();
 
 // Middleware
 if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 {
     app.UseSwaggerDocumentation();
     app.UseReDocDocumentation();
-    app.UseStaticFiles(); // Enable serving static files (css, js, images)
+    app.UseStaticFiles();
     
-    // Endpoint para gerar Postman Collection
     app.MapGet("/api/docs/postman", (IServiceProvider services) =>
     {
         var collection = PostmanCollectionGenerator.GenerateCollection(services);
         return Results.Content(collection, "application/json", System.Text.Encoding.UTF8);
     }).ExcludeFromDescription();
 
-    // Auto-migrate in Dev
+    /*
     using (var scope = app.Services.CreateScope())
     {
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        try 
-        {
-            Log.Information("Applying migrations...");
-            db.Database.Migrate(); 
-            Log.Information("Migrations applied successfully.");
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "Failed to apply migrations.");
-        }
+        db.Database.Migrate(); 
     }
+    */
 }
 
-
 app.UseSerilogRequestLogging();
-app.UseMiddleware<PerformanceMonitoringMiddleware>();
+// app.UseMiddleware<PerformanceMonitoringMiddleware>();
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseAuthentication();
@@ -229,13 +224,4 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHub<InboxHub>("/hubs/inbox");
 
-    app.Run();
-}
-catch (Exception ex)
-{
-    Log.Fatal(ex, "Application terminated unexpectedly");
-}
-finally
-{
-    Log.CloseAndFlush();
-}
+app.Run();

@@ -5,6 +5,7 @@ namespace JurisNexo.Domain.Entities;
 public class Tenant : BaseEntity
 {
     public string FirmName { get; set; } = string.Empty;
+    public string Slug { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string? Phone { get; set; }
     public string? Address { get; set; }

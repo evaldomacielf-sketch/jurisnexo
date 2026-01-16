@@ -64,7 +64,7 @@ const MENU_ITEMS = [
     },
     {
         label: 'Financeiro',
-        href: '/financeiro',
+        href: '/dashboard/financial',
         icon: Wallet,
     },
     {

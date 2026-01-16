@@ -223,6 +223,14 @@ public class AuthService : IAuthService
         return true;
     }
 
+    public async Task<UserDto> GetUserProfileAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        var user = await _userRepository.GetByIdAsync(userId, cancellationToken)
+            ?? throw new NotFoundException("Usuário não encontrado");
+
+        return MapToUserDto(user);
+    }
+
     private static string GenerateVerificationCode()
     {
         return Random.Shared.Next(100000, 999999).ToString();

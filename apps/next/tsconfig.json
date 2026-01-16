@@ -13,11 +13,7 @@
         "noEmit": true,
         "incremental": true,
         "baseUrl": ".",
-        "strict": false,
-        "noImplicitAny": false,
-        "strictNullChecks": false,
-        "noUnusedLocals": false,
-        "noUnusedParameters": false,
+        "strict": true,
         "paths": {
             "@/*": [
                 "./src/*"

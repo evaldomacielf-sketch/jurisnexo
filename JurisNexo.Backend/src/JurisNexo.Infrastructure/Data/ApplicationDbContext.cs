@@ -59,14 +59,35 @@ public class ApplicationDbContext : DbContext
         // Configurações de entidades
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
-        // Global query filter para soft delete
-        modelBuilder.Entity<BaseEntity>().HasQueryFilter(e => !e.IsDeleted);
-
-        // Global query filter para multi-tenancy
-        var tenantId = GetCurrentTenantId();
-        if (tenantId.HasValue)
+        // Apply global filters to all entities inheriting from BaseEntity or TenantEntity
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
-            modelBuilder.Entity<TenantEntity>().HasQueryFilter(e => e.TenantId == tenantId.Value);
+            // Soft Delete Filter
+            if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
+            {
+                var parameter = System.Linq.Expressions.Expression.Parameter(entityType.ClrType, "e");
+                var body = System.Linq.Expressions.Expression.Not(
+                    System.Linq.Expressions.Expression.Property(parameter, nameof(BaseEntity.IsDeleted)));
+                var lambda = System.Linq.Expressions.Expression.Lambda(body, parameter);
+
+                modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
+            }
+
+            // Multi-tenancy Filter
+            if (typeof(TenantEntity).IsAssignableFrom(entityType.ClrType))
+            {
+                var currentTenantId = GetCurrentTenantId();
+                if (currentTenantId.HasValue)
+                {
+                    var parameter = System.Linq.Expressions.Expression.Parameter(entityType.ClrType, "e");
+                    var property = System.Linq.Expressions.Expression.Property(parameter, nameof(TenantEntity.TenantId));
+                    var constant = System.Linq.Expressions.Expression.Constant(currentTenantId.Value);
+                    var body = System.Linq.Expressions.Expression.Equal(property, constant);
+                    var lambda = System.Linq.Expressions.Expression.Lambda(body, parameter);
+
+                    modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
+                }
+            }
         }
 
         // Apply Encryption to WhatsAppMessage Content
@@ -74,7 +95,7 @@ public class ApplicationDbContext : DbContext
             .Property(e => e.Content)
             .HasConversion(new JurisNexo.Infrastructure.Data.Converters.EncryptionValueConverter());
     }
-
+    
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         // Atualiza UpdatedAt automaticamente

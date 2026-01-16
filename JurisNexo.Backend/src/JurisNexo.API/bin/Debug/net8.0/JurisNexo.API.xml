@@ -224,6 +224,21 @@
             Cria novo pipeline
             </summary>
         </member>
+        <member name="T:JurisNexo.API.Controllers.TenantsController">
+            <summary>
+            Endpoints para resolução de tenant
+            </summary>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.TenantsController.LookupBySlug(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Busca tenant pelo slug (para resolução de subdomínio)
+            </summary>
+        </member>
+        <member name="M:JurisNexo.API.Controllers.TenantsController.GetCurrent(System.Threading.CancellationToken)">
+            <summary>
+            Obtém o tenant do usuário autenticado
+            </summary>
+        </member>
         <member name="T:JurisNexo.API.Filters.AuthorizeCheckOperationFilter">
             <summary>
             Adiciona indicador de autenticação necessária nos endpoints

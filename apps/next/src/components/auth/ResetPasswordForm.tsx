@@ -42,7 +42,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         try {
             const result = await resetPasswordAction({ token, password });
 
-            if (!result.success) {
+            if (result.success === false) {
                 setError(result.error);
                 return;
             }

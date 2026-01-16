@@ -16,7 +16,7 @@ interface KanbanColumnProps {
 }
 
 export function KanbanColumn({ column }: KanbanColumnProps) {
-    const { selectCard } = useKanbanStore();
+    const { selectCard, openCreateModal } = useKanbanStore();
     const { setNodeRef, isOver } = useDroppable({
         id: `column-${column.id}`,
     });
@@ -34,9 +34,7 @@ export function KanbanColumn({ column }: KanbanColumnProps) {
                     </span>
                 </div>
                 <button
-                    onClick={() => {
-                        // TODO: Open new card modal
-                    }}
+                    onClick={() => openCreateModal(column.id)}
                     className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
                     title="Adicionar caso"
                 >
