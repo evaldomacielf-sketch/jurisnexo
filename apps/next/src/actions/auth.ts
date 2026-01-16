@@ -45,19 +45,34 @@ export async function loginAction(
 
         const result = await response.json();
 
-        // Map Backend "token" to Frontend "accessToken"
+        // Standardize token name
         const accessToken = result.token || result.accessToken;
+        const refreshToken = result.refreshToken;
+
+        // Standardize user properties
+        const user = result.user ? {
+            ...result.user,
+            emailVerified: result.user.isEmailVerified ?? result.user.emailVerified,
+        } : undefined;
 
         // Setta tokens em HTTP-only cookies
         await setAuthCookies({
-            accessToken: accessToken,
-            refreshToken: result.refreshToken,
+            accessToken,
+            refreshToken,
         });
 
         // Revalida o cache
         revalidatePath('/', 'layout');
 
-        return { success: true, data: result };
+        return {
+            success: true,
+            data: {
+                ...result,
+                token: accessToken,
+                accessToken,
+                user
+            }
+        };
     } catch (error) {
         console.error('[Auth] Login error:', error);
         return {
@@ -229,7 +244,11 @@ export async function refreshTokenAction(
             };
         }
 
-        const tokens: AuthTokens = await response.json();
+        const result = await response.json();
+        const tokens: AuthTokens = {
+            accessToken: result.accessToken || result.token,
+            refreshToken: result.refreshToken,
+        };
 
         // Atualiza cookies
         await setAuthCookies(tokens);

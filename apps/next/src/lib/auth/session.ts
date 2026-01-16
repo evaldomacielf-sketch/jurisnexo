@@ -3,7 +3,8 @@
 import { getAccessToken, getRefreshToken } from './cookies';
 import type { AuthUser } from './types';
 
-const API_URL = process.env.API_URL || 'http://localhost:4000';
+const BASE_URL = process.env.API_URL || 'http://localhost:4000';
+const API_URL = BASE_URL.endsWith('/api') ? BASE_URL : `${BASE_URL}/api`;
 
 export async function getCurrentUser(): Promise<AuthUser | null> {
   try {
@@ -34,9 +35,14 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
       return null;
     }
 
-    const user = await response.json();
-    console.log('[Session] User from API:', JSON.stringify(user, null, 2));
-    return user;
+    const data = await response.json();
+    console.log('[Session] User from API:', JSON.stringify(data, null, 2));
+
+    // Map backend properties to frontend expectations
+    return {
+      ...data,
+      emailVerified: data.isEmailVerified ?? data.emailVerified,
+    };
   } catch (error: any) {
     if (error.name === 'AbortError') {
       console.error('[Session] Request timeout');

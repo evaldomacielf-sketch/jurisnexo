@@ -46,7 +46,9 @@ function isTokenExpired(token: string): boolean {
 
 async function refreshAccessToken(refreshToken: string): Promise<string | null> {
   try {
-    const API_URL = process.env.API_URL || 'http://localhost:4000';
+    const BASE_URL = process.env.API_URL || 'http://localhost:4000';
+    const API_URL = BASE_URL.endsWith('/api') ? BASE_URL : `${BASE_URL}/api`;
+
     const response = await fetch(`${API_URL}/auth/refresh`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -54,8 +56,8 @@ async function refreshAccessToken(refreshToken: string): Promise<string | null> 
     });
 
     if (!response.ok) return null;
-    const { accessToken } = await response.json();
-    return accessToken;
+    const data = await response.json();
+    return data.accessToken || data.token; // Handle both property names
   } catch (error) {
     console.error('[Middleware] Error refreshing token:', error);
     return null;
