@@ -1,0 +1,111 @@
+version: '3.8'
+
+services:
+  # =====================================
+  # 🌐 Frontend Next.js
+  # =====================================
+  web:
+    build:
+      context: ../../
+      dockerfile: infrastructure/docker/Dockerfile.web
+    container_name: jurisnexo-web
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://api:4000
+      - NEXT_PUBLIC_SUPABASE_URL=${SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+    depends_on:
+      - api
+    restart: unless-stopped
+    networks:
+      - jurisnexo-network
+
+  # =====================================
+  # 🚀 Backend .NET API
+  # =====================================
+  api:
+    build:
+      context: ../../apps/api
+      dockerfile: ../../infrastructure/docker/Dockerfile.api
+    container_name: jurisnexo-api
+    ports:
+      - "4000:4000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:4000
+      - ConnectionStrings__DefaultConnection=${DATABASE_URL}
+      - ConnectionStrings__Redis=redis:6379
+      - Supabase__JwtSecret=${SUPABASE_JWT_SECRET}
+      - Supabase__Url=${SUPABASE_URL}
+    depends_on:
+      - redis
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4000/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - jurisnexo-network
+
+  # =====================================
+  # ⚙️ Worker (Background Jobs)
+  # =====================================
+  worker:
+    build:
+      context: ../../
+      dockerfile: infrastructure/docker/Dockerfile.worker
+    container_name: jurisnexo-worker
+    environment:
+      - NODE_ENV=production
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      - redis
+      - api
+    restart: unless-stopped
+    networks:
+      - jurisnexo-network
+
+  # =====================================
+  # 🗄️ Redis (Cache & Queues)
+  # =====================================
+  redis:
+    image: redis:7-alpine
+    container_name: jurisnexo-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    networks:
+      - jurisnexo-network
+
+  # =====================================
+  # 🔄 Nginx (Reverse Proxy)
+  # =====================================
+  nginx:
+    image: nginx:alpine
+    container_name: jurisnexo-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - web
+      - api
+    restart: unless-stopped
+    networks:
+      - jurisnexo-network
+
+networks:
+  jurisnexo-network:
+    driver: bridge
+
+volumes:
+  redis_data:

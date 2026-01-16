@@ -1,58 +1,52 @@
-# Dockerfile.api
-# Builds the @jurisnexo/api application
+# =====================================
+# Stage 1: Build
+# =====================================
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
 
-FROM node:20-alpine AS builder
-# Set working directory
-WORKDIR /app
-# Enable corepack for pnpm
-RUN corepack enable
+# Copiar arquivos de projeto
+COPY ["JurisNexo.Api/JurisNexo.API.csproj", "JurisNexo.Api/"]
+COPY ["JurisNexo.Application/JurisNexo.Application.csproj", "JurisNexo.Application/"]
+COPY ["JurisNexo.Core/JurisNexo.Core.csproj", "JurisNexo.Core/"]
+COPY ["JurisNexo.Infrastructure/JurisNexo.Infrastructure.csproj", "JurisNexo.Infrastructure/"]
 
-# Copy root package.json and lockfile
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+# Restaurar dependências
+RUN dotnet restore "JurisNexo.Api/JurisNexo.API.csproj"
 
-# Copy all packages manifest
-COPY apps/api/package.json apps/api/package.json
-COPY apps/next/package.json apps/next/package.json
-COPY packages/config/package.json packages/config/package.json
-COPY packages/db/package.json packages/db/package.json
-COPY packages/shared/package.json packages/shared/package.json
-
-# Install dependencies (frozen lockfile for speed/consistency)
-RUN pnpm install --frozen-lockfile
-
-# Copy source code
+# Copiar código fonte
 COPY . .
 
-# Build API
-RUN pnpm --filter @jurisnexo/api build
+# Build
+WORKDIR "/src/JurisNexo.Api"
+RUN dotnet build "JurisNexo.API.csproj" -c Release -o /app/build
 
-# --- Production Runner ---
-FROM node:20-alpine AS runner
+# =====================================
+# Stage 2: Publish
+# =====================================
+FROM build AS publish
+RUN dotnet publish "JurisNexo.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+# =====================================
+# Stage 3: Runtime
+# =====================================
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
-RUN corepack enable
 
-ENV NODE_ENV=production
+# Instalar curl para healthcheck
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
-# Copy built artifacts and node_modules
-# Note: In a real production setup, we should prune devDependencies. 
-# For simplicity here, we copy node_modules. Better approach uses turbo prune.
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/apps/api/dist ./apps/api/dist
-COPY --from=builder /app/apps/api/package.json ./apps/api/package.json
-# We might need config/dist if it's built, or just sources if it's ts-node (but api is compiled).
-# Checking dependencies: api depends on @jurisnexo/config, shared, db.
-# If these are workspace dependencies, they need to be present or bundled.
-# NestJS build usually bundles everything in dist/main.js? No, creates dist folders.
-# If NestJS monorepo, it might need the packages in node_modules or built.
-# Safest bet for monorepo without specialized pruning: Copy necessary built packages.
+COPY --from=publish /app/publish .
 
-# Actually, let's keep it simple: Copy the whole monorepo state from builder that has everything built/installed.
-# Optimization: Just copy what's needed.
-COPY --from=builder /app/package.json ./package.json
+# Criar usuário não-root
+RUN addgroup --system --gid 1001 dotnet \
+    && adduser --system --uid 1001 --ingroup dotnet appuser \
+    && chown -R appuser:dotnet /app
 
-# Expose port
+USER appuser
+
 EXPOSE 4000
-ENV API_PORT=4000
 
-# Start command
-CMD ["node", "apps/api/dist/main"]
+ENV ASPNETCORE_URLS=http://+:4000
+ENV ASPNETCORE_ENVIRONMENT=Production
+
+ENTRYPOINT ["dotnet", "JurisNexo.API.dll"]
