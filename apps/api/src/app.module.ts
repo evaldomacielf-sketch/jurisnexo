@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { validate } from './config/env.validation';
 import { TenantsModule } from './tenants/tenants.module';
@@ -20,6 +21,7 @@ import { WorkflowsModule } from './workflows/workflows.module';
 import { CalendarModule } from './calendar/calendar.module';
 import { ChatModule } from './chat/chat.module';
 import { ScheduleModule as NestScheduleModule } from '@nestjs/schedule';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
     imports: [
@@ -44,8 +46,17 @@ import { ScheduleModule as NestScheduleModule } from '@nestjs/schedule';
         WorkflowsModule,
         CalendarModule,
         ChatModule,
+        ThrottlerModule.forRoot([{
+            ttl: 60000,
+            limit: 10,
+        }]),
     ],
     controllers: [HealthController],
-    providers: [],
+    providers: [
+        {
+            provide: APP_GUARD,
+            useClass: ThrottlerGuard,
+        },
+    ],
 })
 export class AppModule { }

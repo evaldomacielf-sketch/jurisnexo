@@ -33,6 +33,7 @@
         "@nestjs/platform-socket.io": "^11.1.11",
         "@nestjs/schedule": "^4.1.2",
         "@nestjs/swagger": "^8.1.1",
+        "@nestjs/throttler": "^6.5.0",
         "@nestjs/websockets": "^11.1.11",
         "@sendgrid/mail": "^8.1.6",
         "@supabase/supabase-js": "^2.47.0",
