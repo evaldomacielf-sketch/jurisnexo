@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import { QueryClient } from '@tanstack/react-query';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001/api';
 
 class FinanceiroApiService {
   private api: AxiosInstance;

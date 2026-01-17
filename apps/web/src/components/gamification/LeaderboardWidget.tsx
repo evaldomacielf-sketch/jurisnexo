@@ -31,7 +31,7 @@ export function LeaderboardWidget() {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/crm/gamification/leaderboard`;
+        const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001/api'}/crm/gamification/leaderboard`;
         const token = (document.cookie.match(/access_token=([^;]+)/) || [])[1];
 
         const res = await fetch(apiUrl, {

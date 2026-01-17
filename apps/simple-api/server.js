@@ -120,6 +120,37 @@ app.post("/api/auth/verify", (req, res) => {
     return res.status(200).json({ token: mockToken });
 });
 
+app.post("/api/auth/register", (req, res) => {
+    const { name, email, password, tenantName, tenantSlug } = req.body || {};
+    
+    if (!email || !password || !name) {
+        return res.status(400).json({ error: "Name, email and password required" });
+    }
+
+    // Create new tenant for this user
+    const newTenant = {
+        id: `tenant-${Date.now()}`,
+        name: tenantName || name + "'s Tenant",
+        slug: tenantSlug || name.toLowerCase().replace(/\s+/g, '-')
+    };
+    
+    // Create token bound to new tenant
+    const token = createMockToken({ tenant_id: newTenant.id });
+    
+    userTenants.push(newTenant);
+    
+    return res.status(201).json({
+        success: true,
+        token,
+        user: {
+            id: `user-${Date.now()}`,
+            email,
+            name
+        },
+        tenant: newTenant
+    });
+});
+
 app.get("/api/tenants/me/plan", (req, res) => {
     // Mock plan data
     return res.status(200).json({

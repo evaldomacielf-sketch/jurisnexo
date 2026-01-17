@@ -1,0 +1,60 @@
+2026-01-17T00:00:55.324045Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/services/api/financeiro.service.ts")}
+2026-01-17T00:00:55.325053Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:00:55.567802Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/daemon/ae9cdae4456387b2-turbo.log.2026-01-16"), AnchoredSystemPathBuf(".turbo/daemon/ae9cdae4456387b2-turbo.log.2026-01-17")}
+2026-01-17T00:00:55.567822Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-01-17T00:01:06.406490Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/services/api/financeiro.service.ts")}
+2026-01-17T00:01:06.406504Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:01:06.427024Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-17T00:01:08.806528Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/lib/axios.ts")}
+2026-01-17T00:01:08.806550Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:01:11.206529Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/lib/axios.ts")}
+2026-01-17T00:01:11.206545Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:01:11.237596Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-17T00:01:25.205829Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/lib/auth/session.ts")}
+2026-01-17T00:01:25.205865Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:01:34.306582Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/lib/auth/session.ts")}
+2026-01-17T00:01:34.306602Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:01:34.361799Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-17T00:01:35.114950Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/hooks/useSocket.ts")}
+2026-01-17T00:01:35.114970Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:01:37.505968Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/hooks/useSocket.ts")}
+2026-01-17T00:01:37.505989Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:01:37.583939Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-17T00:01:42.806996Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/hooks/usePlan.ts")}
+2026-01-17T00:01:42.807016Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:01:46.106976Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/hooks/usePlan.ts")}
+2026-01-17T00:01:46.106993Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:01:46.192400Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-17T00:01:49.906936Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/gamification/LeaderboardWidget.tsx")}
+2026-01-17T00:01:49.906981Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:01:51.206654Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/gamification/LeaderboardWidget.tsx")}
+2026-01-17T00:01:51.206960Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:01:51.348100Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-17T00:02:22.810697Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/(dashboard)/dashboard/DashboardClient.tsx")}
+2026-01-17T00:02:22.810721Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:02:30.311426Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/(dashboard)/dashboard/DashboardClient.tsx")}
+2026-01-17T00:02:30.311480Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:02:30.521719Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-17T00:03:21.910930Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/tenants/create/page.tsx")}
+2026-01-17T00:03:21.910979Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:03:25.712621Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/tenants/create/page.tsx")}
+2026-01-17T00:03:25.712979Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:03:25.831792Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-17T00:04:23.913483Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/tenants/select/page.tsx")}
+2026-01-17T00:04:23.913501Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:04:28.414089Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/tenants/select/page.tsx")}
+2026-01-17T00:04:28.415419Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:04:28.781623Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-17T00:05:02.212733Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/test/mocks/handlers.ts")}
+2026-01-17T00:05:02.212753Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:05:04.913968Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/test/mocks/handlers.ts")}
+2026-01-17T00:05:04.913989Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:05:05.000496Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-17T00:08:44.499587Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/actions/auth.ts")}
+2026-01-17T00:08:44.499776Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:09:24.702884Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/simple-api/server.js")}
+2026-01-17T00:09:24.702905Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("jurisnexo-simple-api"), path: AnchoredSystemPathBuf("apps/simple-api") }}))
+2026-01-17T00:09:47.300408Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/simple-api/server.js"), AnchoredSystemPathBuf("apps/web/src/actions/auth.ts")}
+2026-01-17T00:09:47.300430Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("jurisnexo-simple-api"), path: AnchoredSystemPathBuf("apps/simple-api") }, WorkspacePackage { name: Other("@jurisnexo/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-17T00:09:47.430433Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-17T00:09:47.500322Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
