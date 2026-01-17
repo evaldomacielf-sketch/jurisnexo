@@ -28,6 +28,7 @@ export default function LoginPage() {
         return;
       }
 
+
       console.log('🔐 Tentando login com:', email);
 
       // Usar Server Action para autenticação
@@ -41,6 +42,16 @@ export default function LoginPage() {
       }
 
       console.log('✅ Login bem-sucedido');
+
+      // Salva token no localStorage para uso no axios interceptor
+      if (result.data?.token) {
+        localStorage.setItem('token', result.data.token);
+
+        // Also update auth store for apiClient to use
+        const { useAuthStore } = await import('@/stores/auth');
+        useAuthStore.getState().setAuth(result.data.token, result.data.user);
+      }
+
       toast.success('Login realizado com sucesso!');
 
       // REDIRECIONAMENTO

@@ -11,14 +11,17 @@ public class SeedFinancialDefaultsCommandHandler : IRequestHandler<SeedFinancial
     private readonly IRepository<FinancialCategory> _categoryRepository;
     private readonly IRepository<BankAccount> _accountRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IRepository<JurisNexo.Core.Entities.Financial.Transaction> _transactionRepository;
 
     public SeedFinancialDefaultsCommandHandler(
         IRepository<FinancialCategory> categoryRepository,
         IRepository<BankAccount> accountRepository,
+        IRepository<JurisNexo.Core.Entities.Financial.Transaction> transactionRepository,
         IUnitOfWork unitOfWork)
     {
         _categoryRepository = categoryRepository;
         _accountRepository = accountRepository;
+        _transactionRepository = transactionRepository;
         _unitOfWork = unitOfWork;
     }
 
@@ -55,11 +58,53 @@ public class SeedFinancialDefaultsCommandHandler : IRequestHandler<SeedFinancial
                 Name = "Conta Principal",
                 BankName = "Banco Demo",
                 AccountNumber = "0001-1",
-                InitialBalance = 0,
-                CurrentBalance = 0,
+                InitialBalance = 1000,
+                CurrentBalance = 1000,
                 TenantId = request.TenantId
             };
             await _accountRepository.AddAsync(defaultAccount, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+
+        // 3. Seed Transactions if empty
+        var transactions = await _transactionRepository.GetAllAsync(cancellationToken);
+        if (!transactions.Any())
+        {
+            var cats = await _categoryRepository.GetAllAsync(cancellationToken);
+            var incomeCat = cats.FirstOrDefault(c => c.Type == "INCOME");
+            var expenseCat = cats.FirstOrDefault(c => c.Type == "EXPENSE");
+            var account = (await _accountRepository.GetAllAsync(cancellationToken)).FirstOrDefault();
+
+            if (incomeCat != null && expenseCat != null && account != null)
+            {
+                 // Transaction 1: Income today
+                 var t1 = new JurisNexo.Core.Entities.Financial.Transaction
+                 {
+                     Description = "Honorários Iniciais",
+                     Amount = 5000,
+                     Type = TransactionType.Income,
+                     Date = DateTime.UtcNow,
+                     Status = PaymentStatus.Paid,
+                     CategoryId = incomeCat.Id,
+                     BankAccountId = account.Id,
+                     TenantId = request.TenantId
+                 };
+                 // Transaction 2: Expense yesterday
+                 var t2 = new JurisNexo.Core.Entities.Financial.Transaction
+                 {
+                     Description = "Pagamento Aluguel",
+                     Amount = 1500,
+                     Type = TransactionType.Expense,
+                     Date = DateTime.UtcNow.AddDays(-1),
+                     Status = PaymentStatus.Paid,
+                     CategoryId = expenseCat.Id,
+                     BankAccountId = account.Id,
+                     TenantId = request.TenantId
+                 };
+                 
+                 await _transactionRepository.AddAsync(t1, cancellationToken);
+                 await _transactionRepository.AddAsync(t2, cancellationToken);
+            }
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

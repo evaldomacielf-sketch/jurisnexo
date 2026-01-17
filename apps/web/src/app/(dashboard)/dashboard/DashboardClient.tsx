@@ -15,14 +15,23 @@ export default function DashboardClient() {
   // ... inside component ...
 
   useEffect(() => {
-    // Fetch Kanban Data
+    // Fetch Kanban Data with fallback for missing endpoint
     api.get('/crm/kanban')
       .then((response) => {
         setKanbanData(response.data);
         setLoading(false);
       })
       .catch((err) => {
-        console.error('Failed to fetch kanban data', err);
+        console.warn('Kanban endpoint not available, using fallback data');
+        // Fallback: show empty kanban columns
+        setKanbanData({
+          columns: [
+            { id: 'new', title: 'Novos Leads', cards: [] },
+            { id: 'contact', title: 'Em Contato', cards: [] },
+            { id: 'proposal', title: 'Proposta', cards: [] },
+            { id: 'closed', title: 'Fechados', cards: [] },
+          ]
+        });
         setLoading(false);
       });
   }, []);

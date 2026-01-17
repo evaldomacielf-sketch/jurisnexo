@@ -78,8 +78,14 @@ public class FinanceController : ControllerBase
         var tenantIdClaim = User.FindFirst("tenant_id")?.Value;
         if (string.IsNullOrEmpty(tenantIdClaim)) return BadRequest("Tenant ID missing");
 
-        var startDate = fromDate ?? new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
-        var endDate = toDate ?? startDate.AddMonths(1).AddDays(-1);
+        // Ensure dates are in UTC to avoid PostgreSQL timestamp with time zone error
+        var now = DateTime.UtcNow;
+        var startDate = fromDate.HasValue 
+            ? DateTime.SpecifyKind(fromDate.Value, DateTimeKind.Utc) 
+            : new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+        var endDate = toDate.HasValue 
+            ? DateTime.SpecifyKind(toDate.Value, DateTimeKind.Utc) 
+            : startDate.AddMonths(1).AddDays(-1);
 
         var query = new GetFinancialDashboardQuery(Guid.Parse(tenantIdClaim), startDate, endDate);
         return Ok(await _mediator.Send(query));

@@ -19,6 +19,7 @@ import {
   ViewColumnsIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 import { logoutAction } from '@/actions/auth';
 import { useState } from 'react';
@@ -118,11 +119,12 @@ export function Sidebar() {
           disabled={isLoggingOut}
           title={isCollapsed ? "Sair" : undefined}
           className={cn(
-            'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground disabled:opacity-50',
+            'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-red-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 disabled:opacity-50 transition-colors',
             isCollapsed && 'justify-center'
           )}
         >
-          {!isCollapsed && <span>Sair</span>}
+          <ArrowRightOnRectangleIcon className="h-5 w-5 flex-shrink-0" />
+          {!isCollapsed && <span>{isLoggingOut ? 'Saindo...' : 'Sair'}</span>}
         </button>
       </div>
     </aside>

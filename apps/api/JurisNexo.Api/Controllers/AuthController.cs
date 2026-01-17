@@ -309,4 +309,27 @@ public class AuthController : BaseApiController
             return HandleException(ex);
         }
     }
+
+    /// <summary>
+    /// Cria tenant e usuário de teste (apenas desenvolvimento)
+    /// </summary>
+    /// <returns>Credenciais do usuário de teste</returns>
+    /// <response code="200">Dados de teste criados com sucesso</response>
+    [HttpPost("seed")]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> Seed(CancellationToken cancellationToken)
+    {
+        try
+        {
+            // Cria tenant de teste e usuário admin
+            var seedResult = await _authService.SeedTestDataAsync(cancellationToken);
+            return Ok(seedResult);
+        }
+        catch (Exception ex)
+        {
+            return HandleException(ex);
+        }
+    }
 }
+

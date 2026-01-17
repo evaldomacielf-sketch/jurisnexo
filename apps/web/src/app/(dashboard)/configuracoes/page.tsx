@@ -1,70 +1,101 @@
 'use client';
 
-import { usePlan } from '@/hooks/usePlan';
+import { Header } from '@/components/dashboard/Header';
+import { Bell, Shield, Palette, Building2 } from 'lucide-react';
 
 export default function SettingsPage() {
-  const { isFeatureEnabled, plan } = usePlan();
+  const settingsCards = [
+    {
+      title: 'Dados do Escritório',
+      description: 'Nome, logo, informações de contato e endereço',
+      icon: Building2,
+      color: 'blue',
+    },
+    {
+      title: 'Notificações',
+      description: 'Configure alertas de prazos, mensagens e eventos',
+      icon: Bell,
+      color: 'yellow',
+    },
+    {
+      title: 'Segurança',
+      description: 'Senha, autenticação em duas etapas e permissões',
+      icon: Shield,
+      color: 'red',
+    },
+    {
+      title: 'Aparência',
+      description: 'Tema, cores personalizadas e preferências visuais',
+      icon: Palette,
+      color: 'purple',
+    },
+  ];
+
+  const colorClasses: Record<string, { bg: string; icon: string }> = {
+    blue: { bg: 'bg-blue-100 dark:bg-blue-900/20', icon: 'text-blue-600' },
+    yellow: { bg: 'bg-yellow-100 dark:bg-yellow-900/20', icon: 'text-yellow-600' },
+    red: { bg: 'bg-red-100 dark:bg-red-900/20', icon: 'text-red-600' },
+    purple: { bg: 'bg-purple-100 dark:bg-purple-900/20', icon: 'text-purple-600' },
+  };
 
   return (
-    <div className="font-display p-8">
-      <h1 className="mb-6 text-2xl font-bold dark:text-white">Configurações</h1>
+    <>
+      <Header showSearch={false} />
 
-      {/* Custom Keywords Feature */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-[#1a2130]">
-        <div className="mb-6 flex items-start justify-between">
-          <div>
-            <h2 className="flex items-center gap-2 text-lg font-bold dark:text-white">
-              <span className="material-symbols-outlined text-blue-600">manage_search</span>
-              Palavras-chave Personalizadas
-            </h2>
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              Defina termos específicos para monitoramento automático de novos processos.
-            </p>
+      <div className="p-8">
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Configurações
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Personalize o sistema do seu escritório
+          </p>
+        </div>
+
+        {/* Settings Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {settingsCards.map((card) => {
+            const Icon = card.icon;
+            const colors = colorClasses[card.color];
+            return (
+              <div
+                key={card.title}
+                className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition cursor-pointer"
+              >
+                <div className="flex items-start gap-4">
+                  <div className={`w-12 h-12 ${colors.bg} rounded-lg flex items-center justify-center`}>
+                    <Icon className={`w-6 h-6 ${colors.icon}`} />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
+                      {card.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {card.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Subscription Info */}
+        <div className="mt-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-6 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-xl font-bold mb-1">Plano Trial</h3>
+              <p className="text-blue-100">
+                7 dias restantes • Atualize para ter acesso ilimitado
+              </p>
+            </div>
+            <button className="px-6 py-3 bg-white text-blue-600 rounded-lg font-bold hover:bg-blue-50 transition">
+              Fazer Upgrade
+            </button>
           </div>
         </div>
-
-        <div className="mt-2">
-          {isFeatureEnabled('KEYWORDS_CUSTOM') ? (
-            <div className="animate-fade-in space-y-4">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Ex: 'Dano Moral', 'Ricardo Silva'..."
-                  className="h-10 flex-1 rounded-lg border border-gray-300 bg-gray-50 px-3 outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                />
-                <button className="rounded-lg bg-blue-600 px-4 text-sm font-bold text-white transition-colors hover:bg-blue-700">
-                  Adicionar
-                </button>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <span className="flex items-center gap-1 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
-                  Dano Moral <button className="hover:text-red-500">×</button>
-                </span>
-              </div>
-            </div>
-          ) : (
-            <div className="group relative overflow-hidden rounded-xl border border-gray-200 bg-gray-50 p-8 text-center dark:border-gray-700 dark:bg-[#151b26]">
-              <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
-              <div className="relative z-10 flex flex-col items-center">
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-800">
-                  <span className="material-symbols-outlined text-gray-400">lock</span>
-                </div>
-                <h3 className="mb-1 font-bold text-gray-900 dark:text-white">Recurso Bloqueado</h3>
-                <p className="mx-auto mb-6 max-w-sm text-sm text-gray-500">
-                  A personalização de palavras-chave não está disponível no seu plano atual{' '}
-                  <span className="rounded bg-gray-200 px-1 font-mono text-xs dark:bg-gray-700">
-                    {plan?.plan?.toUpperCase()}
-                  </span>
-                  .
-                </p>
-                <button className="rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:-translate-y-0.5 hover:from-blue-700 hover:to-indigo-700">
-                  Fazer Upgrade para PRO
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -258,4 +258,74 @@ public class AuthService : IAuthService
             user.UpdatedAt
         );
     }
+
+    public async Task<object> SeedTestDataAsync(CancellationToken cancellationToken = default)
+    {
+        const string testEmail = "admin@jurisnexo.test";
+        const string testPassword = "JurisNexo@123";
+
+        // Verifica se já existe
+        var existingUser = await _userRepository.GetByEmailAsync(testEmail, cancellationToken);
+        if (existingUser != null)
+        {
+            _logger.LogInformation("Usuário de teste já existe, gerando token...");
+            
+            // Gera novo token para o usuário existente
+            var token = _jwtTokenGenerator.GenerateToken(existingUser);
+            
+            return new
+            {
+                message = "Usuário de teste já existe",
+                email = testEmail,
+                password = testPassword,
+                token = token,
+                tenantId = existingUser.TenantId
+            };
+        }
+
+        // Cria tenant de teste
+        var tenant = new Tenant
+        {
+            FirmName = "Escritório Teste JurisNexo",
+            Slug = "jurisnexo-teste",
+            Email = testEmail,
+            Phone = "(11) 99999-9999",
+            IsActive = true,
+            TrialEndsAt = DateTime.UtcNow.AddDays(30)
+        };
+
+        await _tenantRepository.AddAsync(tenant, cancellationToken);
+
+        // Cria usuário admin
+        var user = new User
+        {
+            TenantId = tenant.Id,
+            Name = "Admin Teste",
+            Email = testEmail,
+            PasswordHash = _passwordHasher.HashPassword(testPassword),
+            Phone = "(11) 99999-9999",
+            Role = UserRole.Admin,
+            IsEmailVerified = true // Já verificado para facilitar testes
+        };
+
+        await _userRepository.AddAsync(user, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // Seed pipeline padrão
+        await _pipelineSeeder.SeedDefaultPipelineAsync(tenant.Id);
+
+        _logger.LogInformation("Dados de teste criados com sucesso para tenant {TenantId}", tenant.Id);
+
+        var generatedToken = _jwtTokenGenerator.GenerateToken(user);
+
+        return new
+        {
+            message = "Dados de teste criados com sucesso",
+            email = testEmail,
+            password = testPassword,
+            token = generatedToken,
+            tenantId = tenant.Id
+        };
+    }
 }
+
