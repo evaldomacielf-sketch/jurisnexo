@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { setAuthCookies } from '@/lib/auth/cookies';
+import { loginAction } from '@/actions/auth';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -24,40 +24,23 @@ export default function LoginPage() {
       // VALIDAÇÕES
       if (!email || !password) {
         toast.error('Preencha todos os campos');
+        setLoading(false);
         return;
       }
 
       console.log('🔐 Tentando login com:', email);
 
-      // AUTENTICAÇÃO via API .NET
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001/api';
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-        credentials: 'include',
-      });
+      // Usar Server Action para autenticação
+      const result = await loginAction({ email, password });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('❌ Erro de autenticação:', errorData);
-        toast.error(errorData.message || 'Credenciais inválidas');
+      if (!result.success) {
+        console.error('❌ Erro de autenticação:', result.error);
+        toast.error(result.error || 'Credenciais inválidas');
+        setLoading(false);
         return;
       }
 
-      const data = await response.json();
       console.log('✅ Login bem-sucedido');
-
-      // Setar cookies de autenticação
-      if (data.accessToken && data.refreshToken) {
-        await setAuthCookies({
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken,
-        });
-      }
-
       toast.success('Login realizado com sucesso!');
 
       // REDIRECIONAMENTO
@@ -66,7 +49,6 @@ export default function LoginPage() {
     } catch (error) {
       console.error('❌ Erro inesperado:', error);
       toast.error('Erro ao conectar com o servidor');
-    } finally {
       setLoading(false);
     }
   };
