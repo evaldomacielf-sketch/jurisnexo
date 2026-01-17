@@ -8,7 +8,8 @@ public record ListCasesQuery(
     int PageSize = 10,
     string? Search = null,
     string? Status = null,
-    Guid? ClientId = null
+    Guid? ClientId = null,
+    Guid TenantId = default
 ) : IRequest<PaginatedResult<CaseDto>>;
 
 public record PaginatedResult<T>(

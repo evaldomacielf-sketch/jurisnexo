@@ -22,8 +22,8 @@ export const useSocket = () => {
       // Adjust URL based on environment
       const socketUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001/api';
 
-      socketRef.current = io(socketUrl, {
-        query: { token },
+      socketRef.current = io('http://localhost:5000', {
+        withCredentials: true,
         transports: ['websocket'],
         autoConnect: true,
       });

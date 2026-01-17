@@ -1,13 +1,13 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '@/stores/auth';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 /**
  * Instância principal do Axios com interceptors configurados
  */
 export const apiClient: AxiosInstance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_URL,
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',

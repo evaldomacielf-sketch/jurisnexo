@@ -369,6 +369,6 @@
 /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Api/obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.JurisNexo.API.props
 /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Api/obj/Debug/net8.0/staticwebassets.pack.json
 /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Api/obj/Debug/net8.0/scopedcss/bundle/JurisNexo.API.styles.css
-/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Api/obj/Debug/net8.0/JurisNex.8CC3EEA9.Up2Date
 /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Api/obj/Debug/net8.0/JurisNexo.API.genruntimeconfig.cache
 /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Api/obj/Debug/net8.0/ref/JurisNexo.API.dll
+/Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Api/obj/Debug/net8.0/JurisNex.8CC3EEA9.Up2Date

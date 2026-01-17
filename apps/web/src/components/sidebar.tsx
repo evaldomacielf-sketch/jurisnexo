@@ -17,6 +17,8 @@ import {
   PresentationChartLineIcon,
   UserGroupIcon,
   ViewColumnsIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
 } from '@heroicons/react/24/outline';
 import { logoutAction } from '@/actions/auth';
 import { useState } from 'react';
@@ -31,6 +33,7 @@ interface NavigationItem {
 export function Sidebar() {
   const pathname = usePathname();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const navigationItems: NavigationItem[] = [
     { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
@@ -57,12 +60,18 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="flex h-screen w-64 shrink-0 flex-col border-r bg-background">
-      <div className="flex h-14 items-center border-b px-6">
-        <h1 className="text-xl font-bold">JurisNexo</h1>
+    <aside
+      className={cn(
+        'flex h-screen shrink-0 flex-col border-r bg-background transition-all duration-300 relative z-50',
+        isCollapsed ? 'w-20' : 'w-64'
+      )}
+    >
+      <div className={cn("flex h-14 items-center border-b px-6 transition-all", isCollapsed ? "justify-center px-0" : "justify-between")}>
+        {!isCollapsed && <h1 className="text-xl font-bold">JurisNexo</h1>}
+        {isCollapsed && <span className="font-bold text-xl">JN</span>}
       </div>
 
-      <nav className="flex-1 space-y-1 overflow-y-auto p-4">
+      <nav className="flex-1 space-y-1 overflow-y-auto p-4 custom-scrollbar">
         {navigationItems.map((item) => {
           const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
           const Icon = item.icon;
@@ -71,32 +80,49 @@ export function Sidebar() {
             <Link
               key={item.name}
               href={item.href}
+              title={isCollapsed ? item.name : undefined}
               className={cn(
                 'group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                 isActive
                   ? 'bg-primary text-primary-foreground'
-                  : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                  : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+                isCollapsed && 'justify-center'
               )}
             >
               <Icon className="h-5 w-5 flex-shrink-0" />
-              <span className="flex-1">{item.name}</span>
-              {item.badge && (
+              {!isCollapsed && <span className="flex-1 whitespace-nowrap overflow-hidden text-ellipsis">{item.name}</span>}
+              {!isCollapsed && item.badge && (
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
                   {item.badge}
                 </span>
+              )}
+              {isCollapsed && item.badge && (
+                <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500" />
               )}
             </Link>
           );
         })}
       </nav>
 
-      <div className="border-t p-4">
+      <div className="border-t p-4 space-y-2">
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="flex w-full items-center justify-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+        >
+          {isCollapsed ? <ChevronRightIcon className="h-5 w-5" /> : <ChevronLeftIcon className="h-5 w-5" />}
+          {!isCollapsed && <span>Recolher</span>}
+        </button>
+
         <button
           onClick={handleLogout}
           disabled={isLoggingOut}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground disabled:opacity-50"
+          title={isCollapsed ? "Sair" : undefined}
+          className={cn(
+            'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground disabled:opacity-50',
+            isCollapsed && 'justify-center'
+          )}
         >
-          <span>Sair</span>
+          {!isCollapsed && <span>Sair</span>}
         </button>
       </div>
     </aside>

@@ -70,7 +70,7 @@ const nextConfig: NextConfig = {
           {
             key: 'Content-Security-Policy',
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' blob: data: https://*.googleusercontent.com; font-src 'self' data: https://fonts.gstatic.com https://r2cdn.perplexity.ai; connect-src 'self' https://*.jurisnexo.com https://*.googleapis.com wss://*.jurisnexo.com http://localhost:4000 http://localhost:4001 http://127.0.0.1:4001;",
+              "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' blob: data: https://*.googleusercontent.com; font-src 'self' data: https://fonts.gstatic.com https://r2cdn.perplexity.ai; connect-src 'self' https://*.jurisnexo.com https://*.googleapis.com wss://*.jurisnexo.com http://localhost:4000 http://localhost:4001 http://localhost:5000 http://127.0.0.1:4001 http://127.0.0.1:5000;",
           },
         ],
       },

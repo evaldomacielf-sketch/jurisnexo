@@ -26,7 +26,7 @@ export default function InvitePage() {
 
   const fetchInvite = async () => {
     try {
-      const res = await fetch(`http://localhost:4001/api/tenants/invites/${token}`);
+      const res = await fetch(`http://localhost:5000/api/tenants/invites/${token}`);
       if (!res.ok) throw new Error('Convite inválido ou expirado');
       const data = await res.json();
       setInvite(data);

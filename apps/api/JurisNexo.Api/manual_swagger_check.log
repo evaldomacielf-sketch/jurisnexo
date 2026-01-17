@@ -1,0 +1,116 @@
+dbug: Microsoft.Extensions.Hosting.Internal.Host[1]
+      Hosting starting
+info: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[62]
+      User profile is available. Using '/Users/evaldomacielfilho/.aspnet/DataProtection-Keys' as key repository; keys will not be encrypted at rest.
+info: JurisNexo.Infrastructure.BackgroundJobs.CRMSyncEngine[0]
+      CRM Sync Engine Started
+info: JurisNexo.Infrastructure.BackgroundJobs.CRMSyncEventHandler[0]
+      CRM Sync Event Handler iniciado
+fail: Microsoft.Extensions.Hosting.Internal.Host[11]
+      Hosting failed to start
+      System.IO.IOException: Failed to bind to address http://127.0.0.1:5000: address already in use.
+       ---> Microsoft.AspNetCore.Connections.AddressInUseException: Address already in use
+       ---> System.Net.Sockets.SocketException (48): Address already in use
+         at System.Net.Sockets.Socket.DoBind(EndPoint endPointSnapshot, SocketAddress socketAddress)
+         at System.Net.Sockets.Socket.Bind(EndPoint localEP)
+         at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportOptions.CreateDefaultBoundListenSocket(EndPoint endpoint)
+         at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+         --- End of inner exception stack trace ---
+         at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+         at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportFactory.BindAsync(EndPoint endpoint, CancellationToken cancellationToken)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.TransportManager.BindAsync(EndPoint endPoint, ConnectionDelegate connectionDelegate, EndpointConfig endpointConfig, CancellationToken cancellationToken)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.<>c__DisplayClass28_0`1.<<StartAsync>g__OnBind|0>d.MoveNext()
+      --- End of stack trace from previous location ---
+         at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+         --- End of inner exception stack trace ---
+         at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.LocalhostListenOptions.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.DefaultAddressStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindAsync(ListenOptions[] listenOptions, AddressBindContext context, Func`2 useHttps, CancellationToken cancellationToken)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+         at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+         at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+         at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+fail: Microsoft.Extensions.Hosting.Internal.Host[9]
+      BackgroundService failed
+      System.Threading.Tasks.TaskCanceledException: A task was canceled.
+         at JurisNexo.Infrastructure.BackgroundJobs.CRMSyncEventHandler.ExecuteAsync(CancellationToken stoppingToken) in /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Infrastructure/BackgroundJobs/CRMSyncEventHandler.cs:line 65
+         at Microsoft.Extensions.Hosting.Internal.Host.TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)
+crit: Microsoft.Extensions.Hosting.Internal.Host[10]
+      The HostOptions.BackgroundServiceExceptionBehavior is configured to StopHost. A BackgroundService has thrown an unhandled exception, and the IHost instance is stopping. To avoid this behavior, configure this to Ignore; however the BackgroundService will not be restarted.
+      System.Threading.Tasks.TaskCanceledException: A task was canceled.
+         at JurisNexo.Infrastructure.BackgroundJobs.CRMSyncEventHandler.ExecuteAsync(CancellationToken stoppingToken) in /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Infrastructure/BackgroundJobs/CRMSyncEventHandler.cs:line 65
+         at Microsoft.Extensions.Hosting.Internal.Host.TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)
+info: Microsoft.Hosting.Lifetime[0]
+      Application is shutting down...
+fail: JurisNexo.Infrastructure.BackgroundJobs.CRMSyncEngine[0]
+      Error in CRM Sync Engine
+      System.ObjectDisposedException: Cannot access a disposed object.
+      Object name: 'IServiceProvider'.
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.ThrowHelper.ThrowObjectDisposedException()
+         at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+         at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetService[T](IServiceProvider provider)
+         at Npgsql.EntityFrameworkCore.PostgreSQL.Internal.NpgsqlSingletonOptions.Initialize(IDbContextOptions options)
+         at Microsoft.EntityFrameworkCore.Internal.SingletonOptionsInitializer.EnsureInitialized(IServiceProvider serviceProvider, IDbContextOptions options)
+         at Microsoft.EntityFrameworkCore.Internal.ServiceProviderCache.<GetOrAdd>g__BuildServiceProvider|4_1(IDbContextOptions _, ValueTuple`2 arguments)
+         at Microsoft.EntityFrameworkCore.Internal.ServiceProviderCache.<>c.<GetOrAdd>b__4_0(IDbContextOptions contextOptions, ValueTuple`2 tuples)
+         at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd[TArg](TKey key, Func`3 valueFactory, TArg factoryArgument)
+         at Microsoft.EntityFrameworkCore.Internal.ServiceProviderCache.GetOrAdd(IDbContextOptions options, Boolean providerRequired)
+         at Microsoft.EntityFrameworkCore.DbContext..ctor(DbContextOptions options)
+         at JurisNexo.Infrastructure.Data.ApplicationDbContext..ctor(DbContextOptions`1 options, IHttpContextAccessor httpContextAccessor) in /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Infrastructure/Data/ApplicationDbContext.cs:line 14
+         at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+         at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+         at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+         at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+         at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+         at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)
+         at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+         at JurisNexo.Infrastructure.BackgroundJobs.CRMSyncEngine.ExecuteAsync(CancellationToken stoppingToken) in /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Infrastructure/Services/CRMSyncEngine.cs:line 35
+fail: Microsoft.Extensions.Hosting.Internal.Host[9]
+      BackgroundService failed
+      System.Threading.Tasks.TaskCanceledException: A task was canceled.
+         at JurisNexo.Infrastructure.BackgroundJobs.CRMSyncEngine.ExecuteAsync(CancellationToken stoppingToken) in /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Infrastructure/Services/CRMSyncEngine.cs:line 75
+         at Microsoft.Extensions.Hosting.Internal.Host.TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)
+crit: Microsoft.Extensions.Hosting.Internal.Host[10]
+      The HostOptions.BackgroundServiceExceptionBehavior is configured to StopHost. A BackgroundService has thrown an unhandled exception, and the IHost instance is stopping. To avoid this behavior, configure this to Ignore; however the BackgroundService will not be restarted.
+      System.Threading.Tasks.TaskCanceledException: A task was canceled.
+         at JurisNexo.Infrastructure.BackgroundJobs.CRMSyncEngine.ExecuteAsync(CancellationToken stoppingToken) in /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Infrastructure/Services/CRMSyncEngine.cs:line 75
+         at Microsoft.Extensions.Hosting.Internal.Host.TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)
+Unhandled exception. System.IO.IOException: Failed to bind to address http://127.0.0.1:5000: address already in use.
+ ---> Microsoft.AspNetCore.Connections.AddressInUseException: Address already in use
+ ---> System.Net.Sockets.SocketException (48): Address already in use
+   at System.Net.Sockets.Socket.DoBind(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.Sockets.Socket.Bind(EndPoint localEP)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportOptions.CreateDefaultBoundListenSocket(EndPoint endpoint)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportFactory.BindAsync(EndPoint endpoint, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.TransportManager.BindAsync(EndPoint endPoint, ConnectionDelegate connectionDelegate, EndpointConfig endpointConfig, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.<>c__DisplayClass28_0`1.<<StartAsync>g__OnBind|0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.LocalhostListenOptions.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.DefaultAddressStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindAsync(ListenOptions[] listenOptions, AddressBindContext context, Func`2 useHttps, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+   at Microsoft.Extensions.Hosting.Internal.Host.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.Run(IHost host)
+   at Program.<Main>$(String[] args) in /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/api/JurisNexo.Api/Program.cs:line 124

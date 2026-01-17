@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import api from '@/lib/api';
+import { api } from '@/lib/axios';
 import CRMConfigModal from './CRMConfigModal';
 import { CloudIcon } from '@heroicons/react/24/outline'; // Fallback icon
 

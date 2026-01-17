@@ -596,6 +596,92 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.ToTable("ConversationTransfers");
                 });
 
+            modelBuilder.Entity("JurisNexo.Core.Entities.Financial.BankAccount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AccountNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("BankName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("CurrentBalance")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("InitialBalance")
+                        .HasColumnType("numeric");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("BankAccounts");
+                });
+
+            modelBuilder.Entity("JurisNexo.Core.Entities.Financial.FinancialCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("FinancialCategories");
+                });
+
             modelBuilder.Entity("JurisNexo.Core.Entities.Financial.Invoice", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2379,6 +2465,28 @@ namespace JurisNexo.Infrastructure.Migrations
                     b.Navigation("FromUser");
 
                     b.Navigation("ToUser");
+                });
+
+            modelBuilder.Entity("JurisNexo.Core.Entities.Financial.BankAccount", b =>
+                {
+                    b.HasOne("JurisNexo.Core.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("JurisNexo.Core.Entities.Financial.FinancialCategory", b =>
+                {
+                    b.HasOne("JurisNexo.Core.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("JurisNexo.Core.Entities.Financial.Invoice", b =>

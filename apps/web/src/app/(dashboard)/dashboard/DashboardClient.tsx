@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import api from '@/lib/axios';
 import { LeaderboardWidget } from '@/components/gamification/LeaderboardWidget';
 import { Modal } from '@/components/ui/modal';
 
@@ -9,12 +10,15 @@ export default function DashboardClient() {
   const [loading, setLoading] = useState(true);
   const [selectedCard, setSelectedCard] = useState<any>(null);
 
+
+
+  // ... inside component ...
+
   useEffect(() => {
     // Fetch Kanban Data
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001/api'}/crm/kanban`)
-      .then((res) => res.json())
-      .then((data) => {
-        setKanbanData(data);
+    api.get('/crm/kanban')
+      .then((response) => {
+        setKanbanData(response.data);
         setLoading(false);
       })
       .catch((err) => {

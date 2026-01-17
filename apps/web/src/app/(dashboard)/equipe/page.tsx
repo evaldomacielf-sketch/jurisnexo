@@ -37,8 +37,8 @@ export default function TeamPage() {
   const fetchData = async () => {
     try {
       const [memRes, invRes] = await Promise.all([
-        fetch('http://localhost:4001/api/tenants/me/members', { credentials: 'include' }),
-        fetch('http://localhost:4001/api/tenants/me/invites', { credentials: 'include' }),
+        fetch('http://localhost:5000/api/tenants/me/members', { credentials: 'include' }),
+        fetch('http://localhost:5000/api/tenants/me/invites', { credentials: 'include' }),
       ]);
 
       if (memRes.ok) setMembers(await memRes.json());
@@ -51,7 +51,7 @@ export default function TeamPage() {
   const handleInvite = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:4001/api/tenants/me/invites', {
+      const res = await fetch('http://localhost:5000/api/tenants/me/invites', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: inviteEmail, role: inviteRole }),
@@ -72,7 +72,7 @@ export default function TeamPage() {
   const handleRevoke = async (id: string) => {
     if (!confirm('Revogar convite?')) return;
     try {
-      await fetch(`http://localhost:4001/api/tenants/me/invites/${id}`, {
+      await fetch(`http://localhost:5000/api/tenants/me/invites/${id}`, {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -108,31 +108,28 @@ export default function TeamPage() {
         <div className="flex gap-8">
           <button
             onClick={() => setActiveTab('active')}
-            className={`border-b-2 px-1 pb-3 text-sm font-bold transition-all ${
-              activeTab === 'active'
+            className={`border-b-2 px-1 pb-3 text-sm font-bold transition-all ${activeTab === 'active'
                 ? 'border-primary text-primary'
                 : 'border-transparent text-[#616f89] hover:text-[#111318] dark:hover:text-white'
-            }`}
+              }`}
           >
             Membros Ativos ({members.length})
           </button>
           <button
             onClick={() => setActiveTab('pending')}
-            className={`border-b-2 px-1 pb-3 text-sm font-bold transition-all ${
-              activeTab === 'pending'
+            className={`border-b-2 px-1 pb-3 text-sm font-bold transition-all ${activeTab === 'pending'
                 ? 'border-primary text-primary'
                 : 'border-transparent text-[#616f89] hover:text-[#111318] dark:hover:text-white'
-            }`}
+              }`}
           >
             Convites Pendentes ({invites.filter((i) => i.status === 'pending').length})
           </button>
           <button
             onClick={() => setActiveTab('inactive')}
-            className={`border-b-2 px-1 pb-3 text-sm font-bold transition-all ${
-              activeTab === 'inactive'
+            className={`border-b-2 px-1 pb-3 text-sm font-bold transition-all ${activeTab === 'inactive'
                 ? 'border-primary text-primary'
                 : 'border-transparent text-[#616f89] hover:text-[#111318] dark:hover:text-white'
-            }`}
+              }`}
           >
             Inativos
           </button>
@@ -173,13 +170,12 @@ export default function TeamPage() {
                   </td>
                   <td className="px-6 py-4">
                     <span
-                      className={`rounded-full px-3 py-1 text-xs font-bold uppercase ${
-                        m.role === 'admin'
+                      className={`rounded-full px-3 py-1 text-xs font-bold uppercase ${m.role === 'admin'
                           ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                           : m.role === 'owner'
                             ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
                             : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-                      }`}
+                        }`}
                     >
                       {m.role}
                     </span>
@@ -249,12 +245,12 @@ export default function TeamPage() {
             {((activeTab === 'active' && members.length === 0) ||
               (activeTab === 'pending' &&
                 invites.filter((i) => i.status === 'pending').length === 0)) && (
-              <tr>
-                <td colSpan={5} className="px-6 py-12 text-center font-medium text-[#616f89]">
-                  Nenhum registro encontrado.
-                </td>
-              </tr>
-            )}
+                <tr>
+                  <td colSpan={5} className="px-6 py-12 text-center font-medium text-[#616f89]">
+                    Nenhum registro encontrado.
+                  </td>
+                </tr>
+              )}
             {activeTab === 'inactive' && (
               <tr>
                 <td colSpan={5} className="px-6 py-12 text-center font-medium text-[#616f89]">

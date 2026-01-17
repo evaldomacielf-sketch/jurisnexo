@@ -18,7 +18,7 @@ import type {
 // 🚀 Server Actions - Authentication
 // ============================================
 
-const BASE_URL = process.env.API_URL || 'http://localhost:4001/api';
+const BASE_URL = process.env.API_URL || 'http://localhost:5000/api';
 const API_URL = BASE_URL.endsWith('/api') ? BASE_URL : `${BASE_URL}/api`;
 
 /**
@@ -50,9 +50,9 @@ export async function loginAction(data: LoginDTO): Promise<ActionResponse<LoginR
     // Standardize user properties
     const user = result.user
       ? {
-          ...result.user,
-          emailVerified: result.user.isEmailVerified ?? result.user.emailVerified,
-        }
+        ...result.user,
+        emailVerified: result.user.isEmailVerified ?? result.user.emailVerified,
+      }
       : undefined;
 
     // Setta tokens em HTTP-only cookies

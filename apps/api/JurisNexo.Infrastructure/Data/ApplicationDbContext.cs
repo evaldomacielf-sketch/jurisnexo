@@ -47,6 +47,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<JurisNexo.Core.Entities.Financial.Transaction> Transactions => Set<JurisNexo.Core.Entities.Financial.Transaction>();
     public DbSet<JurisNexo.Core.Entities.Financial.Invoice> Invoices => Set<JurisNexo.Core.Entities.Financial.Invoice>();
     public DbSet<JurisNexo.Core.Entities.Financial.PaymentMethod> PaymentMethods => Set<JurisNexo.Core.Entities.Financial.PaymentMethod>();
+    public DbSet<JurisNexo.Core.Entities.Financial.FinancialCategory> FinancialCategories => Set<JurisNexo.Core.Entities.Financial.FinancialCategory>();
+    public DbSet<JurisNexo.Core.Entities.Financial.BankAccount> BankAccounts => Set<JurisNexo.Core.Entities.Financial.BankAccount>();
     
     // Lead Triaging System
     public DbSet<LeadQualificationQuestion> LeadQualificationQuestions => Set<LeadQualificationQuestion>();

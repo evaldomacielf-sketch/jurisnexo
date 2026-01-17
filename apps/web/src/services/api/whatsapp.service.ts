@@ -1,4 +1,4 @@
-import api from '@/lib/api';
+import { api } from '@/lib/axios';
 import { WhatsAppConversation, WhatsAppTemplate, SendWhatsAppMessageDto } from '@/types/whatsapp';
 
 export const whatsappApi = {

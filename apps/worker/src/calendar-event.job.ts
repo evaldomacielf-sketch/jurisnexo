@@ -7,7 +7,7 @@ export class CalendarEventJob {
   private readonly logger = new Logger(CalendarEventJob.name);
 
   // eslint-disable-next-line no-unused-vars
-  constructor(private readonly _db: DatabaseService) {}
+  constructor(private readonly db: DatabaseService) { }
 
   @Cron('*/10 * * * * *') // Every 10 seconds for demo responsiveness
   async processPendingMeetings() {

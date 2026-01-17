@@ -4,6 +4,7 @@ using JurisNexo.Core.Interfaces;
 using JurisNexo.Infrastructure.Data;
 using JurisNexo.Infrastructure.Repositories;
 using JurisNexo.Infrastructure.Services;
+// Remove ambiguous using: using JurisNexo.Application.Services;
 using JurisNexo.Infrastructure.Services.CRM;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,10 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
+        // Caching
+        services.AddMemoryCache();
+        services.AddDistributedMemoryCache();
+
         // Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -35,11 +40,17 @@ public static class DependencyInjection
         services.AddScoped<IConversationRepository, ConversationRepository>();
         services.AddScoped<IMessageRepository, MessageRepository>();
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<ITransactionRepository, TransactionRepository>();
 
         // Infrastructure Services implementations
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+        // Fix: Use fully qualified name to avoid ambiguity
+        services.AddScoped<JurisNexo.Application.Services.IAuthService, JurisNexo.Application.Services.AuthService>(); 
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<ISettingsService, SettingsService>();
+        services.AddScoped<IStorageService, LocalStorageService>();
 
         services.AddScoped<IPushNotificationService, PushNotificationService>();
         services.AddScoped<ISmsService, SmsService>();
@@ -52,9 +63,13 @@ public static class DependencyInjection
         services.AddScoped<IAIClassifierService, OpenAIClassifierService>();
         services.AddHttpClient<IAIClassifierService, OpenAIClassifierService>();
         services.AddScoped<ILeadAnalyticsService, LeadAnalyticsService>();
+
         services.AddScoped<ILeadNotificationService, LeadNotificationService>();
+        services.AddScoped<IInboxNotificationService, SignalRInboxNotificationService>();
         
         // WhatsApp Services
+        services.AddScoped<IWhatsAppClient, TwilioWhatsAppService>();
+        services.AddScoped<IWhatsAppService, WhatsAppService>();
         services.AddScoped<IWhatsAppSchedulingService, WhatsAppSchedulingService>();
         services.AddScoped<IWhatsAppMessageProcessor, WhatsAppMessageProcessor>();
         services.AddScoped<IWhatsAppTemplateService, WhatsAppTemplateService>();
@@ -71,15 +86,8 @@ public static class DependencyInjection
         services.AddScoped<ICRMAutoSyncSettingsService, CRMAutoSyncSettingsService>();
         services.AddScoped<ICRMSyncService, CRMSyncService>();
 
-        // Background Workers - Some disabled due to missing dependencies
-        // TODO: Register IWhatsAppClient, IInboxNotificationService to enable these
-        // services.AddHostedService<WhatsAppMessageWorker>();
-        // services.AddHostedService<WhatsAppSyncWorker>();
-        // services.AddHostedService<WhatsAppCleanupWorker>();
-        // services.AddHostedService<CheckSLAWorker>();
-        // services.AddHostedService<CheckSLAWorker>(); // Duplicate removed
+        // Background Workers
         services.AddHostedService<CRMSyncEngine>();
-        // services.AddHostedService<RedisDomainEventListener>(); // Replaced by CRMSyncEventHandler
         services.AddHostedService<CRMSyncEventHandler>();
 
         // Redis Connection
@@ -92,6 +100,7 @@ public static class DependencyInjection
 
         // Configuration Settings
         services.Configure<OpenAISettings>(configuration.GetSection("OpenAI"));
+        services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 
         // HttpContext Accessor
         services.AddHttpContextAccessor();

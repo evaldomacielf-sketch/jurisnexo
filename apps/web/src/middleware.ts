@@ -10,6 +10,23 @@ export async function middleware(req: NextRequest) {
   // Get auth cookie
   const token = req.cookies.get(AUTH_COOKIE_NAME)?.value;
   const hasSession = !!token;
+  const isLogout = req.nextUrl.searchParams.get('logout') === 'true';
+
+  // If logout param is present, delete cookie and continue to login
+  if (isLogout) {
+    const response = NextResponse.next();
+
+    // Aggressive cookie clearing
+    response.cookies.delete(AUTH_COOKIE_NAME);
+    response.cookies.set(AUTH_COOKIE_NAME, '', { maxAge: 0, path: '/' });
+
+    // Prevent caching of this response
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+
+    return response;
+  }
 
   // Legacy redirect
   if (pathname === '/auth/login') {

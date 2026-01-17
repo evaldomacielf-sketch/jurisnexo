@@ -36,7 +36,7 @@ public class CasesController : ControllerBase
         var tenantId = (Guid)HttpContext.Items["TenantId"]!;
         _logger.LogInformation("Listando casos do tenant {TenantId}", tenantId);
         
-        var result = await _mediator.Send(new ListCasesQuery(page, pageSize, search, status));
+        var result = await _mediator.Send(new ListCasesQuery(page, pageSize, search, status, null, tenantId));
         
         return Ok(result);
     }

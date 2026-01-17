@@ -31,7 +31,7 @@ import {
   XAxis as BarXAxis,
   YAxis as BarYAxis,
 } from 'recharts';
-import api from '@/lib/api';
+import { api } from '@/lib/axios';
 import { format } from 'date-fns';
 
 // --- Utility Components ---

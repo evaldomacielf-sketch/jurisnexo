@@ -11,7 +11,7 @@ export class SlaJob {
   private readonly logger = new Logger(SlaJob.name);
 
   // eslint-disable-next-line no-unused-vars
-  constructor(private readonly _db: DatabaseService) {}
+  constructor(private readonly db: DatabaseService) { }
 
   @Cron(CronExpression.EVERY_MINUTE)
   async checkSlaBreaches() {

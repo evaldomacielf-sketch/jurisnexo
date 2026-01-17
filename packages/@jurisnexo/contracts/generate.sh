@@ -11,19 +11,19 @@ NC='\033[0m' # No Color
 
 # 1. Verificar se backend está rodando
 echo -e "${BLUE}Verificando se backend está rodando...${NC}"
-if ! curl -s http://localhost:4000/health > /dev/null; then
+if ! curl -s http://localhost:5001/health > /dev/null; then
     echo "⚠️  Backend não está rodando. Iniciando..."
-    cd ../../apps/api
-    dotnet run --no-build &
+    cd ../../../apps/api/JurisNexo.Api
+    ASPNETCORE_URLS=http://localhost:5001 ASPNETCORE_ENVIRONMENT=Development dotnet run &
     DOTNET_PID=$!
-    sleep 10
+    sleep 20
 else
     echo "✅ Backend já está rodando"
 fi
 
 # 2. Baixar OpenAPI spec
 echo -e "${BLUE}Baixando OpenAPI spec...${NC}"
-curl -s http://localhost:4000/swagger/v1/swagger.json > swagger.json
+curl -s http://localhost:5001/swagger/v1/swagger.json > swagger.json
 
 if [ ! -s swagger.json ]; then
     echo "❌ Erro ao baixar swagger.json"

@@ -11,7 +11,7 @@ export class MessageSenderJob {
   private readonly logger = new Logger(MessageSenderJob.name);
 
   // eslint-disable-next-line no-unused-vars
-  constructor(private readonly _db: DatabaseService) {}
+  constructor(private readonly db: DatabaseService) { }
 
   @Cron('*/5 * * * * *') // Every 5 seconds
   async processQueue() {

@@ -13,7 +13,12 @@ public class Transaction : TenantEntity
     public Guid? InvoiceId { get; set; }
     public PaymentStatus Status { get; set; } = PaymentStatus.Pending;
     
+    public Guid? CategoryId { get; set; }
+    public Guid? BankAccountId { get; set; }
+    
     // Navigation
+    public virtual FinancialCategory? Category { get; set; }
+    public virtual BankAccount? BankAccount { get; set; }
     public virtual Case? Case { get; set; }
     public virtual Contact? Client { get; set; }
     public virtual Invoice? Invoice { get; set; }

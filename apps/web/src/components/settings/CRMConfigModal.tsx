@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import api from '@/lib/api';
+import { api } from '@/lib/axios';
 import { toast } from 'sonner';
 
 interface PropType {

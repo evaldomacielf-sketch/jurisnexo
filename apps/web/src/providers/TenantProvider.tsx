@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import api from '@/lib/axios';
 
 interface Tenant {
   id: string;
@@ -119,7 +120,7 @@ export function TenantProvider({ children }: { children: ReactNode }): React.Rea
             headers['Authorization'] = `Bearer ${authToken}`;
           }
 
-          const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001/api';
+          const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
           const res = await fetch(`${API_URL}/tenants/current`, {
             credentials: 'include',
             headers,
@@ -128,6 +129,8 @@ export function TenantProvider({ children }: { children: ReactNode }): React.Rea
             const data = await res.json();
             if (data) {
               setTenant(data);
+              // Inject Tenant ID into all future requests
+              api.defaults.headers.common['x-tenant-id'] = data.id;
               console.log('[TenantProvider] Resolved active tenant:', data.name);
             }
           }

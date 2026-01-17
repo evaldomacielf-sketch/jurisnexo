@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 /**
  * MSW handlers for mocking API endpoints in tests.

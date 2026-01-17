@@ -15,7 +15,7 @@ export default function CreateTenantPage() {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001/api'}/tenants`,
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/tenants`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

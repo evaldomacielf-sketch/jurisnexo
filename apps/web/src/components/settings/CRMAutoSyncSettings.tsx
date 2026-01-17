@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import api from '@/lib/api';
+import { api } from '@/lib/axios';
 import toast from 'react-hot-toast';
 
 interface CRMAutoSyncSettings {

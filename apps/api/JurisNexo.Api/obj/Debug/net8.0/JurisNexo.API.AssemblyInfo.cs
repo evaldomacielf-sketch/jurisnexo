@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JurisNexo.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6ed19c535c647000a03d5f4be5868a14c682737f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+62e11310fd7bba679c240f6c1e421ca77a90567d")]
 [assembly: System.Reflection.AssemblyProductAttribute("JurisNexo.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JurisNexo.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

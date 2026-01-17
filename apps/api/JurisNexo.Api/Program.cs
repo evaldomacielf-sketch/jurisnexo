@@ -47,6 +47,9 @@ builder.Services.AddSwaggerGen(c =>
         Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
     });
+
+    // Resolve conflicting schema definitions (e.g. LeadDto)
+    c.CustomSchemaIds(x => x.FullName); 
 });
 
 // Autenticação Supabase JWT
@@ -86,23 +89,26 @@ var app = builder.Build();
 // ====================================
 
 // Swagger (desenvolvimento)
-if (app.Environment.IsDevelopment())
-{
+// if (app.Environment.IsDevelopment())
+// {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "JurisNexo API v1");
         c.RoutePrefix = "swagger"; // Acessar via /swagger
     });
-}
+// }
+
 
 // Middleware customizado
-app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.UseMiddleware<TenantMiddleware>();
-
 app.UseCors("AllowFrontend");
+app.UseRouting();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<TenantMiddleware>();
 
 app.MapControllers();
 app.MapHub<InboxHub>("/hubs/inbox");

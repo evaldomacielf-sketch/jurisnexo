@@ -1,5 +1,24 @@
 
-
-> @jurisnexo/worker@0.0.1 build /Volumes/Macintosh HD/crm JurisNexo/jurisnexo/apps/worker
+> @jurisnexo/worker@0.0.1 build /Users/evaldomacielfilho/Downloads/crm JurisNexo/jurisnexo/apps/worker
 > nest build
 
+[96msrc/database/database.service.ts[0m:[93m3[0m:[93m32[0m - [91merror[0m[90m TS2307: [0mCannot find module '@supabase/supabase-js' or its corresponding type declarations.
+
+[7m3[0m import { SupabaseClient } from '@supabase/supabase-js';
+[7m [0m [91m                               ~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/message-sender.job.ts[0m:[93m14[0m:[93m32[0m - [91merror[0m[90m TS6138: [0mProperty '_db' is declared but its value is never read.
+
+[7m14[0m   constructor(private readonly _db: DatabaseService) {}
+[7m  [0m [91m                               ~~~[0m
+[96msrc/message-sender.job.ts[0m:[93m18[0m:[93m50[0m - [91merror[0m[90m TS2339: [0mProperty 'db' does not exist on type 'MessageSenderJob'.
+
+[7m18[0m     const { data: messages, error } = await this.db.client
+[7m  [0m [91m                                                 ~~[0m
+[96msrc/message-sender.job.ts[0m:[93m38[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'db' does not exist on type 'MessageSenderJob'.
+
+[7m38[0m       await this.db.client
+[7m  [0m [91m                 ~~[0m
+
+Found 4 error(s).
+
+ ELIFECYCLE  Command failed with exit code 1.

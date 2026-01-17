@@ -37,7 +37,7 @@ export default function TenantSelectPage() {
   const selectTenant = async (tenantId: string) => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001/api'}/tenants/me/active-tenant`,
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/tenants/me/active-tenant`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -113,11 +113,10 @@ export default function TenantSelectPage() {
             {/* Create Tenant Option - Primary Action if list is empty, secondary otherwise */}
             <button
               onClick={() => router.push('/tenants/create')}
-              className={`font-display flex w-full items-center justify-center gap-2 rounded-xl py-4 font-bold transition-all ${
-                tenants.length === 0
-                  ? 'bg-[#1152d4] text-white shadow-lg hover:bg-[#0e44b1] hover:shadow-xl'
-                  : 'border-2 border-dashed border-slate-300 bg-white text-[#4f5b76] hover:border-[#1152d4] hover:text-[#1152d4]'
-              }`}
+              className={`font-display flex w-full items-center justify-center gap-2 rounded-xl py-4 font-bold transition-all ${tenants.length === 0
+                ? 'bg-[#1152d4] text-white shadow-lg hover:bg-[#0e44b1] hover:shadow-xl'
+                : 'border-2 border-dashed border-slate-300 bg-white text-[#4f5b76] hover:border-[#1152d4] hover:text-[#1152d4]'
+                }`}
             >
               <span className="material-symbols-outlined">add_circle</span>
               {tenants.length === 0 ? 'Criar meu Primeiro Escritório' : 'Criar Novo Escritório'}
