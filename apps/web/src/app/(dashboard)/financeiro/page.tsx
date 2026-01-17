@@ -1,53 +1,88 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ChevronLeft, ChevronRight, Plus, RefreshCw } from 'lucide-react';
-import { financeApi } from '@/lib/api/finance';
-import {
-  FinancialSummaryCards,
-  RevenueExpenseChart,
-  TransactionTable,
-  BankAccountsPanel,
-  CreateTransactionModal,
-  FilterBar,
-} from '@/components/finance';
+import { useState, Suspense } from 'react';
+import { Plus, RefreshCw } from 'lucide-react';
 
-// Month navigation helper
+// Simple fallback component
+function FinanceLoading() {
+  return (
+    <div className="space-y-4">
+      <div className="h-24 bg-gray-200 rounded-lg animate-pulse"></div>
+      <div className="h-64 bg-gray-200 rounded-lg animate-pulse"></div>
+    </div>
+  );
+}
 
+function FinanceError({ error }: { error: Error }) {
+  return (
+    <div className="rounded-lg border border-red-200 bg-red-50 p-6">
+      <h2 className="font-bold text-red-900">Erro ao carregar financeiro</h2>
+      <p className="text-sm text-red-700 mt-2">{error.message}</p>
+      <button
+        onClick={() => window.location.reload()}
+        className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+      >
+        Tentar novamente
+      </button>
+    </div>
+  );
+}
+
+// Simplified Finance Dashboard
 export default function FinanceDashboard() {
-  const queryClient = useQueryClient();
+  const [loading, setLoading] = useState(false);
 
-  // Current month/year state
-  const now = new Date();
-  const [currentYear, setCurrentYear] = useState(now.getFullYear());
-  const [currentMonth, setCurrentMonth] = useState(now.getMonth() + 1);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [page, setPage] = useState(1);
-  const [filters, setFilters] = useState<{
-    search: string;
-    type: 'ALL' | 'INCOME' | 'EXPENSE';
-    status: 'ALL' | 'PAID' | 'PENDING' | 'OVERDUE';
-    category_id: string;
-    account_id: string;
-    date_from: string;
-    date_to: string;
-  }>({
-    search: '',
-    type: 'ALL',
-    status: 'ALL',
-    category_id: '',
-    account_id: '',
-    date_from: '',
-    date_to: '',
-  });
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Financeiro</h1>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setLoading(!loading)}
+            className="flex items-center gap-2 rounded-lg px-4 py-2 hover:bg-gray-100"
+          >
+            <RefreshCw className="h-5 w-5" />
+          </button>
+          <button className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+            <Plus className="h-5 w-5" />
+            Novo Lançamento
+          </button>
+        </div>
+      </div>
 
-  // Navigate months
-  const navigateMonth = (direction: -1 | 1) => {
-    let newMonth = currentMonth + direction;
-    let newYear = currentYear;
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+        <div className="rounded-lg border bg-white p-6">
+          <p className="text-sm text-gray-600">Receitas</p>
+          <p className="text-2xl font-bold">R$ 0,00</p>
+        </div>
+        <div className="rounded-lg border bg-white p-6">
+          <p className="text-sm text-gray-600">Despesas</p>
+          <p className="text-2xl font-bold">R$ 0,00</p>
+        </div>
+        <div className="rounded-lg border bg-white p-6">
+          <p className="text-sm text-gray-600">Saldo</p>
+          <p className="text-2xl font-bold">R$ 0,00</p>
+        </div>
+        <div className="rounded-lg border bg-white p-6">
+          <p className="text-sm text-gray-600">Pendente</p>
+          <p className="text-2xl font-bold">R$ 0,00</p>
+        </div>
+      </div>
 
-    if (newMonth < 1) {
+      {/* Main Content */}
+      <Suspense fallback={<FinanceLoading />}>
+        <div className="rounded-lg border bg-white p-6">
+          <h2 className="font-bold mb-4">Transações Recentes</h2>
+          <div className="text-center py-12 text-gray-500">
+            <p>Nenhuma transação encontrada</p>
+          </div>
+        </div>
+      </Suspense>
+    </div>
+  );
+}
       newMonth = 12;
       newYear--;
     } else if (newMonth > 12) {

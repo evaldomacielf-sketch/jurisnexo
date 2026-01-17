@@ -438,6 +438,112 @@ app.get("/api/crm/kanban", (req, res) => {
     });
 });
 
+// ================== FINANCE ENDPOINTS ==================
+app.get("/api/finance/categories", (req, res) => {
+    return res.status(200).json([
+        { id: "cat-1", name: "Receita de Honorários", type: "income" },
+        { id: "cat-2", name: "Receita de Custas", type: "income" },
+        { id: "cat-3", name: "Despesa Operacional", type: "expense" },
+    ]);
+});
+
+app.get("/api/finance/bank-accounts", (req, res) => {
+    return res.status(200).json([
+        { id: "acc-1", name: "Banco do Brasil", balance: 15000 },
+        { id: "acc-2", name: "Caixa", balance: 2500 },
+    ]);
+});
+
+app.get("/api/finance/transactions", (req, res) => {
+    return res.status(200).json({
+        items: [],
+        total: 0,
+        page: 1,
+        pageSize: 10,
+    });
+});
+
+app.get("/api/finance/dashboard", (req, res) => {
+    return res.status(200).json({
+        totalReceivable: 45000,
+        totalPayable: 12000,
+        cashBalance: 17500,
+        thisMonthReceived: 8000,
+    });
+});
+
+// ================== AGENDA/CALENDAR ENDPOINTS ==================
+app.get("/api/schedule/events", (req, res) => {
+    return res.status(200).json([]);
+});
+
+app.post("/api/schedule/events", (req, res) => {
+    return res.status(201).json({ id: "evt-1", success: true });
+});
+
+// ================== WHATSAPP ENDPOINTS ==================
+app.get("/api/whatsapp/conversations", (req, res) => {
+    return res.status(200).json([
+        {
+            id: "conv-1",
+            contact: { name: "João Silva", phone: "11999999999" },
+            lastMessage: "Olá, tudo bem?",
+            unread: 2,
+            updatedAt: new Date().toISOString(),
+        },
+    ]);
+});
+
+app.get("/api/whatsapp/messages/:conversationId", (req, res) => {
+    return res.status(200).json([]);
+});
+
+app.post("/api/whatsapp/messages", (req, res) => {
+    return res.status(201).json({ id: "msg-1", success: true });
+});
+
+// ================== REPORTS ENDPOINTS ==================
+app.get("/api/reports/list", (req, res) => {
+    return res.status(200).json([
+        { id: "rep-1", name: "Relatório Mensal", type: "monthly" },
+        { id: "rep-2", name: "Relatório de Casos", type: "cases" },
+    ]);
+});
+
+app.get("/api/reports/:reportId", (req, res) => {
+    return res.status(200).json({
+        id: req.params.reportId,
+        name: "Relatório",
+        data: [],
+    });
+});
+
+// ================== SETTINGS ENDPOINTS ==================
+app.get("/api/settings", (req, res) => {
+    return res.status(200).json({
+        company_name: "Meu Escritório",
+        theme: "light",
+        language: "pt-BR",
+    });
+});
+
+app.post("/api/settings", (req, res) => {
+    return res.status(200).json({ success: true });
+});
+
+// ================== GENERIC ENDPOINTS ==================
+app.get("/api/crm/kanban", (req, res) => {
+    return res.status(200).json({
+        columns: [
+            {
+                id: "col-1",
+                title: "A Fazer",
+                cards: [],
+            },
+        ],
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`🚀 API rodando em http://localhost:${PORT}`);
     console.log(`📝 Teste com: test@example.com / password123`);
