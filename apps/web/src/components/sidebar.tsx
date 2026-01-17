@@ -12,6 +12,11 @@ import {
   ChatBubbleLeftIcon,
   ChartBarIcon,
   Cog6ToothIcon,
+  SparklesIcon,
+  BoltIcon,
+  PresentationChartLineIcon,
+  UserGroupIcon,
+  ViewColumnsIcon,
 } from '@heroicons/react/24/outline';
 import { logoutAction } from '@/actions/auth';
 import { useState } from 'react';
@@ -30,10 +35,15 @@ export function Sidebar() {
   const navigationItems: NavigationItem[] = [
     { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
     { name: 'Casos', href: '/casos', icon: FolderIcon },
+    { name: 'Kanban', href: '/kanban', icon: ViewColumnsIcon },
+    { name: 'CRM', href: '/crm/pipeline', icon: PresentationChartLineIcon },
     { name: 'Clientes', href: '/clientes', icon: UsersIcon },
+    { name: 'Equipe', href: '/equipe', icon: UserGroupIcon },
     { name: 'Financeiro', href: '/financeiro', icon: CurrencyDollarIcon },
-    { name: 'Agenda', href: '/agenda', icon: CalendarIcon },
-    { name: 'WhatsApp', href: '/whatsapp', icon: ChatBubbleLeftIcon, badge: 5 },
+    { name: 'Agenda', href: '/calendario', icon: CalendarIcon },
+    { name: 'WhatsApp', href: '/mensagens', icon: ChatBubbleLeftIcon, badge: 5 },
+    { name: 'AI Assistant', href: '/ai', icon: SparklesIcon },
+    { name: 'Automações', href: '/automacoes', icon: BoltIcon },
     { name: 'Relatórios', href: '/relatorios', icon: ChartBarIcon },
     { name: 'Configurações', href: '/configuracoes', icon: Cog6ToothIcon },
   ];
